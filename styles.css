@@ -94,3 +94,12 @@ body {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+.carousel-heading {
+  margin-top: 80px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Trebuchet MS", Tahoma, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  color: #000000;
+}
