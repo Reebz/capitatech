@@ -1,27 +1,24 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  height: 100vh;
-  width: 100vw;
+.content {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  background: #ffffff;
+  gap: 12px;
 }
 
-.center-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.tagline {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-size: 14px;
+  color: #000000;
+  text-align: center;
 }
 
-.logo-img {
-  max-width: 320px;
-  height: auto;
+.email-link {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-size: 14px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.email-link:hover {
+  text-decoration: underline;
 }
