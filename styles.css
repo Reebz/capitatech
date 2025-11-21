@@ -37,6 +37,7 @@ body {
 .logo-img {
   max-width: 400px;
   height: auto;
+  margin-bottom: 24px;   /* this creates the spacing YOU want */
 }
 
 /* TAGLINE */
@@ -82,7 +83,7 @@ body {
 
 /* logo spacing now via margin instead of gap */
 .logo-carousel img {
-  height: 40px;
+  height: 100px;
   width: auto;
   flex-shrink: 0;
   filter: grayscale(100%);
