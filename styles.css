@@ -7,6 +7,14 @@
   padding: 0;
 }
 
+/* FONT: MONT */
+@font-face {
+  font-family: "Mont";
+  src: url("fonts/Mont-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+
 /* PAGE LAYOUT */
 body {
   background: #ffffff;
@@ -15,6 +23,8 @@ body {
   align-items: center;
   min-height: 100vh;
   padding-top: 40px;
+  font-family: "Mont", sans-serif;
+  font-weight: 600;
 }
 
 /* MAIN CONTENT */
@@ -32,18 +42,11 @@ body {
   gap: 14px;
 }
 
-/* UNIVERSAL FONT */
+/* UNIVERSAL FONT INSIDE CONTENT */
 .content,
 .content * {
   font-family: "Mont", sans-serif;
   font-weight: 600;
-}
-
-@font-face {
-  font-family: "Mont";
-  src: url("fonts/Mont-SemiBold.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
 }
 
 /* LOGO SIZING */
@@ -70,11 +73,22 @@ body {
   text-decoration: underline;
 }
 
+/* CAROUSEL HEADING */
+.carousel-heading {
+  margin-top: 80px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Mont", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000000;
+}
+
 /* LOGO CAROUSEL */
 .logo-carousel {
   width: 100%;
   overflow: hidden;
-  margin-top: 60px;
+  margin-top: 0;
   padding: 20px 0;
 }
 
@@ -100,13 +114,4 @@ body {
 @keyframes scroll-logos {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
-}
-.carousel-heading {
-  margin-top: 80px;
-  margin-bottom: 20px;
-  text-align: center;
-  font-family: "Trebuchet MS", Tahoma, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #000000;
 }
