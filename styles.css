@@ -171,6 +171,14 @@ body {
   .logo-carousel {
     padding: 14px 0;
   }
+  
+  @media (max-width: 600px) {
+  /* existing mobile rules... */
+
+  .logo-track {
+    animation: scroll-logos 12s linear infinite; /* faster on mobile */
+  }
+}
 }
 
 /* --------------------------------------------
