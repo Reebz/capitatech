@@ -37,20 +37,21 @@ body {
 .logo-img {
   max-width: 400px;
   height: auto;
-  margin-bottom: 24px;   /* this creates the spacing YOU want */
+  margin-bottom: 32px;   /* this creates the spacing YOU want */
 }
 
 /* TAGLINE */
 .tagline {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.35;
   color: #000000;
   max-width: 480px;
+  margin-bottom: 16px;   /* ADD THIS */
 }
 
 /* EMAIL LINK */
 .email-link {
-  font-size: 15px;
+  font-size: 16px;
   color: #000000;
   text-decoration: none;
 }
