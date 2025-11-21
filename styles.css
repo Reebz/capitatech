@@ -35,7 +35,7 @@ body {
 
 /* LOGO */
 .logo-img {
-  max-width: 320px;
+  max-width: 400px;
   height: auto;
 }
 
@@ -55,6 +55,7 @@ body {
 }
 .email-link:hover {
   text-decoration: underline;
+  color: #0078f0;
 }
 
 /* CAROUSEL HEADING */
@@ -75,16 +76,22 @@ body {
 
 .logo-track {
   display: flex;
-  gap: 48px;
+  /* IMPORTANT: no gap here to avoid misalignment */
   animation: scroll-logos 25s linear infinite;
 }
 
+/* logo spacing now via margin instead of gap */
 .logo-carousel img {
   height: 40px;
   width: auto;
   flex-shrink: 0;
   filter: grayscale(100%);
   opacity: 0.85;
+  margin-right: 48px;
+}
+
+.logo-carousel img:last-child {
+  margin-right: 0;
 }
 
 .logo-carousel img:hover {
@@ -92,6 +99,7 @@ body {
   opacity: 1;
 }
 
+/* ANIMATION: move exactly half the track width */
 @keyframes scroll-logos {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
