@@ -1,40 +1,31 @@
-/* RESET */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* FONT: MONT */
+/* FONT */
 @font-face {
   font-family: "Mont";
   src: url("fonts/Mont-SemiBold.woff2") format("woff2");
-  font-weight: 600;
+  font-weight: 500;
   font-style: normal;
 }
 
-/* PAGE LAYOUT */
+/* UNIVERSAL FONT RESET */
+html, body, * {
+  font-family: "Mont", sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px;
+}
+
+/* PAGE LAYOUT — VERTICAL CENTERING */
 body {
   background: #ffffff;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding-top: 40px;
-  font-family: "Mont", sans-serif;
-  font-weight: 600;
+  justify-content: center;   /* vertical centering */
+  align-items: center;       /* horizontal centering */
+  margin: 0;
 }
 
 /* MAIN CONTENT */
 .center-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,14 +33,7 @@ body {
   gap: 14px;
 }
 
-/* UNIVERSAL FONT INSIDE CONTENT */
-.content,
-.content * {
-  font-family: "Mont", sans-serif;
-  font-weight: 600;
-}
-
-/* LOGO SIZING */
+/* LOGO */
 .logo-img {
   max-width: 320px;
   height: auto;
@@ -75,20 +59,17 @@ body {
 
 /* CAROUSEL HEADING */
 .carousel-heading {
-  margin-top: 80px;
+  margin-top: 60px;
   margin-bottom: 20px;
   text-align: center;
-  font-family: "Mont", sans-serif;
-  font-weight: 600;
   font-size: 16px;
   color: #000000;
 }
 
-/* LOGO CAROUSEL */
+/* SCROLLING LOGOS */
 .logo-carousel {
   width: 100%;
   overflow: hidden;
-  margin-top: 0;
   padding: 20px 0;
 }
 
@@ -105,12 +86,12 @@ body {
   filter: grayscale(100%);
   opacity: 0.85;
 }
+
 .logo-carousel img:hover {
   filter: none;
   opacity: 1;
 }
 
-/* ANIMATION */
 @keyframes scroll-logos {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
