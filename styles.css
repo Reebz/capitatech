@@ -1,4 +1,6 @@
-/* FONT */
+/* --------------------------------------------
+   FONT: MONT
+-------------------------------------------- */
 @font-face {
   font-family: "Mont";
   src: url("fonts/Mont-SemiBold.woff2") format("woff2");
@@ -11,33 +13,39 @@ html, body, * {
   font-family: "Mont", sans-serif !important;
   font-weight: 500 !important;
   letter-spacing: 0.2px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* PAGE LAYOUT — VERTICAL CENTERING */
+/* --------------------------------------------
+   PAGE LAYOUT (DESKTOP)
+-------------------------------------------- */
 body {
   background: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;   /* vertical centering */
+  justify-content: center;   /* vertical centering on desktop */
   align-items: center;       /* horizontal centering */
-  margin: 0;
 }
 
-/* MAIN CONTENT */
+/* --------------------------------------------
+   MAIN CONTENT BLOCK
+-------------------------------------------- */
 .center-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 14px;
 }
 
-/* LOGO */
+/* PRIMARY LOGO (responsive) */
 .logo-img {
-  max-width: 400px;
+  width: 60vw;
+  max-width: 320px;     /* original size */
   height: auto;
-  margin-bottom: 32px;   /* this creates the spacing YOU want */
+  margin-bottom: 32px;  /* original spacing */
 }
 
 /* TAGLINE */
@@ -45,8 +53,8 @@ body {
   font-size: 16px;
   line-height: 1.35;
   color: #000000;
-  max-width: 480px;
-  margin-bottom: 16px;   /* ADD THIS */
+  max-width: 480px;     /* original width */
+  margin-bottom: 16px;  /* original spacing */
 }
 
 /* EMAIL LINK */
@@ -60,36 +68,39 @@ body {
   color: #0078f0;
 }
 
-/* CAROUSEL HEADING */
+/* --------------------------------------------
+   CAROUSEL HEADING
+-------------------------------------------- */
 .carousel-heading {
-  margin-top: 60px;
-  margin-bottom: 20px;
+  margin-top: 60px;     /* original spacing */
+  margin-bottom: 20px;  /* original spacing */
   text-align: center;
   font-size: 16px;
   color: #000000;
 }
 
-/* SCROLLING LOGOS */
+/* --------------------------------------------
+   LOGO CAROUSEL (DESKTOP DEFAULT)
+-------------------------------------------- */
 .logo-carousel {
   width: 100%;
   overflow: hidden;
-  padding: 20px 0;
+  padding: 20px 0;      /* original vertical padding */
 }
 
 .logo-track {
   display: flex;
-  /* IMPORTANT: no gap here to avoid misalignment */
   animation: scroll-logos 25s linear infinite;
 }
 
-/* logo spacing now via margin instead of gap */
+/* Logos — responsive height */
 .logo-carousel img {
-  height: 100px;
+  height: 40px;        /* original size */
   width: auto;
   flex-shrink: 0;
+  margin-right: 48px;  /* replaces gap */
   filter: grayscale(100%);
   opacity: 0.85;
-  margin-right: 48px;
 }
 
 .logo-carousel img:last-child {
@@ -101,8 +112,77 @@ body {
   opacity: 1;
 }
 
-/* ANIMATION: move exactly half the track width */
+/* Smooth infinite scroll */
 @keyframes scroll-logos {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* --------------------------------------------
+   MOBILE RESPONSIVENESS
+-------------------------------------------- */
+@media (max-width: 600px) {
+
+  /* Stop forced vertical centering on mobile */
+  body {
+    justify-content: flex-start;
+    padding-top: 40px;
+  }
+
+  .logo-img {
+    width: 80vw;         /* scalable for small screens */
+    max-width: 280px;
+    margin-bottom: 28px; /* proportionally smaller */
+  }
+
+  .tagline {
+    font-size: 14px;
+    max-width: 90vw;
+    margin-bottom: 14px;
+  }
+
+  .email-link {
+    font-size: 14px;
+  }
+
+  .carousel-heading {
+    margin-top: 40px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  /* Make carousel logos larger relative to screen */
+  .logo-carousel img {
+    height: 18vw;
+    max-height: 70px;
+    margin-right: 32px;
+  }
+
+  .logo-carousel {
+    padding: 14px 0;
+  }
+}
+
+/* --------------------------------------------
+   TABLET RESPONSIVENESS
+-------------------------------------------- */
+@media (min-width: 601px) and (max-width: 1024px) {
+
+  .logo-img {
+    width: 50vw;
+    max-width: 340px;
+  }
+
+  .tagline {
+    font-size: 15px;
+    max-width: 80vw;
+  }
+
+  .carousel-heading {
+    font-size: 15px;
+  }
+
+  .logo-carousel img {
+    height: 60px;
+  }
 }
