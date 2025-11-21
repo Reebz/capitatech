@@ -1,24 +1,96 @@
+/* RESET */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* PAGE LAYOUT */
+body {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 40px;
+}
+
+/* MAIN CONTENT */
+.center-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-}
-
-.tagline {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-  font-size: 14px;
-  color: #000000;
   text-align: center;
+  gap: 14px;
 }
 
+/* UNIVERSAL FONT */
+.content,
+.content * {
+  font-family: "Trebuchet MS", Tahoma, sans-serif;
+  font-weight: bold;
+}
+
+/* LOGO SIZING */
+.logo-img {
+  max-width: 320px;
+  height: auto;
+}
+
+/* TAGLINE */
+.tagline {
+  font-size: 15px;
+  line-height: 1.35;
+  color: #000000;
+  max-width: 480px;
+}
+
+/* EMAIL LINK */
 .email-link {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   color: #000000;
   text-decoration: none;
 }
-
 .email-link:hover {
   text-decoration: underline;
+}
+
+/* LOGO CAROUSEL */
+.logo-carousel {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 60px;
+  padding: 20px 0;
+}
+
+.logo-track {
+  display: flex;
+  gap: 48px;
+  animation: scroll-logos 25s linear infinite;
+}
+
+.logo-carousel img {
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
+  filter: grayscale(100%);
+  opacity: 0.85;
+}
+.logo-carousel img:hover {
+  filter: none;
+  opacity: 1;
+}
+
+/* ANIMATION */
+@keyframes scroll-logos {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
