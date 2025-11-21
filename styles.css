@@ -95,7 +95,7 @@ body {
 
 /* Logos — responsive height */
 .logo-carousel img {
-  height: 40px;        /* original size */
+  height: 120px;        /* original size */
   width: auto;
   flex-shrink: 0;
   margin-right: 48px;  /* replaces gap */
@@ -114,8 +114,18 @@ body {
 
 /* Smooth infinite scroll */
 @keyframes scroll-logos {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.logo-track {
+  display: flex;
+  animation: scroll-logos 25s linear infinite;
+  will-change: transform;
 }
 
 /* --------------------------------------------
@@ -152,11 +162,11 @@ body {
   }
 
   /* Make carousel logos larger relative to screen */
-  .logo-carousel img {
-    height: 18vw;
-    max-height: 70px;
-    margin-right: 32px;
-  }
+   .logo-carousel img {
+     height: 30vw;         /* larger on small screens */
+     max-height: 120px;    /* matches the 3x desktop cap */
+     margin-right: 32px;
+   }
 
   .logo-carousel {
     padding: 14px 0;
@@ -183,6 +193,6 @@ body {
   }
 
   .logo-carousel img {
-    height: 60px;
+    height: 100px;
   }
 }
