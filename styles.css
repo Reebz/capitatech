@@ -1,10 +1,18 @@
 /* --------------------------------------------
-   FONT: NOTO SANS
+   FONT: NOTO SANS (TTF)
 -------------------------------------------- */
 @font-face {
   font-family: "Noto Sans";
-  src: url("fonts/NotoSans-Regular.woff2") format("woff2");
+  src: url("fonts/NotoSans-Regular.ttf") format("truetype");
   font-weight: 400;
+  font-style: normal;
+}
+
+/* Optional: if you are actually using a heavier cut */
+@font-face {
+  font-family: "Noto Sans";
+  src: url("fonts/NotoSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
   font-style: normal;
 }
 
