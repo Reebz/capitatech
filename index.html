@@ -5,6 +5,65 @@
   <title>Capita Technology</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Mobile-safe infinite logo carousel CSS (loop ~9s) -->
+  <style>
+    .carousel-heading {
+      text-align: center;
+    }
+
+    .logo-carousel {
+      width: 100%;
+      overflow: hidden;
+      -webkit-overflow-scrolling: auto;
+    }
+
+    .logo-track {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 28px;
+
+      width: max-content;
+
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+
+      animation: logo-marquee 9s linear infinite;
+      -webkit-animation: logo-marquee 9s linear infinite;
+    }
+
+    .logo-track img {
+      height: 42px;
+      width: auto;
+      display: block;
+      flex: 0 0 auto;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    @keyframes logo-marquee {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    @-webkit-keyframes logo-marquee {
+      0% { -webkit-transform: translate3d(0, 0, 0); }
+      100% { -webkit-transform: translate3d(-50%, 0, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo-track {
+        animation: none;
+        -webkit-animation: none;
+        transform: none;
+        -webkit-transform: none;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -13,16 +72,15 @@
       <img src="Capita_emailsig_cropped_final.jpg"
            alt="Capita Technology Logo"
            class="logo-img">
-      
+
       <div class="tagline">
-            AI and Data Innovation<br>
-    B2C Growth & Retention<br>
-    Digital CX Strategy<br>
+        AI and Data Innovation<br>
+        B2C Growth & Retention<br>
+        Digital CX Strategy<br>
         <br>
         We help your company unlock growth that can be measured, accelerate AI performance, and stop revenue leakage by advising your teams on how to build decision systems, digital ecosystems, and scalable CX that actually works.
-          <br>
         <br>
-
+        <br>
       </div>
       <br>
       <a href="mailto:consulting@capitatech.com.au" class="email-link">
@@ -31,12 +89,10 @@
     </div>
   </div>
 
-  <!-- NEW HEADING ABOVE CAROUSEL -->
   <div class="carousel-heading">
     Direct experience working with:
   </div>
 
-  <!-- LOGO CAROUSEL -->
   <div class="logo-carousel">
     <div class="logo-track">
 
