@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -11,12 +9,22 @@
     />
     <title>Capita Technology</title>
 
+    <script>
+      // Avoid Chrome “Not secure” form warnings: force HTTPS (except local dev).
+      (function () {
+        const isLocal =
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1" ||
+          location.hostname.endsWith(".local");
+        if (!isLocal && location.protocol !== "https:") {
+          location.replace("https://" + location.host + location.pathname + location.search + location.hash);
+        }
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
 
@@ -57,7 +65,7 @@
 
           <div class="actions" aria-label="Trust signals">
             <a class="btn btn-secondary" href="#outcomes">Your vision, our expertise</a>
-            <a class="btn btn-secondary" href="#contact">Confidential & secure — NDA friendly</a>
+            <a class="btn btn-secondary" href="#contact">Confidential &amp; secure — NDA friendly</a>
             <a class="btn btn-secondary" href="#experience">Senior operators at work</a>
           </div>
 
@@ -192,53 +200,124 @@
             <div>
               <p class="section-label">Start the conversation</p>
               <h2>Tell us what you’re building.</h2>
-              <p class="section-lede">We’ll respond with a suggested next step and a 90-day outcome path.</p>
+              <p class="section-lede">
+                This form opens your email client with a pre-filled message to <strong>consulting@capitatech.com.au</strong>.
+              </p>
 
-              <form action="mailto:consulting@capitatech.com.au" method="post" enctype="text/plain">
-                <div class="grid-2" style="margin-top: 14px">
-                  <label>
-                    <span class="micro">Name</span>
+              <form id="leadForm" class="form-grid" novalidate>
+                <div class="form-row form-row-2">
+                  <div class="field">
+                    <label class="micro" for="name">Name (required)</label>
                     <input
+                      class="input"
+                      id="name"
                       name="name"
+                      autocomplete="name"
                       required
-                      style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px"
+                      inputmode="text"
+                      maxlength="60"
+                      placeholder="Jane Smith"
                     />
-                  </label>
-                  <label>
-                    <span class="micro">Email</span>
+                    <div class="help">Letters, spaces, apostrophes, and hyphens only.</div>
+                  </div>
+
+                  <div class="field">
+                    <label class="micro" for="email">Email (required)</label>
                     <input
+                      class="input"
+                      id="email"
                       name="email"
                       type="email"
+                      autocomplete="email"
                       required
-                      style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px"
+                      maxlength="254"
+                      placeholder="jane@company.com"
                     />
-                  </label>
+                    <div class="help">We’ll reply by email.</div>
+                  </div>
                 </div>
 
-                <label style="display: block; margin-top: 12px">
-                  <span class="micro">Phone (optional)</span>
-                  <input
-                    name="phone"
-                    style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px"
-                  />
-                </label>
+                <div class="form-row form-row-3">
+                  <div class="field" style="grid-column: span 1">
+                    <label class="micro" for="ccSearch">Country code</label>
+                    <input
+                      class="input"
+                      id="ccSearch"
+                      name="ccSearch"
+                      role="combobox"
+                      aria-expanded="false"
+                      aria-controls="ccList"
+                      aria-autocomplete="list"
+                      autocomplete="off"
+                      inputmode="search"
+                      placeholder="Type to search (e.g., Australia, AUS, +61)"
+                    />
+                    <div class="help">Type-ahead supported. Defaults to Australia (+61).</div>
 
-                <label style="display: block; margin-top: 12px">
-                  <span class="micro">What’s on your mind?</span>
+                    <div
+                      id="ccList"
+                      class="card"
+                      style="display: none; margin-top: 10px; padding: 10px"
+                      role="listbox"
+                      aria-label="Country codes"
+                    >
+                      <div class="micro" style="margin: 0 0 8px">Select a country code</div>
+                      <div id="ccOptions" style="display: grid; gap: 6px"></div>
+                    </div>
+
+                    <input type="hidden" id="ccDial" name="ccDial" value="+61" />
+                    <input type="hidden" id="ccISO3" name="ccISO3" value="AUS" />
+                    <input type="hidden" id="ccISO2" name="ccISO2" value="AU" />
+                  </div>
+
+                  <div class="field" style="grid-column: span 1">
+                    <label class="micro" for="phone">Phone (optional)</label>
+                    <input
+                      class="input"
+                      id="phone"
+                      name="phone"
+                      autocomplete="tel-national"
+                      inputmode="tel"
+                      maxlength="24"
+                      placeholder="412 345 678"
+                    />
+                    <div class="help">Digits only; spaces and dashes allowed.</div>
+                  </div>
+
+                  <div class="field" style="grid-column: span 1">
+                    <label class="micro" for="summary">Subject (optional)</label>
+                    <input
+                      class="input"
+                      id="summary"
+                      name="summary"
+                      maxlength="80"
+                      placeholder="Short summary (optional)"
+                    />
+                    <div class="help">Used as the email subject line.</div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="micro" for="message">What’s on your mind? (optional)</label>
                   <textarea
+                    class="textarea"
+                    id="message"
                     name="message"
                     rows="5"
-                    required
-                    style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; resize: vertical"
+                    maxlength="2000"
+                    placeholder="Tell us about the outcome you want to move in the next 90 days."
                   ></textarea>
-                </label>
+                  <div class="help">Max 2000 characters.</div>
+                </div>
 
-                <div class="actions" style="margin-top: 14px">
+                <div id="formError" class="form-error" aria-live="polite"></div>
+
+                <div class="actions">
                   <button class="btn btn-primary" type="submit">Send enquiry</button>
                   <a class="btn btn-secondary" href="mailto:consulting@capitatech.com.au">Email directly</a>
                 </div>
 
-                <div class="actions" aria-label="Trust signals" style="margin-top: 10px">
+                <div class="actions" aria-label="Trust signals" style="margin-top: 6px">
                   <span class="btn btn-secondary" role="note">Strict NDA</span>
                   <span class="btn btn-secondary" role="note">Security-first</span>
                   <span class="btn btn-secondary" role="note">No spam</span>
@@ -295,44 +374,328 @@
       </div>
 
       <script>
-        // Footer year
-        document.getElementById("y").textContent = String(new Date().getFullYear());
-
-        // FAQ accordion: single-open
-        const faqButtons = Array.from(document.querySelectorAll(".faq-q"));
-
-        function closeAll(exceptId) {
-          for (const btn of faqButtons) {
-            const panelId = btn.getAttribute("aria-controls");
-            const panel = panelId ? document.getElementById(panelId) : null;
-            const isExcept = btn.id === exceptId;
-
-            if (!isExcept) {
-              btn.setAttribute("aria-expanded", "false");
-              if (panel) panel.hidden = true;
-            }
-          }
+        // -----------------------------
+        // Utilities / Hardening
+        // -----------------------------
+        function stripControls(s) {
+          // Prevent header injection and control chars in mailto content.
+          return String(s || "")
+            .replace(/[\u0000-\u001F\u007F]/g, " ")
+            .replace(/[\r\n]+/g, " ")
+            .trim();
         }
 
-        for (const btn of faqButtons) {
-          btn.addEventListener("click", () => {
-            const expanded = btn.getAttribute("aria-expanded") === "true";
-            const panelId = btn.getAttribute("aria-controls");
-            const panel = panelId ? document.getElementById(panelId) : null;
+        function normalizeSpaces(s) {
+          return stripControls(s).replace(/\s+/g, " ").trim();
+        }
 
-            if (!panel) return;
+        function safeBodyText(s) {
+          // Allow new lines in body but remove control chars and excessive length.
+          const t = String(s || "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "");
+          return t.slice(0, 2000);
+        }
 
-            if (expanded) {
-              btn.setAttribute("aria-expanded", "false");
-              panel.hidden = true;
+        function isValidName(name) {
+          // Unicode letters + combining marks + spaces + apostrophe/hyphen. 2..60 chars.
+          const n = normalizeSpaces(name);
+          if (n.length < 2 || n.length > 60) return false;
+          const re = /^\p{L}[\p{L}\p{M}\s'’-]{0,58}\p{L}$/u;
+          return re.test(n);
+        }
+
+        function isValidEmail(email) {
+          const e = normalizeSpaces(email);
+          if (e.length < 6 || e.length > 254) return false;
+          if (/\s/.test(e)) return false;
+          const parts = e.split("@");
+          if (parts.length !== 2) return false;
+          if (parts[0].length > 64 || parts[0].length < 1) return false;
+          if (parts[1].length < 3) return false;
+          if (!parts[1].includes(".")) return false;
+          // Let browser’s built-in validation do the heavy lifting too.
+          return true;
+        }
+
+        function isValidPhoneLocal(phone) {
+          const raw = String(phone || "").trim();
+          if (!raw) return true; // optional
+          // Allow digits, spaces, parentheses, hyphens. No other characters.
+          if (!/^[0-9\s()\-]+$/.test(raw)) return false;
+          const digits = raw.replace(/\D/g, "");
+          return digits.length >= 4 && digits.length <= 14;
+        }
+
+        function iso2ToFlag(iso2) {
+          const code = String(iso2 || "").toUpperCase();
+          if (!/^[A-Z]{2}$/.test(code)) return "🏳️";
+          const A = 0x1f1e6;
+          const first = A + (code.charCodeAt(0) - 65);
+          const second = A + (code.charCodeAt(1) - 65);
+          return String.fromCodePoint(first, second);
+        }
+
+        // -----------------------------
+        // Footer year
+        // -----------------------------
+        document.getElementById("y").textContent = String(new Date().getFullYear());
+
+        // -----------------------------
+        // FAQ accordion: single-open
+        // -----------------------------
+        (function () {
+          const faqButtons = Array.from(document.querySelectorAll(".faq-q"));
+
+          function closeAll(exceptId) {
+            for (const btn of faqButtons) {
+              const panelId = btn.getAttribute("aria-controls");
+              const panel = panelId ? document.getElementById(panelId) : null;
+              const isExcept = btn.id === exceptId;
+
+              if (!isExcept) {
+                btn.setAttribute("aria-expanded", "false");
+                if (panel) panel.hidden = true;
+              }
+            }
+          }
+
+          for (const btn of faqButtons) {
+            btn.addEventListener("click", () => {
+              const expanded = btn.getAttribute("aria-expanded") === "true";
+              const panelId = btn.getAttribute("aria-controls");
+              const panel = panelId ? document.getElementById(panelId) : null;
+
+              if (!panel) return;
+
+              if (expanded) {
+                btn.setAttribute("aria-expanded", "false");
+                panel.hidden = true;
+                return;
+              }
+
+              closeAll(btn.id);
+              btn.setAttribute("aria-expanded", "true");
+              panel.hidden = false;
+            });
+          }
+        })();
+
+        // -----------------------------
+        // Country code type-ahead dropdown
+        // -----------------------------
+        const COUNTRY_CODES = [
+          { iso2: "AU", iso3: "AUS", dial: "+61", name: "Australia" },
+          { iso2: "NZ", iso3: "NZL", dial: "+64", name: "New Zealand" },
+          { iso2: "US", iso3: "USA", dial: "+1", name: "United States" },
+          { iso2: "CA", iso3: "CAN", dial: "+1", name: "Canada" },
+          { iso2: "GB", iso3: "GBR", dial: "+44", name: "United Kingdom" },
+          { iso2: "IE", iso3: "IRL", dial: "+353", name: "Ireland" },
+          { iso2: "DE", iso3: "DEU", dial: "+49", name: "Germany" },
+          { iso2: "FR", iso3: "FRA", dial: "+33", name: "France" },
+          { iso2: "ES", iso3: "ESP", dial: "+34", name: "Spain" },
+          { iso2: "IT", iso3: "ITA", dial: "+39", name: "Italy" },
+          { iso2: "NL", iso3: "NLD", dial: "+31", name: "Netherlands" },
+          { iso2: "BE", iso3: "BEL", dial: "+32", name: "Belgium" },
+          { iso2: "CH", iso3: "CHE", dial: "+41", name: "Switzerland" },
+          { iso2: "AT", iso3: "AUT", dial: "+43", name: "Austria" },
+          { iso2: "SE", iso3: "SWE", dial: "+46", name: "Sweden" },
+          { iso2: "NO", iso3: "NOR", dial: "+47", name: "Norway" },
+          { iso2: "DK", iso3: "DNK", dial: "+45", name: "Denmark" },
+          { iso2: "FI", iso3: "FIN", dial: "+358", name: "Finland" },
+          { iso2: "SG", iso3: "SGP", dial: "+65", name: "Singapore" },
+          { iso2: "HK", iso3: "HKG", dial: "+852", name: "Hong Kong" },
+          { iso2: "JP", iso3: "JPN", dial: "+81", name: "Japan" },
+          { iso2: "KR", iso3: "KOR", dial: "+82", name: "South Korea" },
+          { iso2: "IN", iso3: "IND", dial: "+91", name: "India" },
+          { iso2: "CN", iso3: "CHN", dial: "+86", name: "China" },
+          { iso2: "AE", iso3: "ARE", dial: "+971", name: "United Arab Emirates" },
+          { iso2: "SA", iso3: "SAU", dial: "+966", name: "Saudi Arabia" },
+          { iso2: "ZA", iso3: "ZAF", dial: "+27", name: "South Africa" },
+          { iso2: "BR", iso3: "BRA", dial: "+55", name: "Brazil" },
+          { iso2: "MX", iso3: "MEX", dial: "+52", name: "Mexico" },
+          { iso2: "AR", iso3: "ARG", dial: "+54", name: "Argentina" },
+          { iso2: "CL", iso3: "CHL", dial: "+56", name: "Chile" },
+          { iso2: "CO", iso3: "COL", dial: "+57", name: "Colombia" },
+          { iso2: "PE", iso3: "PER", dial: "+51", name: "Peru" },
+          { iso2: "ID", iso3: "IDN", dial: "+62", name: "Indonesia" },
+          { iso2: "MY", iso3: "MYS", dial: "+60", name: "Malaysia" },
+          { iso2: "TH", iso3: "THA", dial: "+66", name: "Thailand" },
+          { iso2: "PH", iso3: "PHL", dial: "+63", name: "Philippines" },
+          { iso2: "VN", iso3: "VNM", dial: "+84", name: "Vietnam" }
+        ];
+
+        (function initCountryCodePicker() {
+          const search = document.getElementById("ccSearch");
+          const list = document.getElementById("ccList");
+          const optionsHost = document.getElementById("ccOptions");
+
+          const ccDial = document.getElementById("ccDial");
+          const ccISO2 = document.getElementById("ccISO2");
+          const ccISO3 = document.getElementById("ccISO3");
+
+          function formatItem(c) {
+            const flag = iso2ToFlag(c.iso2);
+            return `${flag} ${c.dial} ${c.iso3} — ${c.name}`;
+          }
+
+          function setSelection(c) {
+            ccDial.value = c.dial;
+            ccISO2.value = c.iso2;
+            ccISO3.value = c.iso3;
+            search.value = formatItem(c);
+            closeList();
+          }
+
+          function openList() {
+            list.style.display = "block";
+            search.setAttribute("aria-expanded", "true");
+          }
+
+          function closeList() {
+            list.style.display = "none";
+            search.setAttribute("aria-expanded", "false");
+          }
+
+          function render(filtered) {
+            optionsHost.innerHTML = "";
+            const items = filtered.slice(0, 30);
+            for (const c of items) {
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "btn btn-secondary";
+              btn.style.justifyContent = "flex-start";
+              btn.style.borderRadius = "12px";
+              btn.style.width = "100%";
+              btn.setAttribute("role", "option");
+              btn.textContent = formatItem(c);
+              btn.addEventListener("click", () => setSelection(c));
+              optionsHost.appendChild(btn);
+            }
+            if (!items.length) {
+              const empty = document.createElement("div");
+              empty.className = "micro";
+              empty.textContent = "No matches.";
+              optionsHost.appendChild(empty);
+            }
+          }
+
+          function filter(q) {
+            const query = normalizeSpaces(q).toUpperCase();
+            if (!query) return COUNTRY_CODES;
+
+            return COUNTRY_CODES.filter((c) => {
+              const hay = `${c.name} ${c.iso2} ${c.iso3} ${c.dial}`.toUpperCase();
+              return hay.includes(query);
+            });
+          }
+
+          // default display
+          const defaultAU = COUNTRY_CODES.find((c) => c.iso2 === "AU") || COUNTRY_CODES[0];
+          render(COUNTRY_CODES);
+          search.value = formatItem(defaultAU);
+
+          search.addEventListener("focus", () => {
+            render(filter(search.value));
+            openList();
+          });
+
+          search.addEventListener("input", () => {
+            render(filter(search.value));
+            openList();
+          });
+
+          search.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeList();
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!list.contains(e.target) && e.target !== search) closeList();
+          });
+        })();
+
+        // -----------------------------
+        // Form: validated mailto composer
+        // -----------------------------
+        (function initLeadForm() {
+          const form = document.getElementById("leadForm");
+          const err = document.getElementById("formError");
+
+          const nameEl = document.getElementById("name");
+          const emailEl = document.getElementById("email");
+          const phoneEl = document.getElementById("phone");
+          const summaryEl = document.getElementById("summary");
+          const msgEl = document.getElementById("message");
+
+          const ccDial = document.getElementById("ccDial");
+          const ccISO3 = document.getElementById("ccISO3");
+
+          function setError(message) {
+            err.textContent = message || "";
+          }
+
+          function buildMailto(to, subject, body) {
+            const safeSubject = encodeURIComponent(stripControls(subject));
+            // allow new lines in body; encodeURIComponent handles them
+            const safeBody = encodeURIComponent(body);
+            return `mailto:${encodeURIComponent(to)}?subject=${safeSubject}&body=${safeBody}`;
+          }
+
+          form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            setError("");
+
+            const name = normalizeSpaces(nameEl.value);
+            const email = normalizeSpaces(emailEl.value);
+            const phone = normalizeSpaces(phoneEl.value);
+            const summary = normalizeSpaces(summaryEl.value);
+            const message = safeBodyText(msgEl.value);
+
+            // Browser-level checks
+            if (!nameEl.checkValidity() || !emailEl.checkValidity()) {
+              setError("Please complete required fields.");
               return;
             }
 
-            closeAll(btn.id);
-            btn.setAttribute("aria-expanded", "true");
-            panel.hidden = false;
+            // Custom hardening/validation
+            if (!isValidName(name)) {
+              setError("Name must contain letters only (plus spaces/apostrophes/hyphens), 2–60 characters.");
+              return;
+            }
+
+            if (!isValidEmail(email)) {
+              setError("Email must be a valid format.");
+              return;
+            }
+
+            if (!isValidPhoneLocal(phone)) {
+              setError("Phone must contain digits only (spaces/dashes allowed) and be 4–14 digits.");
+              return;
+            }
+
+            const dial = stripControls(ccDial.value || "+61");
+            const iso3 = stripControls(ccISO3.value || "AUS");
+            const fullPhone = phone ? `${dial} (${iso3}) ${phone}` : "";
+
+            const subject = summary ? `Capita enquiry — ${summary}` : "Capita enquiry";
+            const bodyLines = [
+              "New enquiry via capitatech.com.au",
+              "",
+              `Name: ${name}`,
+              `Email: ${email}`,
+              `Phone: ${fullPhone || "(not provided)"}`,
+              "",
+              "What's on your mind:",
+              message ? message : "(not provided)"
+            ];
+            const body = bodyLines.join("\n");
+
+            // Open the user's mail client with a pre-filled email.
+            const mailto = buildMailto("consulting@capitatech.com.au", subject, body);
+            window.location.href = mailto;
+
+            // Clear the form after composing (optional UX).
+            form.reset();
           });
-        }
+        })();
       </script>
     </footer>
   </body>
