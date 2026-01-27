@@ -16,49 +16,21 @@
   font-style: normal;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
-
-:root {
-  /* Neumorphism tokens */
-  --bg: #E0E5EC;
-  --fg: #3D4852;
-  --muted: #6B7280;
-  --accent: #0078f0;
-  --accent-light: #4da6ff;
-
-  --radius-card: 32px;
-  --radius-base: 16px;
-
-  --shadow-raise: 9px 9px 16px rgb(163 177 198 / 0.60), -9px -9px 16px rgb(255 255 255 / 0.50);
-  --shadow-raise-hover: 12px 12px 20px rgb(163 177 198 / 0.70), -12px -12px 20px rgb(255 255 255 / 0.60);
-  --shadow-inset: inset 6px 6px 10px rgb(163 177 198 / 0.60), inset -6px -6px 10px rgb(255 255 255 / 0.50);
-}
-
 /* UNIVERSAL FONT RESET */
-html, body {
-  font-family: "DM Sans", "Noto Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 400;
+html, body, * {
+  font-family: "Noto Sans", sans-serif !important;
+  font-weight: 500 !important;
   letter-spacing: 0.2px;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: var(--fg);
-  background: var(--bg);
-}
-
-*, *::before, *::after {
-  box-sizing: inherit;
-}
-
-.font-display {
-  font-family: "Plus Jakarta Sans", "Noto Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
 /* --------------------------------------------
    PAGE LAYOUT (DESKTOP)
 -------------------------------------------- */
 body {
-  background: var(--bg);
+  background: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -101,7 +73,7 @@ body {
 }
 .email-link:hover {
   text-decoration: underline;
-  color: var(--accent);
+  color: #0078f0;
 }
 
 /* --------------------------------------------
@@ -116,7 +88,7 @@ body {
 }
 
 /* --------------------------------------------
-   LOGO CAROUSEL (MOBILE-SAFE INFINITE MARQUEE)
+   LOGO CAROUSEL (DESKTOP DEFAULT)
 -------------------------------------------- */
 .logo-carousel {
   width: 100%;
@@ -126,63 +98,33 @@ body {
 
 .logo-track {
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 48px;
-  width: max-content;
-
+  animation: scroll-logos 25s linear infinite;
   will-change: transform;
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-
-  animation: scroll-logos 9s linear infinite;
-  -webkit-animation: scroll-logos 9s linear infinite;
 }
 
-/* Logos — stable sizing and no layout thrash */
+/* Logos — responsive height */
 .logo-carousel img {
   height: 120px;
   width: auto;
-  flex: 0 0 auto;
-  display: block;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-
-  opacity: 0.90;
+  flex-shrink: 0;
+  margin-right: 48px;
+  filter: grayscale(100%);
+  opacity: 0.85;
 }
 
-/* Only apply grayscale on devices that actually have hover (avoid iOS/Safari filter + transform stalls) */
-@media (hover: hover) and (pointer: fine) {
-  .logo-carousel img {
-    filter: grayscale(100%);
-    opacity: 0.85;
-  }
-
-  .logo-carousel img:hover {
-    filter: none;
-    opacity: 1;
-  }
+.logo-carousel img:last-child {
+  margin-right: 0;
 }
 
+.logo-carousel img:hover {
+  filter: none;
+  opacity: 1;
+}
+
+/* Smooth infinite scroll */
 @keyframes scroll-logos {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
-}
-
-@-webkit-keyframes scroll-logos {
-  0% { -webkit-transform: translate3d(0, 0, 0); }
-  100% { -webkit-transform: translate3d(-50%, 0, 0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-track {
-    animation: none;
-    -webkit-animation: none;
-    transform: none;
-    -webkit-transform: none;
-  }
 }
 
 /* --------------------------------------------
@@ -218,12 +160,17 @@ body {
   }
 
   .logo-carousel img {
-    height: 64px;
-    width: auto;
+    height: 30vw;
+    max-height: 120px;
+    margin-right: 32px;
   }
 
   .logo-carousel {
     padding: 14px 0;
+  }
+
+  .logo-track {
+    animation: scroll-logos 12s linear infinite;
   }
 }
 
