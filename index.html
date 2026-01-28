@@ -325,7 +325,7 @@
                 </label>
 
                 <div id="formError" class="micro" style="margin-top: 10px"></div>
-                <div id="formSuccess" class="micro" style="margin-top: 10px"></div>
+                <div id="formSuccess" class="lede" style="margin-top: 10px" role="status" aria-live="polite"></div>
 
                 <div class="actions" style="margin-top: 14px">
                   <button class="btn btn-primary" type="submit">Send enquiry</button>
@@ -590,7 +590,8 @@
             ok.textContent = "";
           }
           function setSuccess(m) {
-            ok.textContent = m || "";
+            // Larger, bold confirmation message (uses existing typography class `lede`).
+            ok.innerHTML = m ? `<strong>${m}</strong>` : "";
             err.textContent = "";
           }
 
@@ -652,7 +653,7 @@
               }
 
               form.reset();
-              setSuccess("Enquiry sent. We’ll respond shortly.");
+              setSuccess("Thank you. We will respond shortly");
             } catch (_) {
               setError("Network error. Try again or email consulting@capitatech.com.au.");
             }
