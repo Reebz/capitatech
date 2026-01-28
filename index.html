@@ -10,7 +10,7 @@
     <title>Capita Technology</title>
 
     <script>
-      // Avoid Chrome “Not secure” form warnings: force HTTPS (except local dev).
+      // Avoid Chrome “Not secure” warnings: force HTTPS (except local dev).
       (function () {
         const isLocal =
           location.hostname === "localhost" ||
@@ -48,7 +48,6 @@
     </header>
 
     <main id="main">
-      <!-- 1) Hero: title, subtext, 2 CTAs, 3 trust pills, logos -->
       <section class="hero" aria-label="Hero">
         <div class="container">
           <p class="eyebrow">AI • Data • Customer Growth</p>
@@ -109,7 +108,6 @@
         </div>
       </section>
 
-      <!-- 2) FAQ: single-open accordion -->
       <section class="section" id="faq" aria-label="Frequently asked questions">
         <div class="container">
           <div class="section-head">
@@ -193,7 +191,7 @@
         </div>
       </section>
 
-      <!-- 3) Lead gen form + trust enhancements -->
+      <!-- CONTACT / LEAD GEN -->
       <section class="section contact" id="contact" aria-label="Contact">
         <div class="container">
           <div class="contact-card">
@@ -201,123 +199,139 @@
               <p class="section-label">Start the conversation</p>
               <h2>Tell us what you’re building.</h2>
               <p class="section-lede">
-                This form opens your email client with a pre-filled message to <strong>consulting@capitatech.com.au</strong>.
+                Submit the form. We’ll receive an email with your details and respond with next steps.
               </p>
 
-              <form id="leadForm" class="form-grid" novalidate>
-                <div class="form-row form-row-2">
-                  <div class="field">
-                    <label class="micro" for="name">Name (required)</label>
+              <!--
+                SERVER-SIDE EMAIL DELIVERY:
+                Replace YOUR_FORMSPREE_ID with your Formspree ID:
+                https://formspree.io/f/YOUR_FORMSPREE_ID
+              -->
+              <form id="leadForm" novalidate>
+                <!-- honeypot anti-bot -->
+                <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+                  <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+                </div>
+
+                <div class="grid-2" style="margin-top: 14px">
+                  <label>
+                    <span class="micro">Name (required)</span>
                     <input
-                      class="input"
                       id="name"
                       name="name"
-                      autocomplete="name"
                       required
+                      autocomplete="name"
                       inputmode="text"
                       maxlength="60"
                       placeholder="Jane Smith"
+                      pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'’ -]{2,60}$"
+                      style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px"
                     />
-                    <div class="help">Letters, spaces, apostrophes, and hyphens only.</div>
-                  </div>
+                  </label>
 
-                  <div class="field">
-                    <label class="micro" for="email">Email (required)</label>
+                  <label>
+                    <span class="micro">Email (required)</span>
                     <input
-                      class="input"
                       id="email"
                       name="email"
                       type="email"
-                      autocomplete="email"
                       required
+                      autocomplete="email"
                       maxlength="254"
                       placeholder="jane@company.com"
+                      style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px"
                     />
-                    <div class="help">We’ll reply by email.</div>
-                  </div>
+                  </label>
                 </div>
 
-                <div class="form-row form-row-3">
-                  <div class="field" style="grid-column: span 1">
-                    <label class="micro" for="ccSearch">Country code</label>
-                    <input
-                      class="input"
-                      id="ccSearch"
-                      name="ccSearch"
-                      role="combobox"
-                      aria-expanded="false"
-                      aria-controls="ccList"
-                      aria-autocomplete="list"
-                      autocomplete="off"
-                      inputmode="search"
-                      placeholder="Type to search (e.g., Australia, AUS, +61)"
-                    />
-                    <div class="help">Type-ahead supported. Defaults to Australia (+61).</div>
+                <!-- Country code + Phone -->
+                <div class="grid-2" style="margin-top: 12px">
+                  <div>
+                    <span class="micro">Country code</span>
+                    <div style="position: relative; margin-top: 6px">
+                      <input
+                        id="ccSearch"
+                        name="ccSearch"
+                        role="combobox"
+                        aria-expanded="false"
+                        aria-controls="ccList"
+                        aria-autocomplete="list"
+                        autocomplete="off"
+                        inputmode="search"
+                        placeholder="Type to search (e.g., Australia, AUS, +61)"
+                        style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px"
+                      />
+                      <div
+                        id="ccList"
+                        class="card"
+                        role="listbox"
+                        aria-label="Country codes"
+                        style="
+                          display: none;
+                          position: absolute;
+                          left: 0;
+                          right: 0;
+                          top: calc(100% + 8px);
+                          z-index: 20;
+                          padding: 10px;
+                          max-height: 280px;
+                          overflow: auto;
+                          background: var(--bg);
+                        "
+                      >
+                        <div class="micro" style="margin: 0 0 8px">Select a country code</div>
+                        <div id="ccOptions" style="display: grid; gap: 6px"></div>
+                      </div>
 
-                    <div
-                      id="ccList"
-                      class="card"
-                      style="display: none; margin-top: 10px; padding: 10px"
-                      role="listbox"
-                      aria-label="Country codes"
-                    >
-                      <div class="micro" style="margin: 0 0 8px">Select a country code</div>
-                      <div id="ccOptions" style="display: grid; gap: 6px"></div>
+                      <input type="hidden" id="ccDial" name="ccDial" value="+61" />
+                      <input type="hidden" id="ccISO3" name="ccISO3" value="AUS" />
+                      <input type="hidden" id="ccISO2" name="ccISO2" value="AU" />
                     </div>
-
-                    <input type="hidden" id="ccDial" name="ccDial" value="+61" />
-                    <input type="hidden" id="ccISO3" name="ccISO3" value="AUS" />
-                    <input type="hidden" id="ccISO2" name="ccISO2" value="AU" />
+                    <p class="micro" style="margin-top: 8px">Type-ahead supported. Defaults to Australia (+61).</p>
                   </div>
 
-                  <div class="field" style="grid-column: span 1">
-                    <label class="micro" for="phone">Phone (optional)</label>
+                  <label>
+                    <span class="micro">Phone (optional)</span>
                     <input
-                      class="input"
                       id="phone"
                       name="phone"
                       autocomplete="tel-national"
                       inputmode="tel"
                       maxlength="24"
                       placeholder="412 345 678"
+                      pattern="^[0-9()\\-\\s]{0,24}$"
+                      style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px"
                     />
-                    <div class="help">Digits only; spaces and dashes allowed.</div>
-                  </div>
-
-                  <div class="field" style="grid-column: span 1">
-                    <label class="micro" for="summary">Subject (optional)</label>
-                    <input
-                      class="input"
-                      id="summary"
-                      name="summary"
-                      maxlength="80"
-                      placeholder="Short summary (optional)"
-                    />
-                    <div class="help">Used as the email subject line.</div>
-                  </div>
+                    <p class="micro" style="margin-top: 8px">Digits only; spaces and dashes allowed.</p>
+                  </label>
                 </div>
 
-                <div class="field">
-                  <label class="micro" for="message">What’s on your mind? (optional)</label>
+                <label style="display: block; margin-top: 12px">
+                  <span class="micro">What’s on your mind? (optional)</span>
                   <textarea
-                    class="textarea"
                     id="message"
                     name="message"
                     rows="5"
                     maxlength="2000"
                     placeholder="Tell us about the outcome you want to move in the next 90 days."
+                    style="
+                      width: 100%;
+                      padding: 12px;
+                      border: 1px solid var(--border);
+                      border-radius: 12px;
+                      resize: vertical;
+                    "
                   ></textarea>
-                  <div class="help">Max 2000 characters.</div>
-                </div>
+                </label>
 
-                <div id="formError" class="form-error" aria-live="polite"></div>
+                <div id="formError" class="micro" style="margin-top: 10px"></div>
+                <div id="formSuccess" class="micro" style="margin-top: 10px"></div>
 
-                <div class="actions">
+                <div class="actions" style="margin-top: 14px">
                   <button class="btn btn-primary" type="submit">Send enquiry</button>
-                  <a class="btn btn-secondary" href="mailto:consulting@capitatech.com.au">Email directly</a>
                 </div>
 
-                <div class="actions" aria-label="Trust signals" style="margin-top: 6px">
+                <div class="actions" aria-label="Trust signals" style="margin-top: 10px">
                   <span class="btn btn-secondary" role="note">Strict NDA</span>
                   <span class="btn btn-secondary" role="note">Security-first</span>
                   <span class="btn btn-secondary" role="note">No spam</span>
@@ -341,7 +355,6 @@
       </section>
     </main>
 
-    <!-- 4) Deep footer: keyword-rich navigation + contact details -->
     <footer class="site-footer" aria-label="Footer">
       <div class="container">
         <div class="footer-inner">
@@ -374,104 +387,33 @@
       </div>
 
       <script>
-        // -----------------------------
-        // Utilities / Hardening
-        // -----------------------------
-        function stripControls(s) {
-          // Prevent header injection and control chars in mailto content.
-          return String(s || "")
-            .replace(/[\u0000-\u001F\u007F]/g, " ")
-            .replace(/[\r\n]+/g, " ")
-            .trim();
-        }
-
-        function normalizeSpaces(s) {
-          return stripControls(s).replace(/\s+/g, " ").trim();
-        }
-
-        function safeBodyText(s) {
-          // Allow new lines in body but remove control chars and excessive length.
-          const t = String(s || "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "");
-          return t.slice(0, 2000);
-        }
-
-        function isValidName(name) {
-          // Unicode letters + combining marks + spaces + apostrophe/hyphen. 2..60 chars.
-          const n = normalizeSpaces(name);
-          if (n.length < 2 || n.length > 60) return false;
-          const re = /^\p{L}[\p{L}\p{M}\s'’-]{0,58}\p{L}$/u;
-          return re.test(n);
-        }
-
-        function isValidEmail(email) {
-          const e = normalizeSpaces(email);
-          if (e.length < 6 || e.length > 254) return false;
-          if (/\s/.test(e)) return false;
-          const parts = e.split("@");
-          if (parts.length !== 2) return false;
-          if (parts[0].length > 64 || parts[0].length < 1) return false;
-          if (parts[1].length < 3) return false;
-          if (!parts[1].includes(".")) return false;
-          // Let browser’s built-in validation do the heavy lifting too.
-          return true;
-        }
-
-        function isValidPhoneLocal(phone) {
-          const raw = String(phone || "").trim();
-          if (!raw) return true; // optional
-          // Allow digits, spaces, parentheses, hyphens. No other characters.
-          if (!/^[0-9\s()\-]+$/.test(raw)) return false;
-          const digits = raw.replace(/\D/g, "");
-          return digits.length >= 4 && digits.length <= 14;
-        }
-
-        function iso2ToFlag(iso2) {
-          const code = String(iso2 || "").toUpperCase();
-          if (!/^[A-Z]{2}$/.test(code)) return "🏳️";
-          const A = 0x1f1e6;
-          const first = A + (code.charCodeAt(0) - 65);
-          const second = A + (code.charCodeAt(1) - 65);
-          return String.fromCodePoint(first, second);
-        }
-
-        // -----------------------------
-        // Footer year
-        // -----------------------------
         document.getElementById("y").textContent = String(new Date().getFullYear());
 
-        // -----------------------------
         // FAQ accordion: single-open
-        // -----------------------------
         (function () {
           const faqButtons = Array.from(document.querySelectorAll(".faq-q"));
-
           function closeAll(exceptId) {
             for (const btn of faqButtons) {
               const panelId = btn.getAttribute("aria-controls");
               const panel = panelId ? document.getElementById(panelId) : null;
               const isExcept = btn.id === exceptId;
-
               if (!isExcept) {
                 btn.setAttribute("aria-expanded", "false");
                 if (panel) panel.hidden = true;
               }
             }
           }
-
           for (const btn of faqButtons) {
             btn.addEventListener("click", () => {
               const expanded = btn.getAttribute("aria-expanded") === "true";
               const panelId = btn.getAttribute("aria-controls");
               const panel = panelId ? document.getElementById(panelId) : null;
-
               if (!panel) return;
-
               if (expanded) {
                 btn.setAttribute("aria-expanded", "false");
                 panel.hidden = true;
                 return;
               }
-
               closeAll(btn.id);
               btn.setAttribute("aria-expanded", "true");
               panel.hidden = false;
@@ -479,9 +421,51 @@
           }
         })();
 
-        // -----------------------------
-        // Country code type-ahead dropdown
-        // -----------------------------
+        // Hardening
+        function stripControls(s) {
+          return String(s || "")
+            .replace(/[\u0000-\u001F\u007F]/g, " ")
+            .replace(/[\r\n]+/g, " ")
+            .trim();
+        }
+        function normalizeSpaces(s) {
+          return stripControls(s).replace(/\s+/g, " ").trim();
+        }
+        function safeBodyText(s) {
+          return String(s || "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").slice(0, 2000);
+        }
+        function isValidName(name) {
+          const n = normalizeSpaces(name);
+          if (n.length < 2 || n.length > 60) return false;
+          const re = /^\p{L}[\p{L}\p{M}\s'’-]{0,58}\p{L}$/u;
+          return re.test(n);
+        }
+        function isValidEmail(emailEl) {
+          const e = normalizeSpaces(emailEl.value);
+          if (e.length < 6 || e.length > 254) return false;
+          if (/\s/.test(e)) return false;
+          if (!emailEl.checkValidity()) return false;
+          const parts = e.split("@");
+          if (parts.length !== 2) return false;
+          if (parts[0].length > 64 || parts[0].length < 1) return false;
+          if (parts[1].length < 3 || !parts[1].includes(".")) return false;
+          return true;
+        }
+        function isValidPhoneLocal(phone) {
+          const raw = String(phone || "").trim();
+          if (!raw) return true;
+          if (!/^[0-9\s()\-]+$/.test(raw)) return false;
+          const digits = raw.replace(/\D/g, "");
+          return digits.length >= 4 && digits.length <= 14;
+        }
+        function iso2ToFlag(iso2) {
+          const code = String(iso2 || "").toUpperCase();
+          if (!/^[A-Z]{2}$/.test(code)) return "🏳️";
+          const A = 0x1f1e6;
+          return String.fromCodePoint(A + (code.charCodeAt(0) - 65), A + (code.charCodeAt(1) - 65));
+        }
+
+        // Country code type-ahead
         const COUNTRY_CODES = [
           { iso2: "AU", iso3: "AUS", dial: "+61", name: "Australia" },
           { iso2: "NZ", iso3: "NZL", dial: "+64", name: "New Zealand" },
@@ -502,41 +486,35 @@
           { iso2: "DK", iso3: "DNK", dial: "+45", name: "Denmark" },
           { iso2: "FI", iso3: "FIN", dial: "+358", name: "Finland" },
           { iso2: "SG", iso3: "SGP", dial: "+65", name: "Singapore" },
-          { iso2: "HK", iso3: "HKG", dial: "+852", name: "Hong Kong" },
           { iso2: "JP", iso3: "JPN", dial: "+81", name: "Japan" },
           { iso2: "KR", iso3: "KOR", dial: "+82", name: "South Korea" },
           { iso2: "IN", iso3: "IND", dial: "+91", name: "India" },
           { iso2: "CN", iso3: "CHN", dial: "+86", name: "China" },
           { iso2: "AE", iso3: "ARE", dial: "+971", name: "United Arab Emirates" },
-          { iso2: "SA", iso3: "SAU", dial: "+966", name: "Saudi Arabia" },
           { iso2: "ZA", iso3: "ZAF", dial: "+27", name: "South Africa" },
           { iso2: "BR", iso3: "BRA", dial: "+55", name: "Brazil" },
-          { iso2: "MX", iso3: "MEX", dial: "+52", name: "Mexico" },
-          { iso2: "AR", iso3: "ARG", dial: "+54", name: "Argentina" },
-          { iso2: "CL", iso3: "CHL", dial: "+56", name: "Chile" },
-          { iso2: "CO", iso3: "COL", dial: "+57", name: "Colombia" },
-          { iso2: "PE", iso3: "PER", dial: "+51", name: "Peru" },
-          { iso2: "ID", iso3: "IDN", dial: "+62", name: "Indonesia" },
-          { iso2: "MY", iso3: "MYS", dial: "+60", name: "Malaysia" },
-          { iso2: "TH", iso3: "THA", dial: "+66", name: "Thailand" },
-          { iso2: "PH", iso3: "PHL", dial: "+63", name: "Philippines" },
-          { iso2: "VN", iso3: "VNM", dial: "+84", name: "Vietnam" }
+          { iso2: "ID", iso3: "IDN", dial: "+62", name: "Indonesia" }
         ];
 
         (function initCountryCodePicker() {
           const search = document.getElementById("ccSearch");
           const list = document.getElementById("ccList");
           const optionsHost = document.getElementById("ccOptions");
-
           const ccDial = document.getElementById("ccDial");
           const ccISO2 = document.getElementById("ccISO2");
           const ccISO3 = document.getElementById("ccISO3");
 
           function formatItem(c) {
-            const flag = iso2ToFlag(c.iso2);
-            return `${flag} ${c.dial} ${c.iso3} — ${c.name}`;
+            return `${iso2ToFlag(c.iso2)} ${c.dial} ${c.iso3} — ${c.name}`;
           }
-
+          function openList() {
+            list.style.display = "block";
+            search.setAttribute("aria-expanded", "true");
+          }
+          function closeList() {
+            list.style.display = "none";
+            search.setAttribute("aria-expanded", "false");
+          }
           function setSelection(c) {
             ccDial.value = c.dial;
             ccISO2.value = c.iso2;
@@ -544,17 +522,14 @@
             search.value = formatItem(c);
             closeList();
           }
-
-          function openList() {
-            list.style.display = "block";
-            search.setAttribute("aria-expanded", "true");
+          function filter(q) {
+            const query = normalizeSpaces(q).toUpperCase();
+            if (!query) return COUNTRY_CODES;
+            return COUNTRY_CODES.filter((c) => {
+              const hay = `${c.name} ${c.iso2} ${c.iso3} ${c.dial}`.toUpperCase();
+              return hay.includes(query);
+            });
           }
-
-          function closeList() {
-            list.style.display = "none";
-            search.setAttribute("aria-expanded", "false");
-          }
-
           function render(filtered) {
             optionsHost.innerHTML = "";
             const items = filtered.slice(0, 30);
@@ -563,9 +538,7 @@
               btn.type = "button";
               btn.className = "btn btn-secondary";
               btn.style.justifyContent = "flex-start";
-              btn.style.borderRadius = "12px";
               btn.style.width = "100%";
-              btn.setAttribute("role", "option");
               btn.textContent = formatItem(c);
               btn.addEventListener("click", () => setSelection(c));
               optionsHost.appendChild(btn);
@@ -578,94 +551,74 @@
             }
           }
 
-          function filter(q) {
-            const query = normalizeSpaces(q).toUpperCase();
-            if (!query) return COUNTRY_CODES;
-
-            return COUNTRY_CODES.filter((c) => {
-              const hay = `${c.name} ${c.iso2} ${c.iso3} ${c.dial}`.toUpperCase();
-              return hay.includes(query);
-            });
-          }
-
-          // default display
           const defaultAU = COUNTRY_CODES.find((c) => c.iso2 === "AU") || COUNTRY_CODES[0];
-          render(COUNTRY_CODES);
           search.value = formatItem(defaultAU);
+          render(COUNTRY_CODES);
 
           search.addEventListener("focus", () => {
             render(filter(search.value));
             openList();
           });
-
           search.addEventListener("input", () => {
             render(filter(search.value));
             openList();
           });
-
           search.addEventListener("keydown", (e) => {
             if (e.key === "Escape") closeList();
           });
-
           document.addEventListener("click", (e) => {
             if (!list.contains(e.target) && e.target !== search) closeList();
           });
         })();
 
-        // -----------------------------
-        // Form: validated mailto composer
-        // -----------------------------
+        // Form: server-side email via Formspree
         (function initLeadForm() {
+          const FORMSPREE_ENDPOINT = "https://formspree.io/f/xojdzarv";
           const form = document.getElementById("leadForm");
           const err = document.getElementById("formError");
+          const ok = document.getElementById("formSuccess");
 
           const nameEl = document.getElementById("name");
           const emailEl = document.getElementById("email");
           const phoneEl = document.getElementById("phone");
-          const summaryEl = document.getElementById("summary");
           const msgEl = document.getElementById("message");
-
           const ccDial = document.getElementById("ccDial");
           const ccISO3 = document.getElementById("ccISO3");
 
-          function setError(message) {
-            err.textContent = message || "";
+          function setError(m) {
+            err.textContent = m || "";
+            ok.textContent = "";
+          }
+          function setSuccess(m) {
+            ok.textContent = m || "";
+            err.textContent = "";
           }
 
-          function buildMailto(to, subject, body) {
-            const safeSubject = encodeURIComponent(stripControls(subject));
-            // allow new lines in body; encodeURIComponent handles them
-            const safeBody = encodeURIComponent(body);
-            return `mailto:${encodeURIComponent(to)}?subject=${safeSubject}&body=${safeBody}`;
-          }
-
-          form.addEventListener("submit", (e) => {
+          form.addEventListener("submit", async (e) => {
             e.preventDefault();
             setError("");
+
+            // Honeypot
+            const hp = form.querySelector('input[name="company"]')?.value;
+            if (hp && hp.trim().length) return;
 
             const name = normalizeSpaces(nameEl.value);
             const email = normalizeSpaces(emailEl.value);
             const phone = normalizeSpaces(phoneEl.value);
-            const summary = normalizeSpaces(summaryEl.value);
             const message = safeBodyText(msgEl.value);
 
-            // Browser-level checks
             if (!nameEl.checkValidity() || !emailEl.checkValidity()) {
-              setError("Please complete required fields.");
+              setError("Complete required fields.");
               return;
             }
-
-            // Custom hardening/validation
             if (!isValidName(name)) {
-              setError("Name must contain letters only (plus spaces/apostrophes/hyphens), 2–60 characters.");
+              setError("Name must be letters only (plus spaces/apostrophes/hyphens), 2–60 characters.");
               return;
             }
-
-            if (!isValidEmail(email)) {
-              setError("Email must be a valid format.");
+            if (!isValidEmail(emailEl)) {
+              setError("Email must be valid.");
               return;
             }
-
             if (!isValidPhoneLocal(phone)) {
               setError("Phone must contain digits only (spaces/dashes allowed) and be 4–14 digits.");
               return;
@@ -675,25 +628,34 @@
             const iso3 = stripControls(ccISO3.value || "AUS");
             const fullPhone = phone ? `${dial} (${iso3}) ${phone}` : "";
 
-            const subject = summary ? `Capita enquiry — ${summary}` : "Capita enquiry";
-            const bodyLines = [
-              "New enquiry via capitatech.com.au",
-              "",
-              `Name: ${name}`,
-              `Email: ${email}`,
-              `Phone: ${fullPhone || "(not provided)"}`,
-              "",
-              "What's on your mind:",
-              message ? message : "(not provided)"
-            ];
-            const body = bodyLines.join("\n");
+            const payload = {
+              name,
+              email,
+              phone: fullPhone,
+              message
+            };
 
-            // Open the user's mail client with a pre-filled email.
-            const mailto = buildMailto("consulting@capitatech.com.au", subject, body);
-            window.location.href = mailto;
+            // Send to Formspree (server-side email delivery)
+            try {
+              const res = await fetch(FORMSPREE_ENDPOINT, {
+                method: "POST",
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+              });
 
-            // Clear the form after composing (optional UX).
-            form.reset();
+              if (!res.ok) {
+                setError("Submission failed. Try again or email consulting@capitatech.com.au.");
+                return;
+              }
+
+              form.reset();
+              setSuccess("Enquiry sent. We’ll respond shortly.");
+            } catch (_) {
+              setError("Network error. Try again or email consulting@capitatech.com.au.");
+            }
           });
         })();
       </script>
