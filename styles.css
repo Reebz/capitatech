@@ -501,29 +501,51 @@ h3 {
    FAQ accordion styling
    ========================= */
 
+/* Align the two-column FAQ layout to the top and prevent visual spill */
+#faq .grid-2 {
+  align-items: start;
+}
+
+/* Contain any internal borders/pseudo-elements within the rounded card */
+#faq .card {
+  overflow: hidden;
+  position: relative;
+}
+
 .faq-q {
   all: unset;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
-  padding: 18px 20px;
+  display: block;
+  position: relative;
+  padding: 18px 56px 18px 20px; /* reserve space for the icon */
   font-weight: 600;
   font-size: 16px;
-  line-height: 1.45;
+  line-height: 1.35;
   cursor: pointer;
   color: var(--text);
 }
 
+/* Plus/minus icon stays inside the card edge */
 .faq-q::after {
   content: "+";
-  font-size: 20px;
-  font-weight: 600;
-  margin-left: 16px;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .faq-q[aria-expanded="true"]::after {
-  content: "–";
+  content: "−";
 }
 
 .faq-q:hover {
@@ -539,10 +561,13 @@ h3 {
   padding: 0 20px 18px 20px;
 }
 
-/* Ensure FAQ questions inherit card look */
+.faq-a > p {
+  margin: 0;
+}
+
+/* Ensure FAQ questions inherit card look without overflow */
 .card > .faq-q {
   border-bottom: 1px solid var(--border);
-  border-radius: 0;
 }
 
 .card > .faq-q:first-child {
