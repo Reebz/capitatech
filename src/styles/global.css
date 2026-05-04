@@ -1,13 +1,12 @@
 @import "tailwindcss";
 
 /* Capita Technology design tokens.
-   Root font-size stays at the browser default (16px). The Cavaro project's
-   `html { font-size: 200% }` rem-doubling rule is intentionally NOT inherited;
-   capitatech keeps default rem so Tailwind utilities and clamp tokens scale
-   predictably. */
+   Default 16px root (Cavaro's html { font-size: 200% } rem-doubling rule is
+   intentionally not inherited so Tailwind utilities and clamp() ranges scale
+   predictably). */
 
 :root {
-  /* Palette — preserved exactly from current site, plus a darker eyebrow
+  /* Palette — preserved exactly from the current site, plus a darker eyebrow
      tier (`--muted-strong`) so 12–13px small caps text against white can
      pass WCAG AA without dropping below the 4.5:1 threshold. */
   --bg: #ffffff;
@@ -21,35 +20,29 @@
   --border-strong: rgba(11, 11, 13, 0.22);
   --shadow: 0 12px 40px rgba(11, 11, 13, 0.08);
 
-  /* Surface tokens for tonal placeholders (illustration + photo). Reads as
-     intentional negative space, not "missing image". */
-  --surface-tonal: color-mix(in srgb, var(--text) 4%, var(--bg));
-
-  /* Radius / spacing / container tokens — preserved from current styles.css. */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 22px;
+  /* Radius / spacing / container tokens. */
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
   --container: 1120px;
-  --pad-x: clamp(18px, 3.2vw, 34px);
-  --pad-y: clamp(44px, 7vw, 92px);
+  --pad-x: clamp(20px, 3.6vw, 40px);
+  --pad-y: clamp(72px, 9vw, 144px);
 
-  /* Layout. Header height drives `scroll-margin-top` on every anchor target
-     so iOS Safari's sticky-header occlusion doesn't hide section headings
-     after a scroll-jump. */
+  /* Layout. */
   --header-height: 64px;
 
-  /* Editorial type scale tokens. Values are clamp ranges so each scales
-     between mobile and ultrawide; tune live during U4/U5/U6 against the
-     cross-breakpoint gates table. */
+  /* Editorial type scale — bumped after the design audit to land at editorial
+     drama (H1 144px ceiling, H2 56px, H3 28px) rather than marketing-site
+     defaults. */
   --type-eyebrow: clamp(11px, 0.78vw, 13px);
-  --type-h1: clamp(48px, 8vw, 96px);
-  --type-h2: clamp(28px, 3.2vw, 40px);
-  --type-h3: clamp(18px, 1.4vw, 22px);
+  --type-h1: clamp(56px, 11vw, 144px);
+  --type-h2: clamp(32px, 4.4vw, 56px);
+  --type-h3: clamp(20px, 1.8vw, 28px);
   --type-body: clamp(16px, 1.1vw, 18px);
-  --type-lede: clamp(18px, 1.6vw, 22px);
+  --type-lede: clamp(20px, 1.8vw, 26px);
   --type-micro: 13px;
-  --type-kinetic: clamp(48px, 10vw, 140px);
-  --type-signature: clamp(20px, 2vw, 28px);
+  --type-kinetic: clamp(56px, 12vw, 168px);
+  --type-signature: clamp(24px, 2.4vw, 34px);
 }
 
 @theme inline {
@@ -62,14 +55,14 @@
   --color-accent-fg: var(--accent-fg);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
-  --color-surface-tonal: var(--surface-tonal);
   --font-sans:
     "Inter Variable", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  /* Display token defaults to sans. U4 may add a paired variable face
-     (e.g., a serif or condensed sans) and repoint --font-display at it
-     if Inter alone fails the editorial-contrast gate. */
-  --font-display: var(--font-sans);
+  /* Display tier — Fraunces variable serif. Used for H1, H2.display, kinetic
+     phrase, and the founder signed line so the editorial tier has actual
+     face-level contrast against Inter body type, not just weight + size. */
+  --font-display:
+    "Fraunces Variable", "Iowan Old Style", "Charter", "Georgia", "Times New Roman", serif;
 }
 
 *,
@@ -89,7 +82,7 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.55;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -102,7 +95,7 @@ a {
 
 a:hover {
   text-decoration: underline;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 4px;
 }
 
@@ -112,14 +105,10 @@ img {
   display: block;
 }
 
-/* Anchor-target scroll margin so the sticky header doesn't occlude the
-   section heading after a scroll-jump. Applied broadly so any future
-   id-targeted element inherits the offset. */
 [id] {
   scroll-margin-top: var(--header-height);
 }
 
-/* Skip link — visible on focus only. */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -134,29 +123,27 @@ img {
   top: 14px;
   width: auto;
   height: auto;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   background: var(--bg);
   z-index: 1000;
 }
 
-/* Container — preserved width-and-padding idiom from current site. */
 .container {
   width: min(var(--container), 100% - (var(--pad-x) * 2));
   margin-inline: auto;
 }
 
-/* Header — sticky with backdrop-blur. Mirrors current treatment. */
+/* Header — sticky with backdrop-blur. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
   height: var(--header-height);
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .header-inner {
@@ -170,46 +157,46 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-}
-
-.brand-mark {
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  background: var(--accent);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .brand-text {
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 22px;
   font-weight: 500;
   letter-spacing: -0.01em;
+  font-size: 14px;
 }
 
 .nav a {
-  padding: 10px 12px;
-  border-radius: 999px;
+  padding: 8px 4px;
+  color: var(--muted);
 }
 
 .nav a:hover {
   text-decoration: none;
-  background: rgba(0, 120, 240, 0.08);
+  color: var(--text);
 }
 
 .nav .nav-cta {
+  padding: 9px 18px;
   border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text);
 }
 
 .nav .nav-cta:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+  border-color: var(--text);
+  color: var(--text);
 }
 
 @media (max-width: 840px) {
@@ -221,7 +208,8 @@ img {
 /* Footer */
 .site-footer {
   border-top: 1px solid var(--border);
-  padding-block: clamp(28px, 4vw, 44px);
+  padding-block: clamp(36px, 5vw, 56px);
+  margin-top: clamp(48px, 6vw, 96px);
 }
 
 .footer-inner {
@@ -240,51 +228,64 @@ img {
 
 .footer-links {
   display: flex;
-  gap: 14px;
+  gap: 18px;
 }
 
 .footer-links a {
   color: var(--muted);
   font-size: var(--type-micro);
-  padding: 8px 10px;
-  border-radius: 999px;
 }
 
 .footer-links a:hover {
   text-decoration: none;
-  background: rgba(0, 120, 240, 0.08);
   color: var(--text);
 }
 
 .footer-tiles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-top: 22px;
+  gap: 32px;
+  margin-top: 32px;
 }
 
 @media (max-width: 900px) {
   .footer-tiles {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 }
 
-/* Tile — used in footer; will be reused in U7/U8 side tiles. */
 .tile {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 18px;
+  /* Borderless — vertical hairline rule on tiles 2+ instead. */
+  padding-inline: 0;
+}
+
+.footer-tiles .tile + .tile {
+  border-left: 1px solid var(--border);
+  padding-left: 32px;
+}
+
+@media (max-width: 900px) {
+  .footer-tiles .tile + .tile {
+    border-left: 0;
+    padding-left: 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
 }
 
 .tile h3 {
   margin: 0;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  font-size: var(--type-h3);
+  font-family: var(--font-sans);
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-strong);
 }
 
 .tile p {
-  margin: 10px 0 0 0;
+  margin: 12px 0 0 0;
   color: var(--muted);
 }
 
@@ -296,40 +297,46 @@ img {
 
 /* Type primitives. */
 .eyebrow {
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   color: var(--muted-strong);
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: var(--type-eyebrow);
 }
 
 h1.display {
   margin: 0;
-  letter-spacing: -0.04em;
-  line-height: 1.02;
-  font-size: var(--type-h1);
   font-family: var(--font-display);
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings: "SOFT" 30, "opsz" 144;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  font-size: var(--type-h1);
 }
 
 h2.display {
   margin: 0;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  font-size: var(--type-h2);
   font-family: var(--font-display);
+  font-weight: 500;
+  font-variation-settings: "SOFT" 30, "opsz" 96;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  font-size: var(--type-h2);
 }
 
 .lede {
-  margin: 16px 0 0 0;
-  max-width: 62ch;
+  margin: 18px 0 0 0;
+  max-width: 48ch;
   color: var(--muted);
   font-size: var(--type-lede);
-  line-height: 1.55;
+  line-height: 1.45;
+  font-family: var(--font-sans);
 }
 
 .section-label {
-  margin: 0 0 10px 0;
+  margin: 0 0 12px 0;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -337,18 +344,20 @@ h2.display {
   color: var(--muted-strong);
 }
 
-/* Buttons — preserved rounded-pill / 12px-radius idiom. */
+/* Buttons — preserved rounded-pill / pill idiom. Restraint mode: only
+   .btn-primary uses --accent; secondary is borderless underline. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   min-height: 44px;
-  padding: 12px 18px;
+  padding: 12px 20px;
   border-radius: 999px;
   border: 1px solid var(--border-strong);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
+  font-size: 15px;
   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, color 120ms ease;
   white-space: nowrap;
 }
@@ -358,128 +367,126 @@ h2.display {
   transform: translateY(-1px);
 }
 
-.btn:active {
-  transform: translateY(0);
-}
-
 .btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-fg);
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
+  background: #1a1a1f;
+  border-color: #1a1a1f;
 }
 
 .btn-secondary {
   background: transparent;
+  border: 0;
+  padding-inline: 4px;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border-strong);
+  border-bottom-radius: 0;
+  color: var(--text);
 }
 
 .btn-secondary:hover {
-  background: rgba(0, 120, 240, 0.08);
-  border-color: rgba(0, 120, 240, 0.35);
-}
-
-.btn-ghost {
+  border-bottom-color: var(--text);
   background: transparent;
-  border-color: var(--border);
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.btn-ghost:hover {
-  background: rgba(0, 120, 240, 0.04);
+  transform: none;
 }
 
 .actions {
-  margin-top: 24px;
+  margin-top: 32px;
   display: flex;
-  gap: 12px;
+  gap: 24px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-/* Hero region — the editorial opening composition. */
+/* Hero region — single-purpose: eyebrow, H1, lede, two CTAs. Logo grid moved
+   out to its own "Trusted by" section. */
 .hero {
-  padding-block: clamp(56px, 8vw, 120px);
+  padding-block: clamp(96px, 12vw, 168px);
 }
 
 .hero h1 {
-  max-width: 18ch;
+  max-width: 14ch;
 }
 
-.trust-pills {
-  margin-top: 18px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.hero .lede {
+  margin-top: 28px;
+  max-width: 50ch;
 }
 
-/* Logo grid — preserved 4/2/1 responsive collapse. */
+/* Trusted-by logo strip — pulled out of the hero so it earns its own real
+   estate without fragmenting the hero. */
+.trusted {
+  padding-block: clamp(40px, 5vw, 72px);
+}
+
+.trusted .eyebrow {
+  margin-bottom: 28px;
+}
+
 .logo-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-top: clamp(40px, 5vw, 72px);
+  grid-template-columns: repeat(8, 1fr);
+  gap: 28px;
+  align-items: center;
 }
 
-.logo-tile {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 18px;
-  min-height: 84px;
-  display: grid;
-  place-items: center;
-  background: var(--bg);
-}
-
-.logo-tile img {
-  max-height: 36px;
+.logo-grid img {
+  max-height: 32px;
   width: auto;
-  opacity: 0.78;
-  filter: grayscale(0.15);
-  transition: opacity 150ms ease, filter 150ms ease;
+  margin: 0 auto;
+  opacity: 0.5;
+  filter: grayscale(1);
+  transition: opacity 200ms ease, filter 200ms ease;
 }
 
-.logo-tile:hover img {
+.logo-grid img:hover {
   opacity: 1;
   filter: grayscale(0);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .logo-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 36px;
+  }
+}
+
+@media (max-width: 540px) {
   .logo-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 24px 36px;
   }
 }
 
-@media (max-width: 480px) {
-  .logo-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Section primitive — the editorial section frame. Each top-level
-   section uses this for vertical rhythm; section-specific styles
-   layer on top. */
+/* Generic section frame — no top border (let pad-y do the rhythm). */
 .section {
   padding-block: var(--pad-y);
-  border-top: 1px solid var(--border);
 }
 
 .section-head {
-  margin-bottom: clamp(24px, 3vw, 40px);
+  margin-bottom: clamp(40px, 5vw, 64px);
+  max-width: 32ch;
 }
 
-/* Method body — four asymmetric blocks (1.4fr / 0.6fr) with tonal
-   placeholder. Even blocks reverse so the prose alternates left/right
-   while the placeholder stays the narrower column throughout. */
+.section-head .lede {
+  max-width: 56ch;
+}
+
+/* Method body — single-column prose with offset margin (editorial
+   restraint over decorative two-column with placeholders). The previous
+   1.4fr / 0.6fr grid + tonal placeholders read as wireframe; this drops
+   the right column entirely so each method block is content-only with the
+   eyebrow + section number anchored in a left margin column. */
 .method-block {
   display: grid;
-  grid-template-columns: 1.4fr 0.6fr;
-  gap: clamp(32px, 4vw, 80px);
-  align-items: center;
-  padding-block: clamp(48px, 6vw, 96px);
+  grid-template-columns: minmax(120px, 0.4fr) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: baseline;
+  padding-block: clamp(40px, 5vw, 80px);
   border-top: 1px solid var(--border);
 }
 
@@ -487,89 +494,78 @@ h2.display {
   border-top: 0;
 }
 
-.method-block:nth-of-type(even) {
-  grid-template-columns: 0.6fr 1.4fr;
+.method-anchor {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 44px);
+  font-variation-settings: "SOFT" 30, "opsz" 96;
+  font-weight: 500;
+  font-style: normal;
+  color: var(--muted-strong);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  position: sticky;
+  top: calc(var(--header-height) + 24px);
 }
 
 .method-content {
   max-width: 60ch;
 }
 
-.method-block:nth-of-type(even) .method-content {
-  order: 2;
-  margin-left: auto;
+.method-content .eyebrow {
+  margin-bottom: 14px;
 }
 
-.method-block:nth-of-type(even) .method-placeholder {
-  order: 1;
-}
-
-.method-content h2 {
+.method-content h3 {
   margin: 0 0 16px 0;
-  font-size: var(--type-h2);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
   font-family: var(--font-display);
+  font-size: var(--type-h3);
+  font-variation-settings: "SOFT" 30, "opsz" 32;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
 }
 
 .method-content p {
   margin: 0;
   font-size: var(--type-body);
   color: var(--muted);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
-/* Tonal placeholder — used for U5 illustrations and U6 founder photo.
-   Reads as intentional negative space, not "missing image". When real
-   artwork lands, becomes <img> with the same aspect-ratio. */
-.method-placeholder,
-.tonal-placeholder {
-  aspect-ratio: 4 / 3;
-  background: var(--surface-tonal);
-  border-radius: var(--radius-md);
-  width: 100%;
-}
-
-.tonal-placeholder.square {
-  aspect-ratio: 1 / 1;
-}
-
-@media (max-width: 900px) {
-  .method-block,
-  .method-block:nth-of-type(even) {
+@media (max-width: 720px) {
+  .method-block {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
+    padding-block: clamp(32px, 4vw, 56px);
   }
-
-  .method-block:nth-of-type(even) .method-content {
-    order: initial;
-    margin-left: initial;
-  }
-
-  .method-block:nth-of-type(even) .method-placeholder {
-    order: initial;
+  .method-anchor {
+    position: static;
+    font-size: 28px;
   }
 }
 
-/* Founder profile — 0.4fr / 0.6fr asymmetric grid; photo placeholder
-   left, bio + signed line right. Photo caption sits BELOW the block
-   as a figcaption (not inside) so the placeholder reads as intentional
-   composition rather than wireframe. */
+/* Founder profile — hidden by default until founder copy + photo land
+   (U6 hard copy gate). Opt in by setting `data-show-founder` on <body>
+   or rendering the section conditionally from index.astro. */
 .founder-section {
   padding-block: var(--pad-y);
-  border-top: 1px solid var(--border);
 }
 
 .founder-grid {
   display: grid;
-  grid-template-columns: 0.4fr 0.6fr;
-  gap: clamp(32px, 4vw, 80px);
+  grid-template-columns: 0.55fr 1fr;
+  gap: clamp(40px, 5vw, 80px);
   align-items: start;
 }
 
 .founder-photo {
   margin: 0;
-  max-width: 360px;
+}
+
+.founder-photo .tonal-placeholder {
+  aspect-ratio: 4 / 5;
+  background: color-mix(in srgb, var(--text) 6%, var(--bg));
+  border-radius: var(--radius-md);
 }
 
 .founder-photo figcaption {
@@ -586,38 +582,34 @@ h2.display {
 }
 
 .founder-bio p {
-  margin: 0 0 16px 0;
+  margin: 0 0 18px 0;
   color: var(--muted);
   font-size: var(--type-body);
-  line-height: 1.6;
-}
-
-.founder-bio p:last-of-type {
-  margin-bottom: 0;
+  line-height: 1.65;
 }
 
 .founder-signed {
-  margin-top: clamp(28px, 3vw, 44px);
+  margin-top: clamp(32px, 3.5vw, 48px);
+  font-family: var(--font-display);
   font-size: var(--type-signature);
   font-style: italic;
-  letter-spacing: -0.01em;
+  font-variation-settings: "SOFT" 50, "opsz" 32;
+  font-weight: 400;
   line-height: 1.3;
   color: var(--text);
-  font-family: var(--font-display);
 }
 
 .founder-signed-name {
   display: block;
-  margin-top: 18px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
+  margin-top: 14px;
   color: var(--muted-strong);
   font-style: normal;
   font-weight: 600;
-  font-size: var(--type-body);
-  letter-spacing: -0.01em;
+  font-size: var(--type-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   font-family: var(--font-sans);
-  max-width: 18ch;
+  font-variation-settings: normal;
 }
 
 @media (max-width: 900px) {
@@ -625,31 +617,51 @@ h2.display {
     grid-template-columns: 1fr;
     gap: 28px;
   }
+  .founder-photo {
+    max-width: 360px;
+  }
 }
 
-/* Outcome cards — preserved 3-card grid restyled with heavier whitespace
-   and restrained type to read editorial rather than SaaS-card. */
+/* Outcome columns — column-prose layout, not SaaS cards. Vertical hairline
+   rules separate columns 2 and 3 from the previous one. */
 .outcome-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(16px, 2vw, 24px);
+  gap: 0;
 }
 
-.outcome-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: clamp(20px, 2.4vw, 32px);
+.outcome-col {
+  padding: 0 clamp(20px, 2vw, 32px);
 }
 
-.outcome-card h3 {
+.outcome-col + .outcome-col {
+  border-left: 1px solid var(--border);
+}
+
+.outcome-col:first-child {
+  padding-left: 0;
+}
+
+.outcome-col:last-child {
+  padding-right: 0;
+}
+
+.outcome-col .eyebrow {
+  margin-bottom: 10px;
+}
+
+.outcome-col h3 {
   margin: 0;
+  font-family: var(--font-display);
   font-size: var(--type-h3);
-  letter-spacing: -0.02em;
+  font-variation-settings: "SOFT" 30, "opsz" 32;
+  font-weight: 500;
+  letter-spacing: -0.015em;
   line-height: 1.2;
 }
 
-.outcome-card p {
-  margin: 12px 0 0 0;
+.outcome-col p {
+  margin: 14px 0 0 0;
   color: var(--muted);
   font-size: var(--type-body);
   line-height: 1.55;
@@ -658,31 +670,33 @@ h2.display {
 @media (max-width: 900px) {
   .outcome-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .outcome-col,
+  .outcome-col + .outcome-col,
+  .outcome-col:first-child,
+  .outcome-col:last-child {
+    padding: 0 0 28px;
+    border-left: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .outcome-col:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
   }
 }
 
-/* FAQ — 2-column at desktop (questions left, side tile right),
-   single-open accordion. .faq-q is a behavior selector — kept as a
-   className so the U9 inline-script accordion handler can bind via
-   document.querySelectorAll('.faq-q'). */
-.faq-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(20px, 3vw, 40px);
-  align-items: start;
-}
-
+/* FAQ — full-width single column (the side-tile composition was duplicated
+   in the contact section; removing the duplication here makes FAQ more
+   confident). */
 .faq-stack {
   display: grid;
-  gap: 12px;
+  gap: 16px;
+  max-width: 64ch;
 }
 
 .faq-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--bg);
-  position: relative;
+  border-bottom: 1px solid var(--border);
 }
 
 .faq-q {
@@ -690,10 +704,11 @@ h2.display {
   width: 100%;
   display: block;
   position: relative;
-  padding: 20px 60px 20px 22px;
-  font-weight: 600;
-  font-size: var(--type-body);
-  line-height: 1.4;
+  padding: 22px 56px 22px 0;
+  font-weight: 500;
+  font-size: var(--type-h3);
+  font-family: var(--font-sans);
+  line-height: 1.3;
   cursor: pointer;
   color: var(--text);
 }
@@ -701,80 +716,100 @@ h2.display {
 .faq-q::after {
   content: "+";
   position: absolute;
-  right: 18px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
   width: 28px;
   height: 28px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 400;
   line-height: 1;
+  color: var(--muted-strong);
 }
 
 .faq-q[aria-expanded="true"]::after {
   content: "−";
 }
 
-.faq-q:hover {
-  background: rgba(0, 120, 240, 0.06);
+.faq-q:hover::after {
+  color: var(--text);
 }
 
 .faq-q:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: -2px;
+  outline-offset: 4px;
 }
 
 .faq-a {
-  padding: 0 22px 20px 22px;
+  padding: 0 0 22px 0;
 }
 
 .faq-a > p {
   margin: 0;
   color: var(--muted);
   font-size: var(--type-body);
-  line-height: 1.55;
+  line-height: 1.6;
+  max-width: 56ch;
 }
 
-.faq-aside ul {
-  margin: 14px 0 0 0;
-  padding-left: 20px;
-  color: var(--muted);
-}
-
-.faq-aside li {
-  margin: 8px 0;
-}
-
-.faq-aside li strong {
-  color: var(--text);
-}
-
-@media (max-width: 900px) {
-  .faq-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Contact section — form left, "What we'll help you fix" pain tile right.
-   Trust-signal pill row from the original site is intentionally NOT
-   ported (incompatible with the premium-feel positioning for senior
-   buyers; per the plan's U9 decision). */
+/* Contact section — form + adjacent pain-point list. */
 .contact-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(20px, 3vw, 40px);
+  gap: clamp(32px, 4vw, 64px);
   align-items: start;
+}
+
+.contact-pains {
+  max-width: 42ch;
+  border-left: 1px solid var(--border);
+  padding-left: clamp(24px, 3vw, 40px);
+}
+
+.contact-pains h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-strong);
+}
+
+.contact-pains p {
+  margin: 14px 0 0 0;
+  color: var(--muted);
+  font-size: var(--type-body);
+}
+
+.contact-pains ul {
+  margin: 18px 0 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.contact-pains li {
+  margin: 14px 0;
+  color: var(--muted);
+  font-size: var(--type-body);
+  position: relative;
+  padding-left: 16px;
+}
+
+.contact-pains li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--muted-strong);
 }
 
 .field-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 14px;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .field-row.single {
@@ -807,8 +842,8 @@ h2.display {
 .field-input:focus-visible,
 .field-textarea:focus-visible {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(0, 120, 240, 0.18);
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px rgba(11, 11, 13, 0.06);
 }
 
 .field-textarea {
@@ -826,11 +861,11 @@ h2.display {
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   z-index: 20;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: var(--bg);
   box-shadow: var(--shadow);
   max-height: min(280px, 60vh);
@@ -839,7 +874,7 @@ h2.display {
 
 .cc-options {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .cc-option {
@@ -854,7 +889,7 @@ h2.display {
 
 .cc-option:hover,
 .cc-option:focus-visible {
-  background: rgba(0, 120, 240, 0.08);
+  background: rgba(11, 11, 13, 0.04);
   outline: none;
 }
 
@@ -872,35 +907,43 @@ h2.display {
   .field-row {
     grid-template-columns: 1fr;
   }
+  .contact-pains {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+  }
 }
 
-/* Kinetic phrase — recurring section divider. Two mandatory occurrences
-   (after hero, after founder); third before contact is optional. Two
-   spans inside the track so the marquee fallback loops seamlessly; in
-   the modern scroll-driven path both spans are visible together and the
-   container fades in/out as it crosses the viewport. */
+/* Kinetic phrase — recurring section divider. The page ships with TWO
+   mandatory occurrences (after hero, after founder when founder is on);
+   marquee fallback is frozen static (the 20s loop read as "stock website"
+   in the design audit). Modern browsers see the scroll-driven fade; older
+   browsers see the same phrase static + center-bleeding-left. */
 .kinetic-phrase {
   display: block;
-  padding-block: clamp(40px, 6vw, 96px);
+  padding-block: clamp(64px, 8vw, 128px);
+  padding-inline: var(--pad-x);
   font-family: var(--font-display);
   font-size: var(--type-kinetic);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
+  font-variation-settings: "SOFT" 30, "opsz" 144;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
   color: var(--text);
-  text-align: center;
-  white-space: nowrap;
+  text-align: left;
+  white-space: normal;
   overflow: hidden;
+  max-width: var(--container);
+  margin-inline: auto;
 }
 
 .kinetic-phrase-track {
   display: inline-block;
-  will-change: transform, opacity;
+  will-change: opacity, transform;
 }
 
-/* Modern path: scroll-driven entry/exit. Phrase fades up as it enters
-   the viewport, holds at full opacity through the middle of its scroll
-   range, then fades out as it exits the top. */
 @supports (animation-timeline: view()) {
   .kinetic-phrase {
     overflow: visible;
@@ -908,54 +951,26 @@ h2.display {
     animation-timeline: view();
     animation-range: entry 0% exit 100%;
   }
-  .kinetic-phrase-track {
-    /* In the modern path the marquee horizontal loop is suppressed; the
-       second span sits beside the first as part of the static composition. */
-    animation: none;
-  }
   @keyframes kineticEnter {
-    0% { opacity: 0; transform: translateY(40px); }
-    25% { opacity: 1; transform: translateY(0); }
-    75% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-40px); }
+    0% { opacity: 0; transform: translateY(48px); }
+    20% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-48px); }
   }
 }
 
-/* Fallback path: continuous horizontal marquee for browsers without
-   `animation-timeline: view()` support. Two spans + 20s linear loop +
-   translate(-50%) produces the seamless wrap. */
-@supports not (animation-timeline: view()) {
-  .kinetic-phrase-track {
-    animation: kineticMarquee 20s linear infinite;
-  }
-  @keyframes kineticMarquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-}
-
-/* prefers-reduced-motion override — collapses both paths to a static
-   single instance of the phrase. The duplicate span gets hidden so the
-   static treatment doesn't read as "Decisions, not slides. Decisions,
-   not slides." */
 @media (prefers-reduced-motion: reduce) {
   .kinetic-phrase {
     animation: none !important;
-    overflow: hidden !important;
   }
   .kinetic-phrase-track {
     animation: none !important;
     transform: none !important;
   }
-  .kinetic-phrase-track > span:nth-child(n + 2) {
-    display: none;
-  }
 }
 
-/* prefers-reduced-motion two-layer guard, half 1: CSS rule.
-   Collapses transitions and animations to near-instant for users who opt
-   into reduced motion. The kinetic-phrase override is added in U10 with
-   stricter `animation: none !important` rules. */
+/* prefers-reduced-motion — collapses transitions/animations to near-instant
+   for users who opt into reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

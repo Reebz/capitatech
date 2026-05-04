@@ -119,7 +119,7 @@ Carried forward from `docs/brainstorms/2026-05-04-capita-editorial-redesign-requ
 
 ### Cross-Repo Reference
 
-- `/Users/mitch/Documents/GitHub/cavaro-landingpage-web/` — the Astro project this plan inherits **file shape** from. Specifically:
+- `cavaro-landingpage-web/` (sibling repo at `~/Documents/GitHub/cavaro-landingpage-web/`) — the Astro project this plan inherits **file shape** from. Specifically:
   - `package.json` — Astro 6.2.x, `@tailwindcss/vite` 4.2.x, `tailwindcss` 4.2.x, `@astrojs/check`, TypeScript 6, Node ≥22.12, pnpm. **Do NOT copy `@astrojs/vercel`** — capitatech is static-only. **Inter is added separately** (`@fontsource-variable/inter`); Cavaro ships `@fontsource-variable/stack-sans-notch` and `@fontsource/coral-pixels` instead, so the fontsource dependency is not inherited verbatim — only the import pattern is.
   - `astro.config.mjs` — Tailwind via Vite plugin pattern. Reuse the `tailwindcss()` Vite plugin; replace the `adapter: vercel()` line with no adapter (static output).
   - `src/layouts/Layout.astro` — fontsource imports in frontmatter, `<head>` meta + font + CSS layout. Mirror the file shape; swap font imports for Inter.
@@ -893,7 +893,7 @@ Kinetic typography fires last because it sits between sections and depends on ev
 ## Sources & References
 
 - **Origin document:** [docs/brainstorms/2026-05-04-capita-editorial-redesign-requirements.md](../brainstorms/2026-05-04-capita-editorial-redesign-requirements.md)
-- **Pattern reference (cross-repo):** `/Users/mitch/Documents/GitHub/cavaro-landingpage-web/` — specifically `package.json`, `astro.config.mjs`, `src/layouts/Layout.astro`, `src/styles/global.css`, `src/types.d.ts`, and `cavaro-landingpage-web/docs/plans/2026-05-04-001-feat-cavaro-chunky-redesign-plan.md`. Capitatech inherits file shape, token-block structure, and `prefers-reduced-motion` two-layer pattern. Capitatech diverges on script mode (`is:inline` not processed `<script>`), font package (Inter not stack-sans-notch), and root-rem rule (no `font-size: 200%`).
+- **Pattern reference (cross-repo):** `cavaro-landingpage-web/` (sibling repo at `~/Documents/GitHub/cavaro-landingpage-web/`) — specifically `package.json`, `astro.config.mjs`, `src/layouts/Layout.astro`, `src/styles/global.css`, `src/types.d.ts`, and `cavaro-landingpage-web/docs/plans/2026-05-04-001-feat-cavaro-chunky-redesign-plan.md`. Capitatech inherits file shape, token-block structure, and `prefers-reduced-motion` two-layer pattern. Capitatech diverges on script mode (`is:inline` not processed `<script>`), font package (Inter not stack-sans-notch), and root-rem rule (no `font-size: 200%`).
 - **Style reference (external):** humanlyagile.com (read at brainstorm time).
 - **Stack docs:** Astro 6.2 documentation; Tailwind CSS 4 documentation; `@fontsource-variable/inter` README; MDN scroll-driven animations (`animation-timeline: view()`); MDN `prefers-reduced-motion` reference.
 - **Service contract:** Formspree endpoint `https://formspree.io/f/xojdzarv` — preserved unchanged from current site.

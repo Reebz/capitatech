@@ -3,36 +3,64 @@ import Layout from "../layouts/Layout.astro";
 
 const logos = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/logos/logo-0${n}.png`);
 
-// Placeholder phrase — final wording is a founder authoring decision per
-// the U10 hard copy gate. The phrase repeats as a section divider; two
-// mandatory occurrences (after hero, after founder), an optional third
-// before contact.
-const KINETIC_PHRASE = "Decisions, not slides.";
+// Founder section is hidden behind this flag until real bio + photo + signed
+// line all land per the U6 hard copy gate. Flip to `true` when copy is ready.
+const SHOW_FOUNDER = false;
+
+// Recurring kinetic phrase — placeholder copy. Final wording is a founder
+// authoring decision per the U10 hard copy gate. Currently neutral structural
+// copy that doesn't land the anti-PowerPoint snark of earlier placeholders.
+const KINETIC_PHRASE = "Operator-grade clarity.";
 
 const methodBlocks = [
   {
-    eyebrow: "01 · Assessment",
+    number: "01",
+    eyebrow: "Assessment",
     heading: "Diagnose what's actually moving the number.",
     prose:
       "Operator-grade assessment of churn drivers, journey leakage, pricing leaks, and AI-program maturity. Map the current state, define measurable success criteria, and surface the decisions that will compound.",
   },
   {
-    eyebrow: "02 · Strategy & architecture",
-    heading: "Decisions, not slides.",
+    number: "02",
+    eyebrow: "Strategy & architecture",
+    heading: "Direction your teams can execute against.",
     prose:
       "Operating models, decision rights, and architecture direction written as artifacts your teams execute against. Direction is sharper, scope is bounded, and the next 90 days are concrete.",
   },
   {
-    eyebrow: "03 · Roadmap",
+    number: "03",
+    eyebrow: "Roadmap",
     heading: "A 90-day plan that survives delivery.",
     prose:
       "Sequenced workstreams, named owners, and exec-ready milestones — written so leadership can govern and engineering can ship without a re-litigation cycle every two weeks.",
   },
   {
-    eyebrow: "04 · Measurement & governance",
+    number: "04",
+    eyebrow: "Measurement & governance",
     heading: "Metrics leaders can act on.",
     prose:
       "Leading indicators, model evaluation frameworks, and a governance cadence that keeps teams accountable and surfaces whether the work is moving the business — not just shipping features.",
+  },
+];
+
+const outcomes = [
+  {
+    number: "I",
+    label: "Retention",
+    heading: "Retention lift.",
+    prose: "Diagnose churn drivers. Define interventions. Specify measurement and ownership.",
+  },
+  {
+    number: "II",
+    label: "Revenue",
+    heading: "Revenue protection.",
+    prose: "Pricing, eligibility, friction, and service failures. Quantify, prioritise, and roadmap.",
+  },
+  {
+    number: "III",
+    label: "AI",
+    heading: "AI that performs.",
+    prose: "Model evaluation frameworks, governance, and operating cadence recommendations.",
   },
 ];
 
@@ -76,26 +104,19 @@ const faqs = [
         </p>
 
         <div class="actions">
-          <a class="btn btn-primary" href="#contact">Schedule a discovery meeting</a>
-          <a class="btn btn-secondary" href="#outcomes">Discover how we work</a>
+          <a class="btn btn-primary" href="#contact">Request a working session</a>
+          <a class="btn btn-secondary" href="#method">Read the method</a>
         </div>
+      </div>
+    </section>
 
-        <div class="trust-pills" aria-label="Trust signals">
-          <span class="btn btn-ghost" role="note">Your vision, our expertise</span>
-          <span class="btn btn-ghost" role="note">Confidential &amp; secure — NDA friendly</span>
-          <span class="btn btn-ghost" role="note">Senior operators at work</span>
-        </div>
-
-        <p class="micro" style="margin-top: 28px;">
-          Trusted by teams across telco, banking, and SaaS.
-        </p>
-
-        <div class="logo-grid" id="experience" aria-label="Experience logos">
+    <section class="trusted" id="experience" aria-label="Trusted by">
+      <div class="container">
+        <p class="eyebrow">Trusted by teams across telco, banking, and SaaS</p>
+        <div class="logo-grid">
           {
             logos.map((src, i) => (
-              <div class="logo-tile">
-                <img src={src} alt={`Client logo ${i + 1}`} loading="lazy" decoding="async" />
-              </div>
+              <img src={src} alt={`Client logo ${i + 1}`} loading="lazy" decoding="async" />
             ))
           }
         </div>
@@ -104,8 +125,7 @@ const faqs = [
 
     <div class="kinetic-phrase" aria-hidden="true">
       <div class="kinetic-phrase-track">
-        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
-        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
+        <span>{KINETIC_PHRASE}</span>
       </div>
     </div>
 
@@ -119,53 +139,56 @@ const faqs = [
         {
           methodBlocks.map((b) => (
             <article class="method-block">
+              <div class="method-anchor" aria-hidden="true">{b.number}</div>
               <div class="method-content">
                 <p class="eyebrow">{b.eyebrow}</p>
-                <h2>{b.heading}</h2>
+                <h3>{b.heading}</h3>
                 <p>{b.prose}</p>
               </div>
-              <div class="method-placeholder" aria-hidden="true"></div>
             </article>
           ))
         }
       </div>
     </section>
 
-    <section class="founder-section" id="founder" aria-label="Founder">
-      <div class="container">
-        <div class="section-head">
-          <p class="section-label">The founder</p>
-        </div>
-
-        <div class="founder-grid">
-          <figure class="founder-photo">
-            <div class="tonal-placeholder square" aria-hidden="true"></div>
-            <figcaption>Founder</figcaption>
-          </figure>
-
-          <div class="founder-bio">
-            <p>
-              Two paragraphs introducing the founder — prior operator roles in regulated industries (telco, banking, insurance, SaaS), the specific shape of work delivered there, and the through-line that informs how Capita runs engagements today.
-            </p>
-            <p>
-              A second paragraph naming the founder's view on what's actually shifting in AI-powered customer programs right now, and the kind of leadership team Capita helps best. Founder authors the final copy before ship.
-            </p>
-
-            <p class="founder-signed">
-              We measure what matters.
-              <span class="founder-signed-name">— Founder Name</span>
-            </p>
+    {SHOW_FOUNDER && (
+      <Fragment>
+        <div class="kinetic-phrase" aria-hidden="true">
+          <div class="kinetic-phrase-track">
+            <span>{KINETIC_PHRASE}</span>
           </div>
         </div>
-      </div>
-    </section>
 
-    <div class="kinetic-phrase" aria-hidden="true">
-      <div class="kinetic-phrase-track">
-        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
-        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
-      </div>
-    </div>
+        <section class="founder-section" id="founder" aria-label="Founder">
+          <div class="container">
+            <div class="section-head">
+              <p class="section-label">The founder</p>
+            </div>
+
+            <div class="founder-grid">
+              <figure class="founder-photo">
+                <div class="tonal-placeholder" aria-hidden="true"></div>
+                <figcaption>Founder name</figcaption>
+              </figure>
+
+              <div class="founder-bio">
+                <p>
+                  Founder bio paragraph 1 — placeholder. Awaiting founder copy per the U6 hard gate.
+                </p>
+                <p>
+                  Founder bio paragraph 2 — placeholder. Awaiting founder copy per the U6 hard gate.
+                </p>
+
+                <p class="founder-signed">
+                  Signed manifesto line — placeholder.
+                  <span class="founder-signed-name">— Founder name</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </Fragment>
+    )}
 
     <section class="section" id="outcomes" aria-label="Outcomes">
       <div class="container">
@@ -176,18 +199,15 @@ const faqs = [
         </div>
 
         <div class="outcome-grid">
-          <article class="outcome-card">
-            <h3>Retention lift</h3>
-            <p>Diagnose churn drivers. Define interventions. Specify measurement and ownership.</p>
-          </article>
-          <article class="outcome-card">
-            <h3>Revenue protection</h3>
-            <p>Pricing, eligibility, friction, and service failures. Quantify, prioritise, and roadmap.</p>
-          </article>
-          <article class="outcome-card">
-            <h3>AI that performs</h3>
-            <p>Model evaluation frameworks, governance, and operating cadence recommendations.</p>
-          </article>
+          {
+            outcomes.map((o) => (
+              <article class="outcome-col">
+                <p class="eyebrow">{o.number} · {o.label}</p>
+                <h3>{o.heading}</h3>
+                <p>{o.prose}</p>
+              </article>
+            ))
+          }
         </div>
       </div>
     </section>
@@ -196,43 +216,28 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">FAQ</p>
-          <h2 class="display">Frequently asked questions</h2>
-          <p class="lede">Common questions answered.</p>
+          <h2 class="display">Questions we hear most often.</h2>
         </div>
 
-        <div class="faq-grid">
-          <div class="faq-stack">
-            {
-              faqs.map((f) => (
-                <article class="faq-card">
-                  <button
-                    class="faq-q"
-                    type="button"
-                    aria-expanded="false"
-                    aria-controls={`faq-a${f.id}`}
-                    id={`faq-q${f.id}`}
-                  >
-                    {f.q}
-                  </button>
-                  <div class="faq-a" id={`faq-a${f.id}`} role="region" aria-labelledby={`faq-q${f.id}`} hidden>
-                    <p>{f.a}</p>
-                  </div>
-                </article>
-              ))
-            }
-          </div>
-
-          <aside class="tile faq-aside" aria-label="What we offer">
-            <h3>What we offer</h3>
-            <p>To earn your trust, and keep it.</p>
-            <ul>
-              <li><strong>Risk-managed start</strong> — small scope before scaling.</li>
-              <li><strong>Transparent cadence</strong> — weekly demos and clear artifacts.</li>
-              <li><strong>NDA-first</strong> — confidentiality and security by default.</li>
-              <li><strong>Working principles</strong> — define direction and enable execution.</li>
-              <li><strong>Exec-ready measurement</strong> — metrics leaders govern.</li>
-            </ul>
-          </aside>
+        <div class="faq-stack">
+          {
+            faqs.map((f) => (
+              <article class="faq-card">
+                <button
+                  class="faq-q"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls={`faq-a${f.id}`}
+                  id={`faq-q${f.id}`}
+                >
+                  {f.q}
+                </button>
+                <div class="faq-a" id={`faq-a${f.id}`} role="region" aria-labelledby={`faq-q${f.id}`} hidden>
+                  <p>{f.a}</p>
+                </div>
+              </article>
+            ))
+          }
         </div>
       </div>
     </section>
@@ -241,15 +246,22 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">Start the conversation</p>
-          <h2 class="display">Share the context.</h2>
-          <p class="lede">Send the context. We respond with advisory next steps.</p>
+          <h2 class="display">Share the context. We respond with advisory next steps.</h2>
         </div>
 
         <div class="contact-grid">
-          <form id="leadForm" novalidate>
+          <form
+            id="leadForm"
+            action="https://formspree.io/f/xojdzarv"
+            method="post"
+            novalidate
+          >
             {/* Honeypot — hidden offscreen, populated honeypot aborts submission. */}
             <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
-              <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+              <label>
+                Company
+                <input type="text" name="company" tabindex="-1" autocomplete="off" />
+              </label>
             </div>
 
             <div class="field-row">
@@ -264,7 +276,6 @@ const faqs = [
                   inputmode="text"
                   maxlength="60"
                   placeholder="Jane Smith"
-                  pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'’ -]{2,60}$"
                 />
               </label>
 
@@ -297,17 +308,16 @@ const faqs = [
                     aria-autocomplete="list"
                     autocomplete="off"
                     inputmode="search"
-                    placeholder="Type to search (e.g., Australia, AUS, +61)"
+                    placeholder="Australia (+61)"
                   />
                   <div id="ccList" class="cc-list" role="listbox" aria-label="Country codes">
-                    <div class="micro" style="margin: 0 0 8px;">Select a country code</div>
                     <div id="ccOptions" class="cc-options"></div>
                   </div>
                   <input type="hidden" id="ccDial" name="ccDial" value="+61" />
                   <input type="hidden" id="ccISO3" name="ccISO3" value="AUS" />
                   <input type="hidden" id="ccISO2" name="ccISO2" value="AU" />
                 </div>
-                <p class="micro" style="margin-top: 8px;">Type-ahead supported. Defaults to Australia (+61).</p>
+                <p class="micro" style="margin-top: 8px;">Defaults to Australia. Type to search.</p>
               </div>
 
               <label class="field-label">
@@ -322,7 +332,6 @@ const faqs = [
                   placeholder="412 345 678"
                   pattern={"^[0-9()\\-\\s]{0,24}$"}
                 />
-                <p class="micro" style="margin-top: 8px;">Digits only; spaces and dashes allowed.</p>
               </label>
             </div>
 
@@ -339,23 +348,23 @@ const faqs = [
               </label>
             </div>
 
-            <div id="formError" class="micro" style="margin-top: 12px;"></div>
-            <div id="formSuccess" class="lede" style="margin-top: 12px;" role="status" aria-live="polite"></div>
+            <div id="formError" class="micro" style="margin-top: 14px;"></div>
+            <div id="formSuccess" class="lede" style="margin-top: 14px;" role="status" aria-live="polite"></div>
 
-            <div class="actions" style="margin-top: 16px;">
+            <div class="actions" style="margin-top: 24px;">
               <button class="btn btn-primary" type="submit">Send enquiry</button>
             </div>
           </form>
 
-          <aside class="tile" aria-label="What we understand">
+          <aside class="contact-pains" aria-label="What we understand">
             <h3>What we'll help you fix</h3>
             <p>Common pain points we see in customer and AI programmes.</p>
-            <ul style="margin: 14px 0 0 0; padding-left: 20px; color: var(--muted);">
-              <li style="margin: 8px 0;">Fragmented ownership across product, data, and channels</li>
-              <li style="margin: 8px 0;">Strategies defined without clear measurement or accountability</li>
-              <li style="margin: 8px 0;">Weak measurement and unclear decision rights</li>
-              <li style="margin: 8px 0;">Journey leakage nobody can quantify</li>
-              <li style="margin: 8px 0;">Roadmaps that don't survive delivery reality</li>
+            <ul>
+              <li>Fragmented ownership across product, data, and channels</li>
+              <li>Strategies defined without clear measurement or accountability</li>
+              <li>Weak measurement and unclear decision rights</li>
+              <li>Journey leakage nobody can quantify</li>
+              <li>Roadmaps that don't survive delivery reality</li>
             </ul>
           </aside>
         </div>

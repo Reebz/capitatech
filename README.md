@@ -10,7 +10,7 @@ Astro 6.2 + Tailwind 4 single-page editorial layout. Static output, no SSR. Self
 
 ```bash
 pnpm install
-pnpm dev      # dev server at http://localhost:4321 (or PORT env var)
+pnpm dev      # dev server (use `portless capita pnpm dev` to give it a stable https://capita.local URL; otherwise the port prints to stdout)
 pnpm build    # static build → dist/
 pnpm preview  # serve dist/ locally
 pnpm check    # Astro typecheck

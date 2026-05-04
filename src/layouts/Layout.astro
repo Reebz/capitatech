@@ -1,5 +1,6 @@
 ---
 import "@fontsource-variable/inter/wght.css";
+import "@fontsource-variable/fraunces/wght.css";
 import "../styles/global.css";
 
 interface Props {
@@ -29,13 +30,16 @@ const {
 
     <script is:inline>
       // HTTPS redirect (runs before paint). Defense in depth — Vercel's edge
-      // also redirects HTTP → HTTPS, but this guards against direct origin
-      // access during testing or any future edge misconfiguration.
+      // also redirects HTTP → HTTPS. The bypass list covers localhost,
+      // 127.0.0.1, *.local (portless TLD), AND *.localhost so dev URLs in
+      // any common shape are unaffected.
       (function () {
+        const h = location.hostname;
         const isLocal =
-          location.hostname === "localhost" ||
-          location.hostname === "127.0.0.1" ||
-          location.hostname.endsWith(".local");
+          h === "localhost" ||
+          h === "127.0.0.1" ||
+          h.endsWith(".local") ||
+          h.endsWith(".localhost");
         if (!isLocal && location.protocol !== "https:") {
           location.replace(
             "https://" + location.host + location.pathname + location.search + location.hash
@@ -51,14 +55,13 @@ const {
     <header class="site-header" id="top">
       <div class="container header-inner">
         <a class="brand" href="#top" aria-label="Capita Technology">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-text">Capita Technology</span>
+          <span class="brand-text">Capita<span style="color: var(--muted-strong)">.</span>Technology</span>
         </a>
 
         <nav class="nav" aria-label="Primary">
+          <a href="#method">Method</a>
           <a href="#outcomes">Outcomes</a>
           <a href="#faq">FAQ</a>
-          <a href="#contact">Contact</a>
           <a class="nav-cta" href="#contact">Request intro</a>
         </nav>
       </div>
@@ -72,6 +75,7 @@ const {
           <p>© <span id="y"></span> Capita Technology. Sydney, Australia.</p>
           <div class="footer-links">
             <a href="#top">Top</a>
+            <a href="#method">Method</a>
             <a href="#outcomes">Outcomes</a>
             <a href="#faq">FAQ</a>
             <a href="#contact">Contact</a>
@@ -102,12 +106,6 @@ const {
       // Single end-of-body block — verbatim inline (no Vite processing,
       // no bundle chunk, no module scope). Helpers are top-level function
       // declarations so the FAQ / picker / form IIFEs can call them.
-      // Order:
-      //   1. Year-stamp injection
-      //   2. Hardening helpers
-      //   3. FAQ accordion (single-open)
-      //   4. Country picker (type-ahead, 27-country dataset, AU default)
-      //   5. Form validate + Formspree POST
 
       // 1. Year-stamp.
       (function () {
@@ -115,19 +113,20 @@ const {
         if (y) y.textContent = String(new Date().getFullYear());
       })();
 
-      // 2. Hardening helpers — top-level so subsequent IIFEs can use them.
+      // 2. Hardening helpers.
       function stripControls(s) {
         return String(s || "")
           .replace(/[\u0000-\u001F\u007F]/g, " ")
-          .replace(/[\r\n]+/g, " ")
           .trim();
       }
       function normalizeSpaces(s) {
         return stripControls(s).replace(/\s+/g, " ").trim();
       }
       function safeBodyText(s) {
+        // C0/C1 controls + bidi-overrides + zero-width chars stripped so
+        // operator's notification email can't be visually spoofed.
         return String(s || "")
-          .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+          .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u200B-\u200F\u202A-\u202E\u2028-\u2029\u2060\uFEFF]/g, "")
           .slice(0, 2000);
       }
       function isValidName(name) {
@@ -153,15 +152,6 @@ const {
         if (!/^[0-9\s()\-]+$/.test(raw)) return false;
         const digits = raw.replace(/\D/g, "");
         return digits.length >= 4 && digits.length <= 14;
-      }
-      function iso2ToFlag(iso2) {
-        const code = String(iso2 || "").toUpperCase();
-        if (!/^[A-Z]{2}$/.test(code)) return "🏳️";
-        const A = 0x1f1e6;
-        return String.fromCodePoint(
-          A + (code.charCodeAt(0) - 65),
-          A + (code.charCodeAt(1) - 65)
-        );
       }
 
       // 3. FAQ accordion — single-open.
@@ -205,6 +195,7 @@ const {
         const ccDial = document.getElementById("ccDial");
         const ccISO2 = document.getElementById("ccISO2");
         const ccISO3 = document.getElementById("ccISO3");
+        const wrap = search ? search.closest(".cc-wrap") : null;
         if (!search || !list || !optionsHost || !ccDial || !ccISO2 || !ccISO3) return;
 
         const COUNTRY_CODES = [
@@ -237,9 +228,15 @@ const {
           { iso2: "ID", iso3: "IDN", dial: "+62", name: "Indonesia" },
         ];
 
+        // No emoji flags — picker text echoes into the operator's
+        // notification email; emoji renders inconsistently across clients
+        // and undercuts a senior-advisory premise.
         function formatItem(c) {
-          return `${iso2ToFlag(c.iso2)} ${c.dial} ${c.iso3} — ${c.name}`;
+          return `${c.dial}  ${c.iso3} — ${c.name}`;
         }
+        const defaultAU = COUNTRY_CODES.find((c) => c.iso2 === "AU") || COUNTRY_CODES[0];
+        const defaultDisplay = formatItem(defaultAU);
+
         function openList() {
           list.style.display = "block";
           search.setAttribute("aria-expanded", "true");
@@ -255,7 +252,22 @@ const {
           search.value = formatItem(c);
           closeList();
         }
+        function isFormattedDisplay(value) {
+          // The formatted display value of the selected country contains
+          // chars (dial + em-dash) that do not appear in the haystack, so
+          // a literal includes() check would return zero matches on first
+          // focus. Treat "field still shows the selected formatted text"
+          // as no-query so the dropdown shows the full list.
+          const trimmed = String(value || "").trim();
+          if (!trimmed) return true;
+          const selected =
+            COUNTRY_CODES.find((c) => c.iso2 === ccISO2.value) || defaultAU;
+          return (
+            trimmed === defaultDisplay || trimmed === formatItem(selected)
+          );
+        }
         function filter(q) {
+          if (isFormattedDisplay(q)) return COUNTRY_CODES;
           const query = normalizeSpaces(q).toUpperCase();
           if (!query) return COUNTRY_CODES;
           return COUNTRY_CODES.filter((c) => {
@@ -282,8 +294,7 @@ const {
           }
         }
 
-        const defaultAU = COUNTRY_CODES.find((c) => c.iso2 === "AU") || COUNTRY_CODES[0];
-        search.value = formatItem(defaultAU);
+        search.value = defaultDisplay;
         render(COUNTRY_CODES);
 
         search.addEventListener("focus", () => {
@@ -298,7 +309,10 @@ const {
           if (e.key === "Escape") closeList();
         });
         document.addEventListener("click", (e) => {
-          if (!list.contains(e.target) && e.target !== search) closeList();
+          // Containment check (not strict equality) so clicks on the
+          // wrapper padding / label don't immediately re-close the list.
+          const inside = wrap && wrap.contains(e.target);
+          if (!inside) closeList();
         });
       })();
 
@@ -315,35 +329,58 @@ const {
         const msgEl = document.getElementById("message");
         const ccDial = document.getElementById("ccDial");
         const ccISO3 = document.getElementById("ccISO3");
+        const submitBtn = form.querySelector('button[type="submit"]');
+        let pending = false;
 
         function setError(m) {
+          if (!err) return;
           err.textContent = m || "";
-          ok.textContent = "";
+          if (ok) ok.textContent = "";
         }
         function setSuccess(m) {
-          ok.innerHTML = m ? `<strong>${m}</strong>` : "";
-          err.textContent = "";
+          // textContent + DOM-built <strong> instead of innerHTML so any
+          // future contributor extending this with a non-static message
+          // can't accidentally introduce XSS.
+          if (!ok) return;
+          ok.innerHTML = "";
+          if (m) {
+            const strong = document.createElement("strong");
+            strong.textContent = m;
+            ok.appendChild(strong);
+          }
+          if (err) err.textContent = "";
+        }
+        function setPending(value) {
+          pending = value;
+          if (submitBtn) {
+            submitBtn.disabled = value;
+            submitBtn.textContent = value ? "Sending…" : "Send enquiry";
+          }
         }
 
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
+          if (pending) return;
           setError("");
 
-          // Honeypot — populated honeypot silently aborts.
           const hp = form.querySelector('input[name="company"]')?.value;
           if (hp && hp.trim().length) return;
 
+          if (!nameEl || !emailEl) {
+            setError("Form is missing required fields.");
+            return;
+          }
           const name = normalizeSpaces(nameEl.value);
           const email = normalizeSpaces(emailEl.value);
-          const phone = normalizeSpaces(phoneEl.value);
-          const message = safeBodyText(msgEl.value);
+          const phone = normalizeSpaces(phoneEl ? phoneEl.value : "");
+          const message = safeBodyText(msgEl ? msgEl.value : "");
 
           if (!nameEl.checkValidity() || !emailEl.checkValidity()) {
             setError("Complete required fields.");
             return;
           }
           if (!isValidName(name)) {
-            setError("Name must be letters only (plus spaces/apostrophes/hyphens), 2–60 characters.");
+            setError("Name must be 2–60 characters of letters (and spaces, apostrophes, or hyphens).");
             return;
           }
           if (!isValidEmail(emailEl)) {
@@ -355,28 +392,45 @@ const {
             return;
           }
 
-          const dial = stripControls(ccDial.value || "+61");
-          const iso3 = stripControls(ccISO3.value || "AUS");
+          const dial = stripControls(ccDial ? ccDial.value : "+61") || "+61";
+          const iso3 = stripControls(ccISO3 ? ccISO3.value : "AUS") || "AUS";
           const fullPhone = phone ? `${dial} (${iso3}) ${phone}` : "";
 
           const payload = { name, email, phone: fullPhone, message };
+
+          setPending(true);
+          // 30s ceiling so a stalled Formspree edge can't leave the user
+          // waiting indefinitely with no signal.
+          const ctl = AbortSignal.timeout ? { signal: AbortSignal.timeout(30000) } : {};
 
           try {
             const res = await fetch(FORMSPREE_ENDPOINT, {
               method: "POST",
               headers: { Accept: "application/json", "Content-Type": "application/json" },
               body: JSON.stringify(payload),
+              ...ctl,
             });
 
+            if (res.status === 429) {
+              setError("Too many submissions in a short window. Try again in a few minutes or email consulting@capitatech.com.au.");
+              return;
+            }
             if (!res.ok) {
               setError("Submission failed. Try again or email consulting@capitatech.com.au.");
               return;
             }
 
             form.reset();
-            setSuccess("Thank you. We will respond shortly");
-          } catch (_) {
-            setError("Network error. Try again or email consulting@capitatech.com.au.");
+            setSuccess("Thank you. We will respond shortly.");
+          } catch (caught) {
+            const isAbort = caught && caught.name === "AbortError";
+            setError(
+              isAbort
+                ? "Submission timed out. Try again or email consulting@capitatech.com.au."
+                : "Network error. Try again or email consulting@capitatech.com.au."
+            );
+          } finally {
+            setPending(false);
           }
         });
       })();
