@@ -16,6 +16,12 @@
   --accent: #0078f0;
   --accent-hover: #0069d1;
   --accent-fg: #ffffff;
+  /* Magenta is the editorial accent — used sparingly on the kinetic phrase
+     and the method anchor numerals so the palette has a second register
+     beyond Capita blue without sliding into "blue everywhere" territory. */
+  --highlight: #d946ef;
+  --highlight-hover: #c026d3;
+  --highlight-fg: #ffffff;
   --border: rgba(11, 11, 13, 0.12);
   --border-strong: rgba(11, 11, 13, 0.22);
   --shadow: 0 12px 40px rgba(11, 11, 13, 0.08);
@@ -53,6 +59,9 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-fg: var(--accent-fg);
+  --color-highlight: var(--highlight);
+  --color-highlight-hover: var(--highlight-hover);
+  --color-highlight-fg: var(--highlight-fg);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --font-sans:
@@ -97,6 +106,12 @@ a:hover {
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
   text-underline-offset: 4px;
+  text-decoration-color: var(--accent);
+}
+
+::selection {
+  background: var(--highlight);
+  color: var(--highlight-fg);
 }
 
 img {
@@ -368,14 +383,14 @@ h2.display {
 }
 
 .btn-primary {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
 }
 
 .btn-primary:hover {
-  background: #1a1a1f;
-  border-color: #1a1a1f;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn-secondary {
@@ -499,8 +514,8 @@ h2.display {
   font-size: clamp(28px, 3vw, 44px);
   font-variation-settings: "SOFT" 30, "opsz" 96;
   font-weight: 500;
-  font-style: normal;
-  color: var(--muted-strong);
+  font-style: italic;
+  color: var(--highlight);
   line-height: 1;
   letter-spacing: -0.02em;
   position: sticky;
@@ -928,10 +943,10 @@ h2.display {
   font-size: var(--type-kinetic);
   font-variation-settings: "SOFT" 30, "opsz" 144;
   font-weight: 500;
-  font-style: normal;
+  font-style: italic;
   letter-spacing: -0.025em;
   line-height: 0.96;
-  color: var(--text);
+  color: var(--highlight);
   text-align: left;
   white-space: normal;
   overflow: hidden;
