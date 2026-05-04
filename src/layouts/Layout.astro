@@ -99,8 +99,287 @@ const {
     </footer>
 
     <script is:inline>
-      // Year-stamp runs after parse so #y exists in the DOM.
-      document.getElementById("y").textContent = String(new Date().getFullYear());
+      // Single end-of-body block — verbatim inline (no Vite processing,
+      // no bundle chunk, no module scope). Helpers are top-level function
+      // declarations so the FAQ / picker / form IIFEs can call them.
+      // Order:
+      //   1. Year-stamp injection
+      //   2. Hardening helpers
+      //   3. FAQ accordion (single-open)
+      //   4. Country picker (type-ahead, 27-country dataset, AU default)
+      //   5. Form validate + Formspree POST
+
+      // 1. Year-stamp.
+      (function () {
+        const y = document.getElementById("y");
+        if (y) y.textContent = String(new Date().getFullYear());
+      })();
+
+      // 2. Hardening helpers — top-level so subsequent IIFEs can use them.
+      function stripControls(s) {
+        return String(s || "")
+          .replace(/[\u0000-\u001F\u007F]/g, " ")
+          .replace(/[\r\n]+/g, " ")
+          .trim();
+      }
+      function normalizeSpaces(s) {
+        return stripControls(s).replace(/\s+/g, " ").trim();
+      }
+      function safeBodyText(s) {
+        return String(s || "")
+          .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+          .slice(0, 2000);
+      }
+      function isValidName(name) {
+        const n = normalizeSpaces(name);
+        if (n.length < 2 || n.length > 60) return false;
+        const re = /^\p{L}[\p{L}\p{M}\s'’-]{0,58}\p{L}$/u;
+        return re.test(n);
+      }
+      function isValidEmail(emailEl) {
+        const e = normalizeSpaces(emailEl.value);
+        if (e.length < 6 || e.length > 254) return false;
+        if (/\s/.test(e)) return false;
+        if (!emailEl.checkValidity()) return false;
+        const parts = e.split("@");
+        if (parts.length !== 2) return false;
+        if (parts[0].length > 64 || parts[0].length < 1) return false;
+        if (parts[1].length < 3 || !parts[1].includes(".")) return false;
+        return true;
+      }
+      function isValidPhoneLocal(phone) {
+        const raw = String(phone || "").trim();
+        if (!raw) return true;
+        if (!/^[0-9\s()\-]+$/.test(raw)) return false;
+        const digits = raw.replace(/\D/g, "");
+        return digits.length >= 4 && digits.length <= 14;
+      }
+      function iso2ToFlag(iso2) {
+        const code = String(iso2 || "").toUpperCase();
+        if (!/^[A-Z]{2}$/.test(code)) return "🏳️";
+        const A = 0x1f1e6;
+        return String.fromCodePoint(
+          A + (code.charCodeAt(0) - 65),
+          A + (code.charCodeAt(1) - 65)
+        );
+      }
+
+      // 3. FAQ accordion — single-open.
+      (function initFAQ() {
+        const faqButtons = Array.from(document.querySelectorAll(".faq-q"));
+        if (!faqButtons.length) return;
+        function closeAll(exceptId) {
+          for (const btn of faqButtons) {
+            const panelId = btn.getAttribute("aria-controls");
+            const panel = panelId ? document.getElementById(panelId) : null;
+            const isExcept = btn.id === exceptId;
+            if (!isExcept) {
+              btn.setAttribute("aria-expanded", "false");
+              if (panel) panel.hidden = true;
+            }
+          }
+        }
+        for (const btn of faqButtons) {
+          btn.addEventListener("click", () => {
+            const expanded = btn.getAttribute("aria-expanded") === "true";
+            const panelId = btn.getAttribute("aria-controls");
+            const panel = panelId ? document.getElementById(panelId) : null;
+            if (!panel) return;
+            if (expanded) {
+              btn.setAttribute("aria-expanded", "false");
+              panel.hidden = true;
+              return;
+            }
+            closeAll(btn.id);
+            btn.setAttribute("aria-expanded", "true");
+            panel.hidden = false;
+          });
+        }
+      })();
+
+      // 4. Country code type-ahead picker.
+      (function initCountryCodePicker() {
+        const search = document.getElementById("ccSearch");
+        const list = document.getElementById("ccList");
+        const optionsHost = document.getElementById("ccOptions");
+        const ccDial = document.getElementById("ccDial");
+        const ccISO2 = document.getElementById("ccISO2");
+        const ccISO3 = document.getElementById("ccISO3");
+        if (!search || !list || !optionsHost || !ccDial || !ccISO2 || !ccISO3) return;
+
+        const COUNTRY_CODES = [
+          { iso2: "AU", iso3: "AUS", dial: "+61", name: "Australia" },
+          { iso2: "NZ", iso3: "NZL", dial: "+64", name: "New Zealand" },
+          { iso2: "US", iso3: "USA", dial: "+1", name: "United States" },
+          { iso2: "CA", iso3: "CAN", dial: "+1", name: "Canada" },
+          { iso2: "GB", iso3: "GBR", dial: "+44", name: "United Kingdom" },
+          { iso2: "IE", iso3: "IRL", dial: "+353", name: "Ireland" },
+          { iso2: "DE", iso3: "DEU", dial: "+49", name: "Germany" },
+          { iso2: "FR", iso3: "FRA", dial: "+33", name: "France" },
+          { iso2: "ES", iso3: "ESP", dial: "+34", name: "Spain" },
+          { iso2: "IT", iso3: "ITA", dial: "+39", name: "Italy" },
+          { iso2: "NL", iso3: "NLD", dial: "+31", name: "Netherlands" },
+          { iso2: "BE", iso3: "BEL", dial: "+32", name: "Belgium" },
+          { iso2: "CH", iso3: "CHE", dial: "+41", name: "Switzerland" },
+          { iso2: "AT", iso3: "AUT", dial: "+43", name: "Austria" },
+          { iso2: "SE", iso3: "SWE", dial: "+46", name: "Sweden" },
+          { iso2: "NO", iso3: "NOR", dial: "+47", name: "Norway" },
+          { iso2: "DK", iso3: "DNK", dial: "+45", name: "Denmark" },
+          { iso2: "FI", iso3: "FIN", dial: "+358", name: "Finland" },
+          { iso2: "SG", iso3: "SGP", dial: "+65", name: "Singapore" },
+          { iso2: "JP", iso3: "JPN", dial: "+81", name: "Japan" },
+          { iso2: "KR", iso3: "KOR", dial: "+82", name: "South Korea" },
+          { iso2: "IN", iso3: "IND", dial: "+91", name: "India" },
+          { iso2: "CN", iso3: "CHN", dial: "+86", name: "China" },
+          { iso2: "AE", iso3: "ARE", dial: "+971", name: "United Arab Emirates" },
+          { iso2: "ZA", iso3: "ZAF", dial: "+27", name: "South Africa" },
+          { iso2: "BR", iso3: "BRA", dial: "+55", name: "Brazil" },
+          { iso2: "ID", iso3: "IDN", dial: "+62", name: "Indonesia" },
+        ];
+
+        function formatItem(c) {
+          return `${iso2ToFlag(c.iso2)} ${c.dial} ${c.iso3} — ${c.name}`;
+        }
+        function openList() {
+          list.style.display = "block";
+          search.setAttribute("aria-expanded", "true");
+        }
+        function closeList() {
+          list.style.display = "none";
+          search.setAttribute("aria-expanded", "false");
+        }
+        function setSelection(c) {
+          ccDial.value = c.dial;
+          ccISO2.value = c.iso2;
+          ccISO3.value = c.iso3;
+          search.value = formatItem(c);
+          closeList();
+        }
+        function filter(q) {
+          const query = normalizeSpaces(q).toUpperCase();
+          if (!query) return COUNTRY_CODES;
+          return COUNTRY_CODES.filter((c) => {
+            const hay = `${c.name} ${c.iso2} ${c.iso3} ${c.dial}`.toUpperCase();
+            return hay.includes(query);
+          });
+        }
+        function render(filtered) {
+          optionsHost.innerHTML = "";
+          const items = filtered.slice(0, 30);
+          for (const c of items) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "cc-option";
+            btn.textContent = formatItem(c);
+            btn.addEventListener("click", () => setSelection(c));
+            optionsHost.appendChild(btn);
+          }
+          if (!items.length) {
+            const empty = document.createElement("div");
+            empty.className = "micro";
+            empty.textContent = "No matches.";
+            optionsHost.appendChild(empty);
+          }
+        }
+
+        const defaultAU = COUNTRY_CODES.find((c) => c.iso2 === "AU") || COUNTRY_CODES[0];
+        search.value = formatItem(defaultAU);
+        render(COUNTRY_CODES);
+
+        search.addEventListener("focus", () => {
+          render(filter(search.value));
+          openList();
+        });
+        search.addEventListener("input", () => {
+          render(filter(search.value));
+          openList();
+        });
+        search.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeList();
+        });
+        document.addEventListener("click", (e) => {
+          if (!list.contains(e.target) && e.target !== search) closeList();
+        });
+      })();
+
+      // 5. Form validate + Formspree POST.
+      (function initLeadForm() {
+        const FORMSPREE_ENDPOINT = "https://formspree.io/f/xojdzarv";
+        const form = document.getElementById("leadForm");
+        if (!form) return;
+        const err = document.getElementById("formError");
+        const ok = document.getElementById("formSuccess");
+        const nameEl = document.getElementById("name");
+        const emailEl = document.getElementById("email");
+        const phoneEl = document.getElementById("phone");
+        const msgEl = document.getElementById("message");
+        const ccDial = document.getElementById("ccDial");
+        const ccISO3 = document.getElementById("ccISO3");
+
+        function setError(m) {
+          err.textContent = m || "";
+          ok.textContent = "";
+        }
+        function setSuccess(m) {
+          ok.innerHTML = m ? `<strong>${m}</strong>` : "";
+          err.textContent = "";
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          setError("");
+
+          // Honeypot — populated honeypot silently aborts.
+          const hp = form.querySelector('input[name="company"]')?.value;
+          if (hp && hp.trim().length) return;
+
+          const name = normalizeSpaces(nameEl.value);
+          const email = normalizeSpaces(emailEl.value);
+          const phone = normalizeSpaces(phoneEl.value);
+          const message = safeBodyText(msgEl.value);
+
+          if (!nameEl.checkValidity() || !emailEl.checkValidity()) {
+            setError("Complete required fields.");
+            return;
+          }
+          if (!isValidName(name)) {
+            setError("Name must be letters only (plus spaces/apostrophes/hyphens), 2–60 characters.");
+            return;
+          }
+          if (!isValidEmail(emailEl)) {
+            setError("Email must be valid.");
+            return;
+          }
+          if (!isValidPhoneLocal(phone)) {
+            setError("Phone must contain digits only (spaces/dashes allowed) and be 4–14 digits.");
+            return;
+          }
+
+          const dial = stripControls(ccDial.value || "+61");
+          const iso3 = stripControls(ccISO3.value || "AUS");
+          const fullPhone = phone ? `${dial} (${iso3}) ${phone}` : "";
+
+          const payload = { name, email, phone: fullPhone, message };
+
+          try {
+            const res = await fetch(FORMSPREE_ENDPOINT, {
+              method: "POST",
+              headers: { Accept: "application/json", "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+              setError("Submission failed. Try again or email consulting@capitatech.com.au.");
+              return;
+            }
+
+            form.reset();
+            setSuccess("Thank you. We will respond shortly");
+          } catch (_) {
+            setError("Network error. Try again or email consulting@capitatech.com.au.");
+          }
+        });
+      })();
     </script>
   </body>
 </html>

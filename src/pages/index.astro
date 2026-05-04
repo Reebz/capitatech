@@ -216,5 +216,130 @@ const faqs = [
         </div>
       </div>
     </section>
+
+    <section class="section" id="contact" aria-label="Contact">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Start the conversation</p>
+          <h2 class="display">Share the context.</h2>
+          <p class="lede">Send the context. We respond with advisory next steps.</p>
+        </div>
+
+        <div class="contact-grid">
+          <form id="leadForm" novalidate>
+            {/* Honeypot — hidden offscreen, populated honeypot aborts submission. */}
+            <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+              <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
+            <div class="field-row">
+              <label class="field-label">
+                <span class="micro">Name (required)</span>
+                <input
+                  id="name"
+                  name="name"
+                  class="field-input"
+                  required
+                  autocomplete="name"
+                  inputmode="text"
+                  maxlength="60"
+                  placeholder="Jane Smith"
+                  pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'’ -]{2,60}$"
+                />
+              </label>
+
+              <label class="field-label">
+                <span class="micro">Email (required)</span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  class="field-input"
+                  required
+                  autocomplete="email"
+                  maxlength="254"
+                  placeholder="jane@company.com"
+                />
+              </label>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <span class="micro">Country code</span>
+                <div class="cc-wrap" style="margin-top: 8px;">
+                  <input
+                    id="ccSearch"
+                    name="ccSearch"
+                    class="field-input"
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-controls="ccList"
+                    aria-autocomplete="list"
+                    autocomplete="off"
+                    inputmode="search"
+                    placeholder="Type to search (e.g., Australia, AUS, +61)"
+                  />
+                  <div id="ccList" class="cc-list" role="listbox" aria-label="Country codes">
+                    <div class="micro" style="margin: 0 0 8px;">Select a country code</div>
+                    <div id="ccOptions" class="cc-options"></div>
+                  </div>
+                  <input type="hidden" id="ccDial" name="ccDial" value="+61" />
+                  <input type="hidden" id="ccISO3" name="ccISO3" value="AUS" />
+                  <input type="hidden" id="ccISO2" name="ccISO2" value="AU" />
+                </div>
+                <p class="micro" style="margin-top: 8px;">Type-ahead supported. Defaults to Australia (+61).</p>
+              </div>
+
+              <label class="field-label">
+                <span class="micro">Phone (optional)</span>
+                <input
+                  id="phone"
+                  name="phone"
+                  class="field-input"
+                  autocomplete="tel-national"
+                  inputmode="tel"
+                  maxlength="24"
+                  placeholder="412 345 678"
+                  pattern={"^[0-9()\\-\\s]{0,24}$"}
+                />
+                <p class="micro" style="margin-top: 8px;">Digits only; spaces and dashes allowed.</p>
+              </label>
+            </div>
+
+            <div class="field-row single">
+              <label class="field-label">
+                <span class="micro">What's on your mind? (optional)</span>
+                <textarea
+                  id="message"
+                  name="message"
+                  class="field-textarea"
+                  rows="5"
+                  maxlength="2000"
+                  placeholder="Tell us about the outcome you want to move in the next 90 days."></textarea>
+              </label>
+            </div>
+
+            <div id="formError" class="micro" style="margin-top: 12px;"></div>
+            <div id="formSuccess" class="lede" style="margin-top: 12px;" role="status" aria-live="polite"></div>
+
+            <div class="actions" style="margin-top: 16px;">
+              <button class="btn btn-primary" type="submit">Send enquiry</button>
+            </div>
+          </form>
+
+          <aside class="tile" aria-label="What we understand">
+            <h3>What we'll help you fix</h3>
+            <p>Common pain points we see in customer and AI programmes.</p>
+            <ul style="margin: 14px 0 0 0; padding-left: 20px; color: var(--muted);">
+              <li style="margin: 8px 0;">Fragmented ownership across product, data, and channels</li>
+              <li style="margin: 8px 0;">Strategies defined without clear measurement or accountability</li>
+              <li style="margin: 8px 0;">Weak measurement and unclear decision rights</li>
+              <li style="margin: 8px 0;">Journey leakage nobody can quantify</li>
+              <li style="margin: 8px 0;">Roadmaps that don't survive delivery reality</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
 </Layout>

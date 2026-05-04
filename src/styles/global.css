@@ -759,6 +759,121 @@ h2.display {
   }
 }
 
+/* Contact section — form left, "What we'll help you fix" pain tile right.
+   Trust-signal pill row from the original site is intentionally NOT
+   ported (incompatible with the premium-feel positioning for senior
+   buyers; per the plan's U9 decision). */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.field-row.single {
+  grid-template-columns: 1fr;
+}
+
+.field-label {
+  display: block;
+}
+
+.field-label .micro {
+  margin: 0 0 8px 0;
+  display: block;
+}
+
+.field-input,
+.field-textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--type-body);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.field-input:focus-visible,
+.field-textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 120, 240, 0.18);
+}
+
+.field-textarea {
+  min-height: 132px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.cc-wrap {
+  position: relative;
+}
+
+.cc-list {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 20;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  max-height: min(280px, 60vh);
+  overflow: auto;
+}
+
+.cc-options {
+  display: grid;
+  gap: 6px;
+}
+
+.cc-option {
+  all: unset;
+  width: 100%;
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--type-body);
+}
+
+.cc-option:hover,
+.cc-option:focus-visible {
+  background: rgba(0, 120, 240, 0.08);
+  outline: none;
+}
+
+#formError {
+  color: #b91c1c;
+}
+
+#formSuccess strong {
+  font-size: var(--type-lede);
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .contact-grid,
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* prefers-reduced-motion two-layer guard, half 1: CSS rule.
    Collapses transitions and animations to near-instant for users who opt
    into reduced motion. The kinetic-phrase override is added in U10 with
