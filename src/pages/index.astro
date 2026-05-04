@@ -2,6 +2,33 @@
 import Layout from "../layouts/Layout.astro";
 
 const logos = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/logos/logo-0${n}.png`);
+
+const methodBlocks = [
+  {
+    eyebrow: "01 · Assessment",
+    heading: "Diagnose what's actually moving the number.",
+    prose:
+      "Operator-grade assessment of churn drivers, journey leakage, pricing leaks, and AI-program maturity. Map the current state, define measurable success criteria, and surface the decisions that will compound.",
+  },
+  {
+    eyebrow: "02 · Strategy & architecture",
+    heading: "Decisions, not slides.",
+    prose:
+      "Operating models, decision rights, and architecture direction written as artifacts your teams execute against. Direction is sharper, scope is bounded, and the next 90 days are concrete.",
+  },
+  {
+    eyebrow: "03 · Roadmap",
+    heading: "A 90-day plan that survives delivery.",
+    prose:
+      "Sequenced workstreams, named owners, and exec-ready milestones — written so leadership can govern and engineering can ship without a re-litigation cycle every two weeks.",
+  },
+  {
+    eyebrow: "04 · Measurement & governance",
+    heading: "Metrics leaders can act on.",
+    prose:
+      "Leading indicators, model evaluation frameworks, and a governance cadence that keeps teams accountable and surfaces whether the work is moving the business — not just shipping features.",
+  },
+];
 ---
 
 <Layout>
@@ -38,6 +65,28 @@ const logos = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/logos/logo-0${n}.png`);
             ))
           }
         </div>
+      </div>
+    </section>
+
+    <section class="section" id="method" aria-label="How we work">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">How we work</p>
+          <h2 class="display">Four moves that turn AI and customer programs into compounding growth.</h2>
+        </div>
+
+        {
+          methodBlocks.map((b) => (
+            <article class="method-block">
+              <div class="method-content">
+                <p class="eyebrow">{b.eyebrow}</p>
+                <h2>{b.heading}</h2>
+                <p>{b.prose}</p>
+              </div>
+              <div class="method-placeholder" aria-hidden="true"></div>
+            </article>
+          ))
+        }
       </div>
     </section>
   </main>

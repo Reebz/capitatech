@@ -459,6 +459,98 @@ h2.display {
   }
 }
 
+/* Section primitive — the editorial section frame. Each top-level
+   section uses this for vertical rhythm; section-specific styles
+   layer on top. */
+.section {
+  padding-block: var(--pad-y);
+  border-top: 1px solid var(--border);
+}
+
+.section-head {
+  margin-bottom: clamp(24px, 3vw, 40px);
+}
+
+/* Method body — four asymmetric blocks (1.4fr / 0.6fr) with tonal
+   placeholder. Even blocks reverse so the prose alternates left/right
+   while the placeholder stays the narrower column throughout. */
+.method-block {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: clamp(32px, 4vw, 80px);
+  align-items: center;
+  padding-block: clamp(48px, 6vw, 96px);
+  border-top: 1px solid var(--border);
+}
+
+.method-block:first-of-type {
+  border-top: 0;
+}
+
+.method-block:nth-of-type(even) {
+  grid-template-columns: 0.6fr 1.4fr;
+}
+
+.method-content {
+  max-width: 60ch;
+}
+
+.method-block:nth-of-type(even) .method-content {
+  order: 2;
+  margin-left: auto;
+}
+
+.method-block:nth-of-type(even) .method-placeholder {
+  order: 1;
+}
+
+.method-content h2 {
+  margin: 0 0 16px 0;
+  font-size: var(--type-h2);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  font-family: var(--font-display);
+}
+
+.method-content p {
+  margin: 0;
+  font-size: var(--type-body);
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* Tonal placeholder — used for U5 illustrations and U6 founder photo.
+   Reads as intentional negative space, not "missing image". When real
+   artwork lands, becomes <img> with the same aspect-ratio. */
+.method-placeholder,
+.tonal-placeholder {
+  aspect-ratio: 4 / 3;
+  background: var(--surface-tonal);
+  border-radius: var(--radius-md);
+  width: 100%;
+}
+
+.tonal-placeholder.square {
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 900px) {
+  .method-block,
+  .method-block:nth-of-type(even) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .method-block:nth-of-type(even) .method-content {
+    order: initial;
+    margin-left: initial;
+  }
+
+  .method-block:nth-of-type(even) .method-placeholder {
+    order: initial;
+  }
+}
+
 /* prefers-reduced-motion two-layer guard, half 1: CSS rule.
    Collapses transitions and animations to near-instant for users who opt
    into reduced motion. The kinetic-phrase override is added in U10 with
