@@ -294,6 +294,171 @@ img {
   font-size: var(--type-micro);
 }
 
+/* Type primitives. */
+.eyebrow {
+  margin: 0 0 12px 0;
+  color: var(--muted-strong);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: var(--type-eyebrow);
+}
+
+h1.display {
+  margin: 0;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  font-size: var(--type-h1);
+  font-family: var(--font-display);
+}
+
+h2.display {
+  margin: 0;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  font-size: var(--type-h2);
+  font-family: var(--font-display);
+}
+
+.lede {
+  margin: 16px 0 0 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: var(--type-lede);
+  line-height: 1.55;
+}
+
+.section-label {
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: var(--type-eyebrow);
+  color: var(--muted-strong);
+}
+
+/* Buttons — preserved rounded-pill / 12px-radius idiom. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, color 120ms ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 120, 240, 0.08);
+  border-color: rgba(0, 120, 240, 0.35);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.btn-ghost:hover {
+  background: rgba(0, 120, 240, 0.04);
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Hero region — the editorial opening composition. */
+.hero {
+  padding-block: clamp(56px, 8vw, 120px);
+}
+
+.hero h1 {
+  max-width: 18ch;
+}
+
+.trust-pills {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Logo grid — preserved 4/2/1 responsive collapse. */
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: clamp(40px, 5vw, 72px);
+}
+
+.logo-tile {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  min-height: 84px;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+}
+
+.logo-tile img {
+  max-height: 36px;
+  width: auto;
+  opacity: 0.78;
+  filter: grayscale(0.15);
+  transition: opacity 150ms ease, filter 150ms ease;
+}
+
+.logo-tile:hover img {
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+@media (max-width: 900px) {
+  .logo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* prefers-reduced-motion two-layer guard, half 1: CSS rule.
    Collapses transitions and animations to near-instant for users who opt
    into reduced motion. The kinetic-phrase override is added in U10 with

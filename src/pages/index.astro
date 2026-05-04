@@ -1,17 +1,44 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const logos = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/logos/logo-0${n}.png`);
 ---
 
 <Layout>
-  <main id="main" class="container" style="padding-block: var(--pad-y);">
-    <h1 style="font-size: var(--type-h1); letter-spacing: -0.04em; line-height: 1.02; margin: 0;">
-      Capita Technology
-    </h1>
-    <p style="font-size: var(--type-lede); color: var(--muted); max-width: 62ch; margin-top: 16px;">
-      Independent executive advisory on operating models, platforms, and decisions that compound lifetime value.
-    </p>
-    <p class="micro" style="margin-top: 32px;">
-      U3 shell in place — hero / method / founder / outcomes / FAQ / contact land in U4–U10.
-    </p>
+  <main id="main">
+    <section class="hero" aria-label="Hero">
+      <div class="container">
+        <p class="eyebrow">AI · Data · Customer Growth</p>
+        <h1 class="display">Turn AI, data, and customers into a durable growth system.</h1>
+        <p class="lede">
+          Independent executive advisory on operating models, platforms, and decisions that compound lifetime value.
+        </p>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="#contact">Schedule a discovery meeting</a>
+          <a class="btn btn-secondary" href="#outcomes">Discover how we work</a>
+        </div>
+
+        <div class="trust-pills" aria-label="Trust signals">
+          <span class="btn btn-ghost" role="note">Your vision, our expertise</span>
+          <span class="btn btn-ghost" role="note">Confidential &amp; secure — NDA friendly</span>
+          <span class="btn btn-ghost" role="note">Senior operators at work</span>
+        </div>
+
+        <p class="micro" style="margin-top: 28px;">
+          Trusted by teams across telco, banking, and SaaS.
+        </p>
+
+        <div class="logo-grid" id="experience" aria-label="Experience logos">
+          {
+            logos.map((src, i) => (
+              <div class="logo-tile">
+                <img src={src} alt={`Client logo ${i + 1}`} loading="lazy" decoding="async" />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
   </main>
 </Layout>
