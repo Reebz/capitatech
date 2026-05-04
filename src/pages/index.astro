@@ -29,6 +29,34 @@ const methodBlocks = [
       "Leading indicators, model evaluation frameworks, and a governance cadence that keeps teams accountable and surfaces whether the work is moving the business — not just shipping features.",
   },
 ];
+
+const faqs = [
+  {
+    id: 1,
+    q: "What do I get in the first 2 weeks?",
+    a: "A tight problem definition, current-state map, measurable success criteria, and a scoped 90-day plan that your teams can execute.",
+  },
+  {
+    id: 2,
+    q: "Do you implement systems or code?",
+    a: "No. We advise only. We define strategy, architecture direction, requirements, and decision frameworks your teams or partners execute.",
+  },
+  {
+    id: 3,
+    q: "Can you sign an NDA before we talk?",
+    a: "Yes. We're comfortable operating inside regulated environments and with strict confidentiality.",
+  },
+  {
+    id: 4,
+    q: "What does an engagement actually include?",
+    a: "Assessments, executive workshops, architecture reviews, roadmaps, and written action plans. No build or delivery ownership.",
+  },
+  {
+    id: 5,
+    q: "How do you measure impact?",
+    a: "We define leading indicators and business outcomes up front, instrument journeys, and set a review cadence that keeps teams accountable.",
+  },
+];
 ---
 
 <Layout>
@@ -140,6 +168,51 @@ const methodBlocks = [
             <h3>AI that performs</h3>
             <p>Model evaluation frameworks, governance, and operating cadence recommendations.</p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" aria-label="Frequently asked questions">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">FAQ</p>
+          <h2 class="display">Frequently asked questions</h2>
+          <p class="lede">Common questions answered.</p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-stack">
+            {
+              faqs.map((f) => (
+                <article class="faq-card">
+                  <button
+                    class="faq-q"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls={`faq-a${f.id}`}
+                    id={`faq-q${f.id}`}
+                  >
+                    {f.q}
+                  </button>
+                  <div class="faq-a" id={`faq-a${f.id}`} role="region" aria-labelledby={`faq-q${f.id}`} hidden>
+                    <p>{f.a}</p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+
+          <aside class="tile faq-aside" aria-label="What we offer">
+            <h3>What we offer</h3>
+            <p>To earn your trust, and keep it.</p>
+            <ul>
+              <li><strong>Risk-managed start</strong> — small scope before scaling.</li>
+              <li><strong>Transparent cadence</strong> — weekly demos and clear artifacts.</li>
+              <li><strong>NDA-first</strong> — confidentiality and security by default.</li>
+              <li><strong>Working principles</strong> — define direction and enable execution.</li>
+              <li><strong>Exec-ready measurement</strong> — metrics leaders govern.</li>
+            </ul>
+          </aside>
         </div>
       </div>
     </section>

@@ -661,6 +661,104 @@ h2.display {
   }
 }
 
+/* FAQ — 2-column at desktop (questions left, side tile right),
+   single-open accordion. .faq-q is a behavior selector — kept as a
+   className so the U9 inline-script accordion handler can bind via
+   document.querySelectorAll('.faq-q'). */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+
+.faq-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.faq-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg);
+  position: relative;
+}
+
+.faq-q {
+  all: unset;
+  width: 100%;
+  display: block;
+  position: relative;
+  padding: 20px 60px 20px 22px;
+  font-weight: 600;
+  font-size: var(--type-body);
+  line-height: 1.4;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.faq-q::after {
+  content: "+";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.faq-q[aria-expanded="true"]::after {
+  content: "−";
+}
+
+.faq-q:hover {
+  background: rgba(0, 120, 240, 0.06);
+}
+
+.faq-q:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.faq-a {
+  padding: 0 22px 20px 22px;
+}
+
+.faq-a > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--type-body);
+  line-height: 1.55;
+}
+
+.faq-aside ul {
+  margin: 14px 0 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.faq-aside li {
+  margin: 8px 0;
+}
+
+.faq-aside li strong {
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* prefers-reduced-motion two-layer guard, half 1: CSS rule.
    Collapses transitions and animations to near-instant for users who opt
    into reduced motion. The kinetic-phrase override is added in U10 with
