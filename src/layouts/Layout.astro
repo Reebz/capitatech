@@ -29,8 +29,8 @@ const {
 
     <script is:inline>
       // HTTPS redirect (runs before paint). Defense in depth — Vercel's edge
-      // also redirects HTTP → HTTPS, but this guards against any future edge
-      // misconfiguration and against direct origin access during testing.
+      // also redirects HTTP → HTTPS, but this guards against direct origin
+      // access during testing or any future edge misconfiguration.
       (function () {
         const isLocal =
           location.hostname === "localhost" ||
@@ -46,6 +46,61 @@ const {
   </head>
 
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" id="top">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="Capita Technology">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-text">Capita Technology</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="#outcomes">Outcomes</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+          <a class="nav-cta" href="#contact">Request intro</a>
+        </nav>
+      </div>
+    </header>
+
     <slot />
+
+    <footer class="site-footer" aria-label="Footer">
+      <div class="container">
+        <div class="footer-inner">
+          <p>© <span id="y"></span> Capita Technology. Sydney, Australia.</p>
+          <div class="footer-links">
+            <a href="#top">Top</a>
+            <a href="#outcomes">Outcomes</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>
+
+        <div class="footer-tiles">
+          <div class="tile">
+            <h3>Contact</h3>
+            <p class="micro">consulting@capitatech.com.au</p>
+            <p class="micro">Sydney, NSW · Australia</p>
+          </div>
+          <div class="tile">
+            <h3>Services</h3>
+            <p class="micro">Strategy · Maturity assessments · Architecture review · Roadmaps</p>
+            <p class="micro">Executive workshops · Requirements definition · Decision frameworks</p>
+          </div>
+          <div class="tile">
+            <h3>Industries</h3>
+            <p class="micro">Telecommunications · Banking · Insurance · Property · SaaS · Subscription businesses</p>
+            <p class="micro">Regulated delivery · Governance · Security · Privacy-by-design</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // Year-stamp runs after parse so #y exists in the DOM.
+      document.getElementById("y").textContent = String(new Date().getFullYear());
+    </script>
   </body>
 </html>

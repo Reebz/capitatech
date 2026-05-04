@@ -119,6 +119,181 @@ img {
   scroll-margin-top: var(--header-height);
 }
 
+/* Skip link — visible on focus only. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: var(--pad-x);
+  top: 14px;
+  width: auto;
+  height: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--bg);
+  z-index: 1000;
+}
+
+/* Container — preserved width-and-padding idiom from current site. */
+.container {
+  width: min(var(--container), 100% - (var(--pad-x) * 2));
+  margin-inline: auto;
+}
+
+/* Header — sticky with backdrop-blur. Mirrors current treatment. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-height);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mark {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.brand-text {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.nav a {
+  padding: 10px 12px;
+  border-radius: 999px;
+}
+
+.nav a:hover {
+  text-decoration: none;
+  background: rgba(0, 120, 240, 0.08);
+}
+
+.nav .nav-cta {
+  border: 1px solid var(--border-strong);
+}
+
+.nav .nav-cta:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+@media (max-width: 840px) {
+  .nav a:not(.nav-cta) {
+    display: none;
+  }
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding-block: clamp(28px, 4vw, 44px);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.site-footer p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--type-micro);
+}
+
+.footer-links {
+  display: flex;
+  gap: 14px;
+}
+
+.footer-links a {
+  color: var(--muted);
+  font-size: var(--type-micro);
+  padding: 8px 10px;
+  border-radius: 999px;
+}
+
+.footer-links a:hover {
+  text-decoration: none;
+  background: rgba(0, 120, 240, 0.08);
+  color: var(--text);
+}
+
+.footer-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 22px;
+}
+
+@media (max-width: 900px) {
+  .footer-tiles {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tile — used in footer; will be reused in U7/U8 side tiles. */
+.tile {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.tile h3 {
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  font-size: var(--type-h3);
+}
+
+.tile p {
+  margin: 10px 0 0 0;
+  color: var(--muted);
+}
+
+.micro {
+  margin: 14px 0 0 0;
+  color: var(--muted);
+  font-size: var(--type-micro);
+}
+
 /* prefers-reduced-motion two-layer guard, half 1: CSS rule.
    Collapses transitions and animations to near-instant for users who opt
    into reduced motion. The kinetic-phrase override is added in U10 with
