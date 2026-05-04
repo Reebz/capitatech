@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* Capita Technology design tokens.
+   Root font-size stays at the browser default (16px). The Cavaro project's
+   `html { font-size: 200% }` rem-doubling rule is intentionally NOT inherited;
+   capitatech keeps default rem so Tailwind utilities and clamp tokens scale
+   predictably. */
+
+:root {
+  /* Palette — preserved exactly from current site, plus a darker eyebrow
+     tier (`--muted-strong`) so 12–13px small caps text against white can
+     pass WCAG AA without dropping below the 4.5:1 threshold. */
+  --bg: #ffffff;
+  --text: #0b0b0d;
+  --muted: #4b4b57;
+  --muted-strong: #3a3a44;
+  --accent: #0078f0;
+  --accent-hover: #0069d1;
+  --accent-fg: #ffffff;
+  --border: rgba(11, 11, 13, 0.12);
+  --border-strong: rgba(11, 11, 13, 0.22);
+  --shadow: 0 12px 40px rgba(11, 11, 13, 0.08);
+
+  /* Surface tokens for tonal placeholders (illustration + photo). Reads as
+     intentional negative space, not "missing image". */
+  --surface-tonal: color-mix(in srgb, var(--text) 4%, var(--bg));
+
+  /* Radius / spacing / container tokens — preserved from current styles.css. */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --container: 1120px;
+  --pad-x: clamp(18px, 3.2vw, 34px);
+  --pad-y: clamp(44px, 7vw, 92px);
+
+  /* Layout. Header height drives `scroll-margin-top` on every anchor target
+     so iOS Safari's sticky-header occlusion doesn't hide section headings
+     after a scroll-jump. */
+  --header-height: 64px;
+
+  /* Editorial type scale tokens. Values are clamp ranges so each scales
+     between mobile and ultrawide; tune live during U4/U5/U6 against the
+     cross-breakpoint gates table. */
+  --type-eyebrow: clamp(11px, 0.78vw, 13px);
+  --type-h1: clamp(48px, 8vw, 96px);
+  --type-h2: clamp(28px, 3.2vw, 40px);
+  --type-h3: clamp(18px, 1.4vw, 22px);
+  --type-body: clamp(16px, 1.1vw, 18px);
+  --type-lede: clamp(18px, 1.6vw, 22px);
+  --type-micro: 13px;
+  --type-kinetic: clamp(48px, 10vw, 140px);
+  --type-signature: clamp(20px, 2vw, 28px);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-surface-tonal: var(--surface-tonal);
+  --font-sans:
+    "Inter Variable", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Display token defaults to sans. U4 may add a paired variable face
+     (e.g., a serif or condensed sans) and repoint --font-display at it
+     if Inter alone fails the editorial-contrast gate. */
+  --font-display: var(--font-sans);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Anchor-target scroll margin so the sticky header doesn't occlude the
+   section heading after a scroll-jump. Applied broadly so any future
+   id-targeted element inherits the offset. */
+[id] {
+  scroll-margin-top: var(--header-height);
+}
+
+/* prefers-reduced-motion two-layer guard, half 1: CSS rule.
+   Collapses transitions and animations to near-instant for users who opt
+   into reduced motion. The kinetic-phrase override is added in U10 with
+   stricter `animation: none !important` rules. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

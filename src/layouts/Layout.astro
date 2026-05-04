@@ -1,0 +1,51 @@
+---
+import "@fontsource-variable/inter/wght.css";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Capita Technology",
+  description = "Capita Technology helps leadership teams unlock measurable retention and lifetime value by designing AI-powered decision systems, operating models, and customer experience measurement.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <title>{title}</title>
+
+    <script is:inline>
+      // HTTPS redirect (runs before paint). Defense in depth — Vercel's edge
+      // also redirects HTTP → HTTPS, but this guards against any future edge
+      // misconfiguration and against direct origin access during testing.
+      (function () {
+        const isLocal =
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1" ||
+          location.hostname.endsWith(".local");
+        if (!isLocal && location.protocol !== "https:") {
+          location.replace(
+            "https://" + location.host + location.pathname + location.search + location.hash
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <slot />
+  </body>
+</html>
