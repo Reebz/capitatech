@@ -874,6 +874,84 @@ h2.display {
   }
 }
 
+/* Kinetic phrase — recurring section divider. Two mandatory occurrences
+   (after hero, after founder); third before contact is optional. Two
+   spans inside the track so the marquee fallback loops seamlessly; in
+   the modern scroll-driven path both spans are visible together and the
+   container fades in/out as it crosses the viewport. */
+.kinetic-phrase {
+  display: block;
+  padding-block: clamp(40px, 6vw, 96px);
+  font-family: var(--font-display);
+  font-size: var(--type-kinetic);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--text);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.kinetic-phrase-track {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Modern path: scroll-driven entry/exit. Phrase fades up as it enters
+   the viewport, holds at full opacity through the middle of its scroll
+   range, then fades out as it exits the top. */
+@supports (animation-timeline: view()) {
+  .kinetic-phrase {
+    overflow: visible;
+    animation: kineticEnter linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+  .kinetic-phrase-track {
+    /* In the modern path the marquee horizontal loop is suppressed; the
+       second span sits beside the first as part of the static composition. */
+    animation: none;
+  }
+  @keyframes kineticEnter {
+    0% { opacity: 0; transform: translateY(40px); }
+    25% { opacity: 1; transform: translateY(0); }
+    75% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-40px); }
+  }
+}
+
+/* Fallback path: continuous horizontal marquee for browsers without
+   `animation-timeline: view()` support. Two spans + 20s linear loop +
+   translate(-50%) produces the seamless wrap. */
+@supports not (animation-timeline: view()) {
+  .kinetic-phrase-track {
+    animation: kineticMarquee 20s linear infinite;
+  }
+  @keyframes kineticMarquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+/* prefers-reduced-motion override — collapses both paths to a static
+   single instance of the phrase. The duplicate span gets hidden so the
+   static treatment doesn't read as "Decisions, not slides. Decisions,
+   not slides." */
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-phrase {
+    animation: none !important;
+    overflow: hidden !important;
+  }
+  .kinetic-phrase-track {
+    animation: none !important;
+    transform: none !important;
+  }
+  .kinetic-phrase-track > span:nth-child(n + 2) {
+    display: none;
+  }
+}
+
 /* prefers-reduced-motion two-layer guard, half 1: CSS rule.
    Collapses transitions and animations to near-instant for users who opt
    into reduced motion. The kinetic-phrase override is added in U10 with

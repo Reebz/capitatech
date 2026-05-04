@@ -3,6 +3,12 @@ import Layout from "../layouts/Layout.astro";
 
 const logos = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/logos/logo-0${n}.png`);
 
+// Placeholder phrase — final wording is a founder authoring decision per
+// the U10 hard copy gate. The phrase repeats as a section divider; two
+// mandatory occurrences (after hero, after founder), an optional third
+// before contact.
+const KINETIC_PHRASE = "Decisions, not slides.";
+
 const methodBlocks = [
   {
     eyebrow: "01 · Assessment",
@@ -96,6 +102,13 @@ const faqs = [
       </div>
     </section>
 
+    <div class="kinetic-phrase" aria-hidden="true">
+      <div class="kinetic-phrase-track">
+        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
+        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
     <section class="section" id="method" aria-label="How we work">
       <div class="container">
         <div class="section-head">
@@ -146,6 +159,13 @@ const faqs = [
         </div>
       </div>
     </section>
+
+    <div class="kinetic-phrase" aria-hidden="true">
+      <div class="kinetic-phrase-track">
+        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
+        <span>{KINETIC_PHRASE}&nbsp;&nbsp;</span>
+      </div>
+    </div>
 
     <section class="section" id="outcomes" aria-label="Outcomes">
       <div class="container">
