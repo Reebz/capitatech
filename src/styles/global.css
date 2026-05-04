@@ -551,6 +551,82 @@ h2.display {
   }
 }
 
+/* Founder profile — 0.4fr / 0.6fr asymmetric grid; photo placeholder
+   left, bio + signed line right. Photo caption sits BELOW the block
+   as a figcaption (not inside) so the placeholder reads as intentional
+   composition rather than wireframe. */
+.founder-section {
+  padding-block: var(--pad-y);
+  border-top: 1px solid var(--border);
+}
+
+.founder-grid {
+  display: grid;
+  grid-template-columns: 0.4fr 0.6fr;
+  gap: clamp(32px, 4vw, 80px);
+  align-items: start;
+}
+
+.founder-photo {
+  margin: 0;
+  max-width: 360px;
+}
+
+.founder-photo figcaption {
+  margin-top: 12px;
+  color: var(--muted-strong);
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.founder-bio {
+  max-width: 56ch;
+}
+
+.founder-bio p {
+  margin: 0 0 16px 0;
+  color: var(--muted);
+  font-size: var(--type-body);
+  line-height: 1.6;
+}
+
+.founder-bio p:last-of-type {
+  margin-bottom: 0;
+}
+
+.founder-signed {
+  margin-top: clamp(28px, 3vw, 44px);
+  font-size: var(--type-signature);
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text);
+  font-family: var(--font-display);
+}
+
+.founder-signed-name {
+  display: block;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  color: var(--muted-strong);
+  font-style: normal;
+  font-weight: 600;
+  font-size: var(--type-body);
+  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  max-width: 18ch;
+}
+
+@media (max-width: 900px) {
+  .founder-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
 /* prefers-reduced-motion two-layer guard, half 1: CSS rule.
    Collapses transitions and animations to near-instant for users who opt
    into reduced motion. The kinetic-phrase override is added in U10 with
