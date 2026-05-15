@@ -427,6 +427,26 @@ h1.display {
   font-size: var(--type-h1);
 }
 
+/* Magenta hero mark — the single in-body magenta location per R8. Geist
+   italic via synthetic obliqueing (Geist doesn't ship slnt), slight
+   size bump so the marked word reads as a deliberate emphasis rather
+   than a colored word in a sentence. The text-shadow halo provides
+   separation when the cursor spotlight passes underneath in the ASCII
+   grid behind — without it, the magenta word would blur visually into
+   the magenta hot center of the gradient. */
+mark.why-mark {
+  background: transparent;
+  color: var(--highlight);
+  font-family: inherit;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.002em;
+  padding: 0 0.04em;
+  text-shadow:
+    0 0 1px var(--bg),
+    0 0 2px var(--bg);
+}
+
 h2.display {
   margin: 0;
   font-family: var(--font-display);
