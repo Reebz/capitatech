@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#ffffff"/>
+
+  <!-- Subtle ASCII-grid texture as a faint dot pattern. Deterministic placement
+       echoes the page's server-rendered ASCII grid without requiring a font. -->
+  <g fill="#0b0b0d" opacity="0.08">
+    <circle cx="60" cy="60" r="2"/>
+    <circle cx="120" cy="60" r="2"/>
+    <circle cx="180" cy="60" r="2"/>
+    <circle cx="60" cy="120" r="2"/>
+    <circle cx="60" cy="180" r="2"/>
+    <circle cx="60" cy="240" r="2"/>
+    <circle cx="120" cy="240" r="2"/>
+    <circle cx="60" cy="300" r="2"/>
+    <circle cx="60" cy="360" r="2"/>
+    <circle cx="60" cy="420" r="2"/>
+    <circle cx="60" cy="480" r="2"/>
+    <circle cx="120" cy="480" r="2"/>
+    <circle cx="180" cy="480" r="2"/>
+    <circle cx="60" cy="540" r="2"/>
+    <circle cx="1080" cy="60" r="2"/>
+    <circle cx="1140" cy="60" r="2"/>
+    <circle cx="1080" cy="120" r="2"/>
+    <circle cx="1140" cy="240" r="2"/>
+    <circle cx="1080" cy="300" r="2"/>
+    <circle cx="1140" cy="360" r="2"/>
+    <circle cx="1080" cy="420" r="2"/>
+    <circle cx="1140" cy="480" r="2"/>
+    <circle cx="1080" cy="540" r="2"/>
+    <circle cx="300" cy="60" r="2"/>
+    <circle cx="420" cy="60" r="2"/>
+    <circle cx="540" cy="60" r="2"/>
+    <circle cx="660" cy="60" r="2"/>
+    <circle cx="780" cy="60" r="2"/>
+    <circle cx="900" cy="60" r="2"/>
+    <circle cx="300" cy="540" r="2"/>
+    <circle cx="420" cy="540" r="2"/>
+    <circle cx="540" cy="540" r="2"/>
+    <circle cx="660" cy="540" r="2"/>
+    <circle cx="780" cy="540" r="2"/>
+    <circle cx="900" cy="540" r="2"/>
+  </g>
+
+  <!-- Optional magenta glow behind the wordmark — subtle radial at low opacity
+       to give the visual a hint of the page's spotlight signature without
+       washing out the blue wordmark contrast. -->
+  <defs>
+    <radialGradient id="magentaGlow" cx="50%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#d946ef" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#d946ef" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#d946ef" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="600" cy="315" rx="380" ry="200" fill="url(#magentaGlow)"/>
+
+  <!-- "Capita" wordmark — geometric path traced from a clean sans (Geist-ish)
+       so PNG rasterization doesn't depend on font availability. Capita blue
+       on white with subtle magenta glow already laid down behind. -->
+  <g fill="#0078f0">
+    <!-- C -->
+    <path d="M 270 240 q -50 0 -78 30 q -28 30 -28 80 t 28 80 q 28 30 78 30 q 40 0 70 -20 l 22 38 q -38 28 -94 28 q -68 0 -110 -42 q -42 -42 -42 -114 t 42 -114 q 42 -42 110 -42 q 56 0 94 28 l -22 38 q -30 -20 -70 -20 z"/>
+    <!-- a -->
+    <path d="M 430 290 q 32 0 54 18 q 22 18 22 50 v 110 h -32 v -16 q -18 22 -54 22 q -32 0 -52 -16 q -20 -16 -20 -42 q 0 -28 22 -42 q 22 -14 56 -14 h 46 v -2 q 0 -38 -42 -38 q -28 0 -52 16 l -14 -28 q 32 -18 66 -18 z m 4 162 q 18 0 32 -12 q 14 -12 14 -32 v -10 h -42 q -38 0 -38 26 q 0 14 10 21 q 10 7 24 7 z"/>
+    <!-- p -->
+    <path d="M 614 290 q 42 0 68 32 q 26 32 26 80 t -26 80 q -26 32 -68 32 q -34 0 -56 -20 v 86 h -36 v -286 h 36 v 16 q 22 -20 56 -20 z m -10 192 q 28 0 44 -22 q 16 -22 16 -58 t -16 -58 q -16 -22 -44 -22 q -24 0 -42 18 q -18 18 -18 36 v 52 q 0 18 18 36 q 18 18 42 18 z"/>
+    <!-- i -->
+    <path d="M 750 230 q 12 0 20 8 q 8 8 8 20 t -8 20 q -8 8 -20 8 t -20 -8 q -8 -8 -8 -20 t 8 -20 q 8 -8 20 -8 z m -18 64 h 36 v 174 h -36 z"/>
+    <!-- t -->
+    <path d="M 818 240 h 36 v 54 h 46 v 28 h -46 v 100 q 0 12 6 18 q 6 6 18 6 h 22 v 28 h -28 q -26 0 -40 -14 q -14 -14 -14 -38 v -100 h -34 v -28 h 34 z"/>
+    <!-- a -->
+    <path d="M 974 290 q 32 0 54 18 q 22 18 22 50 v 110 h -32 v -16 q -18 22 -54 22 q -32 0 -52 -16 q -20 -16 -20 -42 q 0 -28 22 -42 q 22 -14 56 -14 h 46 v -2 q 0 -38 -42 -38 q -28 0 -52 16 l -14 -28 q 32 -18 66 -18 z m 4 162 q 18 0 32 -12 q 14 -12 14 -32 v -10 h -42 q -38 0 -38 26 q 0 14 10 21 q 10 7 24 7 z"/>
+  </g>
+
+  <!-- Tagline below the wordmark — geometric path-based so it survives
+       font-less rasterization. Reads "AI · Data · Customer Growth" as a
+       dotted shorthand. -->
+  <g fill="#4b4b57">
+    <circle cx="455" cy="510" r="3"/>
+    <circle cx="515" cy="510" r="3"/>
+    <circle cx="575" cy="510" r="3"/>
+    <circle cx="625" cy="510" r="3"/>
+    <circle cx="685" cy="510" r="3"/>
+    <circle cx="745" cy="510" r="3"/>
+  </g>
+</svg>

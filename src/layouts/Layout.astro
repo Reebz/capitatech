@@ -41,11 +41,32 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#0078f0" />
+
+    {/* Open Graph + Twitter Card meta. og:image and twitter:image are
+        absolute URLs because the OG protocol requires it. The same static
+        1200×630 PNG serves both LinkedIn (large card) and X
+        (summary_large_image). */}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:site_name" content="Capita Technology" />
+    <meta property="og:url" content="https://capitatech.com.au/" />
+    <meta property="og:image" content="https://capitatech.com.au/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://capitatech.com.au/og-image.png" />
+
+    {/* Favicon set + manifest. SVG is the primary icon (sharp at every
+        size); raster fallbacks cover legacy browsers and iOS home-screen. */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+
     <title>{title}</title>
 
     <script is:inline>
