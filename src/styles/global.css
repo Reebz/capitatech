@@ -271,13 +271,20 @@ img {
   gap: 10px;
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  color: var(--accent);
 }
 
 .brand-text {
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.brand:hover {
+  text-decoration: none;
+  color: var(--accent-hover);
 }
 
 .nav {
@@ -300,15 +307,31 @@ img {
 }
 
 .nav .nav-cta {
-  padding: 9px 18px;
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
+  padding: 8px 16px;
+  border: var(--chunky-border-width) solid var(--text);
+  border-radius: var(--chunky-radius);
+  box-shadow: 3px 3px 0 var(--text);
+  background: var(--bg);
   color: var(--text);
+  font-weight: 600;
+  transition: transform 100ms ease, box-shadow 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
 .nav .nav-cta:hover {
-  border-color: var(--text);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
   color: var(--text);
+}
+
+.nav .nav-cta:active {
+  transform: scale(0.97);
+}
+
+.nav .nav-cta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 3px 3px 0 var(--accent);
+  border-color: var(--accent);
 }
 
 @media (max-width: 840px) {
@@ -317,11 +340,80 @@ img {
   }
 }
 
+/* Back-to-top — fixed bottom-right, chunky idiom. Hidden until the
+   hero-end sentinel exits the viewport; smoothly fades + lifts in via
+   the .visible class set by the inline script. Click scrolls to top
+   smoothly under default motion, instantly under reduced-motion. */
+.back-to-top {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 32px);
+  z-index: 60;
+  width: clamp(48px, 7vw, 56px);
+  height: clamp(48px, 7vw, 56px);
+  display: grid;
+  place-items: center;
+  border: var(--chunky-border);
+  border-radius: var(--chunky-radius);
+  box-shadow: var(--chunky-shadow);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+}
+
+.back-to-top:active:not(:disabled) {
+  transform: translateY(0) scale(0.96);
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: var(--chunky-shadow-accent);
+  border-color: var(--accent);
+}
+
 /* Footer */
 .site-footer {
   border-top: 1px solid var(--border);
   padding-block: clamp(36px, 5vw, 56px);
   margin-top: clamp(48px, 6vw, 96px);
+}
+
+/* Oversized Cavaro-style closing wordmark band. Sits ABOVE the existing
+   footer content (contact email + Sydney location are preserved per the
+   ce-doc-review residual concern). The band is the page's closing
+   crescendo — biggest, boldest visual moment. */
+.footer-band {
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 56px) var(--pad-x);
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.footer-mark {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 14vw, 11rem);
+  font-weight: 700;
+  line-height: 0.86;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  user-select: none;
+  margin: 0;
 }
 
 .footer-inner {

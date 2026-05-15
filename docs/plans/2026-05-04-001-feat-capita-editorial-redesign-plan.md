@@ -1,9 +1,10 @@
 ---
 title: "feat: Capita Technology editorial redesign — Astro + Tailwind 4, single-page editorial layout, kinetic typography, founder profile, Vercel deploy"
 type: feat
-status: active
+status: superseded
 date: 2026-05-04
 origin: docs/brainstorms/2026-05-04-capita-editorial-redesign-requirements.md
+superseded_by: docs/plans/2026-05-14-001-feat-capita-cavaro-visual-reskin-plan.md
 ---
 
 # feat: Capita Technology editorial redesign

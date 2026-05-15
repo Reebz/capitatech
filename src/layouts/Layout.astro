@@ -98,7 +98,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
     <header class="site-header layer-fg" id="top">
       <div class="container header-inner">
         <a class="brand" href="#top" aria-label="Capita Technology">
-          <span class="brand-text">Capita<span style="color: var(--accent)">.</span>Technology</span>
+          <span class="brand-text">Capita<span style="color: var(--text)">.</span>Technology</span>
         </a>
 
         <nav class="nav" aria-label="Primary">
@@ -113,6 +113,9 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
     <div class="layer-fg"><slot /></div>
 
     <footer class="site-footer layer-fg" aria-label="Footer">
+      <div class="footer-band" aria-hidden="true">
+        <span class="footer-mark">Capita</span>
+      </div>
       <div class="container">
         <div class="footer-inner">
           <p>© <span id="y"></span> Capita Technology. Sydney, Australia.</p>
@@ -144,6 +147,21 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         </div>
       </div>
     </footer>
+
+    {/* Back-to-top button — position:fixed bottom-right. Hidden by default,
+        revealed after the user scrolls past the hero (reuses the
+        #grid-calm-sentinel observer). Smooth scroll respects reduced-motion. */}
+    <button
+      id="back-to-top"
+      class="back-to-top"
+      type="button"
+      aria-label="Back to top"
+      hidden
+    >
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path d="M 10 4 L 4 11 M 10 4 L 16 11 M 10 4 L 10 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
 
     <script is:inline>
       // ASCII spotlight + idle drift + two-tier grid intensity.
@@ -333,6 +351,55 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           { rootMargin: "20% 0px 20% 0px", threshold: 0 },
         );
         for (const band of bands) observer.observe(band);
+      })();
+
+      // Back-to-top button: revealed after the hero-end sentinel exits the
+      // viewport top. Click scrolls to top — smoothly by default, instantly
+      // under prefers-reduced-motion. Focus returns to the brand link in
+      // the header after activation so a keyboard user re-enters the page
+      // at the top rather than being stranded on an invisible button.
+      (function initBackToTop() {
+        const btn = document.getElementById("back-to-top");
+        const sentinel = document.getElementById("grid-calm-sentinel");
+        const brandLink = document.querySelector(".brand");
+        if (!btn || !sentinel) return;
+
+        const observer = new IntersectionObserver(
+          function (entries) {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                btn.classList.remove("visible");
+                btn.hidden = true;
+              } else if (entry.boundingClientRect.top < 0) {
+                btn.hidden = false;
+                // Force a frame so the transition fires from the hidden state.
+                requestAnimationFrame(function () {
+                  btn.classList.add("visible");
+                });
+              }
+            }
+          },
+          { rootMargin: "0px", threshold: 0 },
+        );
+        observer.observe(sentinel);
+
+        btn.addEventListener("click", function () {
+          const reducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
+          window.scrollTo({
+            top: 0,
+            behavior: reducedMotion ? "auto" : "smooth",
+          });
+          // Move focus to the brand link in the header so the next Tab
+          // enters the page from the top. Done after a short delay so the
+          // scroll has a chance to land before focus changes.
+          if (brandLink) {
+            setTimeout(function () {
+              brandLink.focus();
+            }, reducedMotion ? 0 : 500);
+          }
+        });
       })();
 
       // Two-tier grid intensity: body.grid-calm flips when the user has
