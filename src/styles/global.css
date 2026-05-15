@@ -620,6 +620,24 @@ h2.display {
   padding-block: var(--pad-y);
 }
 
+/* Translucent white plate over the calmed ASCII grid. Body sections wear
+   this so copy stays crisp without losing the grid's textural presence.
+   backdrop-filter is the primary mechanism; the @supports fallback raises
+   opacity for browsers without backdrop-blur. Padding-inline lets the
+   plate edge meet the viewport on narrow screens without an awkward
+   margin gutter. */
+.section-plate {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+@supports not (backdrop-filter: blur(2px)) {
+  .section-plate {
+    background: rgba(255, 255, 255, 0.99);
+  }
+}
+
 .section-head {
   margin-bottom: clamp(40px, 5vw, 64px);
   max-width: 32ch;
@@ -636,9 +654,9 @@ h2.display {
    eyebrow + section number anchored in a left margin column. */
 .method-block {
   display: grid;
-  grid-template-columns: minmax(120px, 0.4fr) minmax(0, 1fr);
+  grid-template-columns: max-content minmax(0, 1fr);
   gap: clamp(24px, 3vw, 48px);
-  align-items: baseline;
+  align-items: start;
   padding-block: clamp(40px, 5vw, 80px);
   border-top: 1px solid var(--border);
 }
@@ -648,15 +666,22 @@ h2.display {
 }
 
 .method-anchor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(56px, 6vw, 80px);
+  height: clamp(56px, 6vw, 80px);
   font-family: var(--font-display);
-  font-size: clamp(28px, 3vw, 44px);
+  font-size: clamp(20px, 2vw, 28px);
   font-weight: 600;
   font-style: normal;
   color: var(--text);
   line-height: 1;
   letter-spacing: -0.02em;
-  position: sticky;
-  top: calc(var(--header-height) + 24px);
+  border: var(--chunky-border);
+  border-radius: var(--chunky-radius);
+  box-shadow: var(--chunky-shadow);
+  background: var(--bg);
 }
 
 .method-content {
@@ -686,12 +711,8 @@ h2.display {
 @media (max-width: 720px) {
   .method-block {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 20px;
     padding-block: clamp(32px, 4vw, 56px);
-  }
-  .method-anchor {
-    position: static;
-    font-size: 28px;
   }
 }
 
