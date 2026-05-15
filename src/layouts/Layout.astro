@@ -12,6 +12,26 @@ const {
   title = "Capita Technology",
   description = "Capita Technology helps leadership teams unlock measurable retention and lifetime value by designing AI-powered decision systems, operating models, and customer experience measurement.",
 } = Astro.props;
+
+// Server-rendered ASCII grid. Generous size to cover ultrawide displays at the
+// smallest font-size in the clamp; CSS clips bleed via overflow:hidden on the
+// fixed layer. Character mix is deterministic (seeded from row/col) so the
+// texture is identical across builds — sparse +, ∙, * break the dot monotony
+// without visually competing with foreground content.
+const ASCII_COLS = 320;
+const ASCII_ROWS = 80;
+const gridChar = (r: number, c: number): string => {
+  const h = ((r * 73856093) ^ (c * 19349663) ^ (r * c * 83492791)) >>> 0;
+  const v = h % 100;
+  if (v < 4) return " ";
+  if (v < 12) return "*";
+  if (v < 17) return "+";
+  if (v < 22) return "∙";
+  return "·";
+};
+const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
+  Array.from({ length: ASCII_COLS }, (_, c) => gridChar(r, c)).join(""),
+).join("\n");
 ---
 
 <!doctype html>
@@ -50,9 +70,11 @@ const {
   </head>
 
   <body>
+    <pre id="ascii-grid" class="ascii-grid" aria-hidden="true">{ascii}</pre>
+
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="site-header" id="top">
+    <header class="site-header layer-fg" id="top">
       <div class="container header-inner">
         <a class="brand" href="#top" aria-label="Capita Technology">
           <span class="brand-text">Capita<span style="color: var(--accent)">.</span>Technology</span>
@@ -67,9 +89,9 @@ const {
       </div>
     </header>
 
-    <slot />
+    <div class="layer-fg"><slot /></div>
 
-    <footer class="site-footer" aria-label="Footer">
+    <footer class="site-footer layer-fg" aria-label="Footer">
       <div class="container">
         <div class="footer-inner">
           <p>© <span id="y"></span> Capita Technology. Sydney, Australia.</p>
@@ -103,9 +125,194 @@ const {
     </footer>
 
     <script is:inline>
-      // Single end-of-body block — verbatim inline (no Vite processing,
-      // no bundle chunk, no module scope). Helpers are top-level function
-      // declarations so the FAQ / picker / form IIFEs can call them.
+      // ASCII spotlight + idle drift + two-tier grid intensity.
+      // Mirrors the Cavaro mechanism with mid-session matchMedia listeners
+      // and Page Visibility handling that Cavaro's one-time check lacks.
+      (function initSpotlight() {
+        const grid = document.getElementById("ascii-grid");
+        if (!grid) return;
+
+        const reducedMotionMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const cursorMQ = window.matchMedia("(hover: hover) and (pointer: fine)");
+        let reducedMotion = reducedMotionMQ.matches;
+        let hasCursor = cursorMQ.matches;
+        let idleActive = !hasCursor;
+        let rafId = 0;
+        let idleStart = performance.now();
+
+        function setPos(x, y) {
+          grid.style.setProperty("--mx", x + "px");
+          grid.style.setProperty("--my", y + "px");
+        }
+
+        function clearGradient() {
+          // Removes the spotlight position so CSS falls back to the flat
+          // dot tint only — used under reduced-motion.
+          grid.style.removeProperty("--mx");
+          grid.style.removeProperty("--my");
+        }
+
+        function idleLoop(now) {
+          if (reducedMotion || !idleActive) return;
+          // Lissajous orbit, asymmetric X/Y so the path doesn't repeat
+          // visibly within a session. X period ~4500ms, Y at 0.7× freq.
+          const t = (now - idleStart) / 4500;
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          const cx = w / 2;
+          const cy = h / 2;
+          const radius = Math.min(w, h) * 0.42;
+          const x = cx + Math.cos(t * 2 * Math.PI) * radius;
+          const y = cy + Math.sin(t * 2 * Math.PI * 0.7) * radius * 0.65;
+          setPos(x, y);
+          rafId = requestAnimationFrame(idleLoop);
+        }
+
+        function startIdle() {
+          if (reducedMotion) return;
+          idleActive = true;
+          idleStart = performance.now();
+          cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(idleLoop);
+        }
+
+        function stopIdle() {
+          idleActive = false;
+          cancelAnimationFrame(rafId);
+        }
+
+        function applyMotionState() {
+          if (reducedMotion) {
+            stopIdle();
+            clearGradient();
+            return;
+          }
+          if (hasCursor) {
+            // Wait for first mousemove; idle drift fills the gap.
+            startIdle();
+          } else {
+            startIdle();
+          }
+        }
+
+        function onMouseMove(e) {
+          if (reducedMotion) return;
+          stopIdle();
+          // Single rAF coalesces multi-events-per-frame from high-Hz mice.
+          cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(function () {
+            setPos(e.clientX, e.clientY);
+          });
+        }
+
+        function onMouseLeave() {
+          if (reducedMotion || !hasCursor) return;
+          startIdle();
+        }
+
+        function attachCursorListeners() {
+          if (!hasCursor) return;
+          window.addEventListener("mousemove", onMouseMove, { passive: true });
+          document.addEventListener("mouseleave", onMouseLeave);
+        }
+
+        function detachCursorListeners() {
+          window.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseleave", onMouseLeave);
+        }
+
+        // Initial wiring.
+        applyMotionState();
+        attachCursorListeners();
+
+        // Mid-session reactivity: OS reduced-motion toggle and cursor
+        // capability change (e.g., iPad keyboard connect) update state
+        // within one frame without a page reload.
+        reducedMotionMQ.addEventListener("change", function (e) {
+          reducedMotion = e.matches;
+          applyMotionState();
+        });
+        cursorMQ.addEventListener("change", function (e) {
+          const wasCursor = hasCursor;
+          hasCursor = e.matches;
+          if (wasCursor && !hasCursor) {
+            detachCursorListeners();
+          } else if (!wasCursor && hasCursor) {
+            attachCursorListeners();
+          }
+          applyMotionState();
+        });
+
+        // Page Visibility: reset idle clock when the tab is restored from
+        // background so the Lissajous position doesn't skip. rAF is paused
+        // by the browser when the tab is hidden; without this, the next
+        // frame would compute against a stale `idleStart`.
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible" && idleActive && !reducedMotion) {
+            idleStart = performance.now();
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(idleLoop);
+          }
+        });
+      })();
+
+      // Two-tier grid intensity: body.grid-calm flips when the user has
+      // scrolled past the hero AND the footer is not yet in view. Hero +
+      // footer remain at full intensity; body sections (logo grid, method,
+      // outcomes, FAQ, contact) read the calmed tint via CSS.
+      (function initGridIntensity() {
+        const sentinel = document.getElementById("grid-calm-sentinel");
+        const footer = document.querySelector(".site-footer");
+        if (!sentinel || !footer) return;
+
+        let heroExited = false;
+        let footerInView = false;
+
+        function apply() {
+          // Calm when past hero AND footer not yet visible.
+          if (heroExited && !footerInView) {
+            document.body.classList.add("grid-calm");
+          } else {
+            document.body.classList.remove("grid-calm");
+          }
+        }
+
+        // Sentinel sits at the end of the hero. When it scrolls above the
+        // viewport top, the user has read past the hero.
+        const heroObserver = new IntersectionObserver(
+          function (entries) {
+            for (const entry of entries) {
+              // `isIntersecting` flips when the sentinel enters/exits the
+              // viewport. We want "above the viewport top" which manifests
+              // as boundingClientRect.top < 0 when not intersecting.
+              if (entry.isIntersecting) {
+                heroExited = false;
+              } else if (entry.boundingClientRect.top < 0) {
+                heroExited = true;
+              }
+            }
+            apply();
+          },
+          { rootMargin: "0px", threshold: 0 },
+        );
+        heroObserver.observe(sentinel);
+
+        // Footer observer: when the footer enters viewport (even partially),
+        // return to full intensity so its closing band reads.
+        const footerObserver = new IntersectionObserver(
+          function (entries) {
+            for (const entry of entries) {
+              footerInView = entry.isIntersecting;
+            }
+            apply();
+          },
+          { rootMargin: "0px", threshold: 0 },
+        );
+        footerObserver.observe(footer);
+      })();
+    </script>
+
+    <script is:inline>
 
       // 1. Year-stamp.
       (function () {

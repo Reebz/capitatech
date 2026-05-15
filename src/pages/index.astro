@@ -110,6 +110,12 @@ const faqs = [
       </div>
     </section>
 
+    {/* Sentinel for the body.grid-calm toggle. When this scrolls above the
+        viewport top, body sections render over the calmed grid tint; when
+        it's still visible (user is at/near hero), grid renders at full
+        intensity. Observed by the inline script in Layout.astro. */}
+    <div id="grid-calm-sentinel" aria-hidden="true" style="height: 1px;"></div>
+
     <section class="trusted" id="experience" aria-label="Trusted by">
       <div class="container">
         <p class="eyebrow">Trusted by teams across telco, banking, and SaaS</p>

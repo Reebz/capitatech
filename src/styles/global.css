@@ -134,6 +134,83 @@ a:hover {
   color: var(--highlight-fg);
 }
 
+/* ASCII spotlight grid — viewport-fixed full-bleed text layer behind every
+   page element. A radial gradient (magenta hot center → Capita blue →
+   foreground ink → transparent) is clipped to the glyph shapes via
+   background-clip: text, so the gradient is only visible *through* the
+   ASCII characters. At rest (no cursor / motion reduced), the flat
+   --grid-dot-default layer shows the texture as a faint ink tint. The
+   spotlight position is driven by the inline script — cursor on desktop,
+   Lissajous idle drift on touch or mouseleave. */
+.ascii-grid {
+  --mx: -300px;
+  --my: -300px;
+  --spot: clamp(140px, 16vw, 260px);
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: clamp(8.1px, 0.99vw, 12.6px);
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  white-space: pre;
+  user-select: none;
+  overflow: hidden;
+  will-change: background-image;
+  background-image:
+    radial-gradient(
+      circle var(--spot) at var(--mx) var(--my),
+      var(--highlight) 0%,
+      var(--accent) 35%,
+      var(--text) 75%,
+      transparent 100%
+    ),
+    linear-gradient(0deg, var(--grid-dot-default), var(--grid-dot-default));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Body-class .grid-calm — applied between hero-exit and footer-enter. Dims
+   the resting tint so body sections read crisply over the grid. The radial
+   gradient (when motion is allowed) still renders at full intensity, since
+   it's only visible at the spotlight position which is small relative to
+   the viewport. */
+body.grid-calm .ascii-grid {
+  background-image:
+    radial-gradient(
+      circle var(--spot) at var(--mx) var(--my),
+      var(--highlight) 0%,
+      var(--accent) 35%,
+      var(--text) 75%,
+      transparent 100%
+    ),
+    linear-gradient(0deg, var(--grid-dot-calm), var(--grid-dot-calm));
+}
+
+/* Foreground stacking — keep header, main, footer above the fixed grid. */
+.layer-fg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reduced-motion: grid renders as static dot tint with no gradient. The
+   inline script also stops the rAF loop and clears the --mx/--my position
+   so the radial gradient is off-canvas; this CSS rule is a belt-and-braces
+   guard for the case where JS is disabled. */
+@media (prefers-reduced-motion: reduce) {
+  .ascii-grid {
+    background-image: linear-gradient(0deg, var(--grid-dot-default), var(--grid-dot-default));
+  }
+  body.grid-calm .ascii-grid {
+    background-image: linear-gradient(0deg, var(--grid-dot-calm), var(--grid-dot-calm));
+  }
+}
+
 img {
   max-width: 100%;
   height: auto;
