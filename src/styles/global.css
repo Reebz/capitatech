@@ -855,17 +855,22 @@ h2.display {
   }
 }
 
-/* FAQ — full-width single column (the side-tile composition was duplicated
-   in the contact section; removing the duplication here makes FAQ more
-   confident). */
+/* FAQ — chunky idiom: each card carries thick border + hard offset shadow.
+   Single-open behavior preserved by the inline form-handler script via
+   aria-expanded + panel.hidden. Focus-visible adds an outline ring AND
+   swaps the shadow tint for AA-perimeter coverage per WCAG 2.2 SC 2.4.11. */
 .faq-stack {
   display: grid;
-  gap: 16px;
+  gap: clamp(16px, 1.6vw, 24px);
   max-width: 64ch;
 }
 
 .faq-card {
-  border-bottom: 1px solid var(--border);
+  border: var(--chunky-border);
+  border-radius: var(--chunky-radius);
+  box-shadow: var(--chunky-shadow);
+  background: var(--bg);
+  overflow: hidden;
 }
 
 .faq-q {
@@ -873,33 +878,36 @@ h2.display {
   width: 100%;
   display: block;
   position: relative;
-  padding: 22px 56px 22px 0;
-  font-weight: 500;
+  padding: 20px 56px 20px 22px;
+  font-weight: 600;
   font-size: var(--type-h3);
   font-family: var(--font-sans);
   line-height: 1.3;
   cursor: pointer;
   color: var(--text);
+  box-sizing: border-box;
 }
 
 .faq-q::after {
   content: "+";
   position: absolute;
-  right: 0;
+  right: 22px;
   top: 50%;
   transform: translateY(-50%);
   width: 28px;
   height: 28px;
   display: grid;
   place-items: center;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 400;
   line-height: 1;
   color: var(--muted-strong);
+  transition: color 150ms ease, transform 150ms ease;
 }
 
 .faq-q[aria-expanded="true"]::after {
   content: "−";
+  color: var(--text);
 }
 
 .faq-q:hover::after {
@@ -908,11 +916,16 @@ h2.display {
 
 .faq-q:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 4px;
+  outline-offset: -2px;
+}
+
+.faq-card:focus-within {
+  box-shadow: var(--chunky-shadow-accent);
+  border-color: var(--accent);
 }
 
 .faq-a {
-  padding: 0 0 22px 0;
+  padding: 0 22px 22px 22px;
 }
 
 .faq-a > p {
@@ -997,28 +1010,46 @@ h2.display {
 .field-input,
 .field-textarea {
   width: 100%;
-  min-height: 44px;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  min-height: 48px;
+  padding: 12px 16px;
+  border: var(--chunky-border);
+  border-radius: var(--chunky-radius);
+  box-shadow: var(--chunky-shadow);
   background: var(--bg);
   color: var(--text);
   font: inherit;
   font-size: var(--type-body);
-  transition: border-color 120ms ease, box-shadow 120ms ease;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .field-input:focus-visible,
 .field-textarea:focus-visible {
-  outline: none;
-  border-color: var(--text);
-  box-shadow: 0 0 0 2px rgba(11, 11, 13, 0.06);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+  box-shadow: var(--chunky-shadow-accent);
+}
+
+.field-input[aria-invalid="true"],
+.field-textarea[aria-invalid="true"] {
+  border-color: #b91c1c;
+  box-shadow: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 #b91c1c;
 }
 
 .field-textarea {
   min-height: 132px;
   resize: vertical;
   line-height: 1.5;
+}
+
+/* Per-field error slot — populated by the inline form-handler script.
+   Inputs gain aria-describedby pointing here. Layout is in-flow (margin-top
+   small, line-height tight) so unhide doesn't shift other fields. */
+.field-error {
+  margin: 8px 0 0 0;
+  color: #b91c1c;
+  font-size: var(--type-micro);
+  line-height: 1.4;
 }
 
 .cc-wrap {
@@ -1030,13 +1061,13 @@ h2.display {
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   z-index: 20;
   padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border: var(--chunky-border);
+  border-radius: var(--chunky-radius);
+  box-shadow: var(--chunky-shadow);
   background: var(--bg);
-  box-shadow: var(--shadow);
   max-height: min(280px, 60vh);
   overflow: auto;
 }
@@ -1051,15 +1082,21 @@ h2.display {
   width: 100%;
   display: block;
   padding: 10px 12px;
-  border-radius: var(--radius-sm);
+  border-radius: calc(var(--chunky-radius) - 4px);
   cursor: pointer;
   font-size: var(--type-body);
+  box-sizing: border-box;
 }
 
 .cc-option:hover,
+.cc-option.is-active {
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+}
+
 .cc-option:focus-visible {
-  background: rgba(11, 11, 13, 0.04);
-  outline: none;
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 #formError {
@@ -1109,31 +1146,19 @@ h2.display {
 
 .kinetic-phrase-track {
   display: inline-block;
-  will-change: opacity, transform;
-}
-
-@supports (animation-timeline: view()) {
-  .kinetic-phrase {
-    overflow: visible;
-    animation: kineticEnter linear both;
-    animation-timeline: view();
-    animation-range: entry 0% exit 100%;
-  }
-  @keyframes kineticEnter {
-    0% { opacity: 0; transform: translateY(48px); }
-    20% { opacity: 1; transform: translateY(0); }
-    80% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-48px); }
-  }
+  will-change: transform;
+  /* Scroll-driven horizontal travel. --kinetic-progress runs -1 (band
+     below viewport) → 0 (band centered) → +1 (band above viewport), set
+     by the inline script. Translates the phrase from +25% to -25% of the
+     band width across the user's scroll arc. */
+  transform: translateX(calc(var(--kinetic-progress, 0) * -25%));
+  transition: transform 16ms linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kinetic-phrase {
-    animation: none !important;
-  }
   .kinetic-phrase-track {
-    animation: none !important;
     transform: none !important;
+    transition: none !important;
   }
 }
 

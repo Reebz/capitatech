@@ -282,7 +282,9 @@ const faqs = [
                   inputmode="text"
                   maxlength="60"
                   placeholder="Jane Smith"
+                  aria-describedby="error-name"
                 />
+                <p id="error-name" class="field-error" role="alert" hidden></p>
               </label>
 
               <label class="field-label">
@@ -296,7 +298,9 @@ const faqs = [
                   autocomplete="email"
                   maxlength="254"
                   placeholder="jane@company.com"
+                  aria-describedby="error-email"
                 />
+                <p id="error-email" class="field-error" role="alert" hidden></p>
               </label>
             </div>
 
@@ -337,7 +341,9 @@ const faqs = [
                   maxlength="24"
                   placeholder="412 345 678"
                   pattern={"^[0-9()\\-\\s]{0,24}$"}
+                  aria-describedby="error-phone"
                 />
+                <p id="error-phone" class="field-error" role="alert" hidden></p>
               </label>
             </div>
 
