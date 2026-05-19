@@ -218,6 +218,17 @@ const faqs = [
       </div>
     </section>
 
+    {/* Second kinetic phrase band — rhythmic interruption between the
+        Outcomes 3-column block and the FAQ stack so the page doesn't
+        run four H2 sections in a row without visual punctuation. Reuses
+        the same placeholder copy as the first band per U10 hard copy
+        gate; swap to a distinct phrase when founder copy lands. */}
+    <div class="kinetic-phrase" aria-hidden="true">
+      <div class="kinetic-phrase-track">
+        <span>{KINETIC_PHRASE}</span>
+      </div>
+    </div>
+
     <section class="section section-plate" id="faq" aria-label="Frequently asked questions">
       <div class="container">
         <div class="section-head">
@@ -327,7 +338,6 @@ const faqs = [
                   <input type="hidden" id="ccISO3" name="ccISO3" value="AUS" />
                   <input type="hidden" id="ccISO2" name="ccISO2" value="AU" />
                 </div>
-                <p class="micro" style="margin-top: 8px;">Defaults to Australia. Type to search.</p>
               </div>
 
               <label class="field-label">

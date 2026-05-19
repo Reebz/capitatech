@@ -719,20 +719,34 @@ h2.display {
    plate edge meet the viewport on narrow screens without an awkward
    margin gutter. */
 .section-plate {
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(255, 255, 255, 0.82);
+  /* Lightning CSS (Tailwind v4 build) deduplicates the prefixed +
+     unprefixed pair and drops the unprefixed form, leaving Chromium
+     with no backdrop-filter at all. Writing only the unprefixed
+     property keeps the rule intact — Chrome 76+, Firefox 103+, and
+     Safari 18+ all read it. Older Safari falls through to the
+     @supports fallback below, which raises plate opacity so text
+     legibility is preserved when the blur isn't available. */
+  backdrop-filter: blur(8px) saturate(110%);
 }
 
 @supports not (backdrop-filter: blur(2px)) {
   .section-plate {
-    background: rgba(255, 255, 255, 0.99);
+    background: rgba(255, 255, 255, 0.92);
   }
 }
 
 .section-head {
   margin-bottom: clamp(40px, 5vw, 64px);
-  max-width: 32ch;
+  max-width: min(72ch, 100%);
+}
+
+/* Heading-scoped measure — `ch` is the advance width of the `0` glyph at
+   the element's own font-size, so a 22ch cap on h2.display computes against
+   the H2 size (not the wrapper's 16px) and yields an editorial column wide
+   enough for natural breaks instead of stacking single words per line. */
+.section-head h2.display {
+  max-width: 22ch;
 }
 
 .section-head .lede {
@@ -885,11 +899,26 @@ h2.display {
 }
 
 /* Outcome columns — column-prose layout, not SaaS cards. Vertical hairline
-   rules separate columns 2 and 3 from the previous one. */
+   rules separate columns 2 and 3 from the previous one. The horizontal gap
+   gives adjacent column prose breathing room without pushing the hairlines
+   apart (gap renders as space between, hairlines sit on the column edge).
+   The border-top + padding-top tie the grid visually back up to its
+   section heading so the three columns don't read as floating below a
+   gap of dead air. */
 .outcome-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0;
+  gap: 0 clamp(24px, 3vw, 40px);
+  border-top: 1px solid var(--border);
+  padding-top: clamp(28px, 3vw, 40px);
+}
+
+/* Tighten the heading-to-grid gap on the outcomes section specifically.
+   Other sections (method, FAQ, contact) keep the default section-head
+   margin since their content below is more visually weighty (chunky
+   anchored method blocks, chunky FAQ cards, chunky form fields). */
+#outcomes .section-head {
+  margin-bottom: clamp(28px, 3vw, 40px);
 }
 
 .outcome-col {
@@ -1221,7 +1250,7 @@ h2.display {
 .kinetic-phrase {
   display: block;
   padding-block: clamp(64px, 8vw, 128px);
-  padding-inline: var(--pad-x);
+  padding-inline: 0;
   font-family: var(--font-display);
   font-size: var(--type-kinetic);
   font-weight: 600;
@@ -1230,10 +1259,16 @@ h2.display {
   line-height: 0.96;
   color: var(--text);
   text-align: left;
-  white-space: normal;
+  white-space: nowrap;
   overflow: hidden;
-  max-width: var(--container);
-  margin-inline: auto;
+  /* Full-bleed escape from the 1120px container. The band sits inside
+     `.layer-fg > <slot>` which respects the page container, but the
+     negative margin trick (margin-inline: calc(50% - 50vw)) pulls the
+     element edge-to-edge with the viewport so the scroll-driven travel
+     has the full screen width to sweep across, not a 1120px window. */
+  max-width: none;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
 }
 
 .kinetic-phrase-track {
@@ -1241,9 +1276,10 @@ h2.display {
   will-change: transform;
   /* Scroll-driven horizontal travel. --kinetic-progress runs -1 (band
      below viewport) → 0 (band centered) → +1 (band above viewport), set
-     by the inline script. Translates the phrase from +25% to -25% of the
-     band width across the user's scroll arc. */
-  transform: translateX(calc(var(--kinetic-progress, 0) * -25%));
+     by the inline script. Full-bleed band + -60% translate gives a true
+     right-to-left sweep across the viewport, not the 1120px-contained
+     nudge that -25% inside the original container produced. */
+  transform: translateX(calc(var(--kinetic-progress, 0) * -60%));
   transition: transform 16ms linear;
 }
 
@@ -1262,5 +1298,64 @@ h2.display {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile vertical pacing — tightens token floors and per-idiom block
+   padding at sub-720px viewports. Without this, --pad-y floors at 72px
+   per side per plated section and the contact form alone spans ~3
+   screen-heights on a 390×844 phone. Each value below is tuned so the
+   page reads as "editorial-tight" on mobile rather than "abandoned air
+   between sections". Desktop and tablet rhythm unchanged. */
+@media (max-width: 720px) {
+  :root {
+    --pad-y: clamp(40px, 7vw, 72px);
+    --pad-x: clamp(16px, 4vw, 24px);
+  }
+
+  .hero {
+    padding-block: clamp(56px, 14vw, 96px);
+  }
+
+  .kinetic-phrase {
+    padding-block: clamp(36px, 9vw, 64px);
+    /* Cap kinetic font-size on mobile so it doesn't outshout the H2.
+       Without this cap the kinetic phrase floors at 56px while H2
+       floors at 32px — a 1.75× ratio that reads as decorative noise
+       rather than rhythmic interruption. */
+    font-size: clamp(36px, 11vw, 56px);
+  }
+
+  .section-head {
+    margin-bottom: clamp(24px, 4vw, 40px);
+  }
+
+  /* Overrides the earlier 720px rule that set padding-block to
+     clamp(32px, 4vw, 56px) — last declaration wins so this one applies. */
+  .method-block {
+    padding-block: clamp(24px, 5vw, 40px);
+    gap: 16px;
+  }
+
+  .contact-grid {
+    gap: clamp(24px, 4vw, 40px);
+  }
+
+  .field-row {
+    margin-top: 12px;
+  }
+
+  .actions {
+    margin-top: 20px;
+    gap: 16px;
+  }
+
+  .faq-stack {
+    gap: clamp(12px, 3vw, 18px);
+  }
+
+  .site-footer {
+    margin-top: clamp(32px, 6vw, 48px);
+    padding-block: clamp(28px, 6vw, 40px);
   }
 }
