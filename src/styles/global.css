@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+/* Metric-matched fallback fonts — Arial-based fallback families with
+   ascent / descent / line-gap / size-adjust overrides tuned so the
+   fallback's text bounding box matches the real font's. Used in the
+   font stacks BEFORE the generic system fallbacks so if the WOFF2
+   download loses the race against first paint (slow network), the
+   user sees the same line-height + word widths as the final font.
+   Inter values come from Vercel's next/font output. Geist values
+   are approximate; refine if visible mismatch remains after preload. */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  size-adjust: 107.4%;
+  ascent-override: 90.20%;
+  descent-override: 22.48%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Geist Fallback";
+  src: local("Arial");
+  size-adjust: 100%;
+  ascent-override: 95%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
 /* Capita Technology design tokens.
    Default 16px root (Cavaro's html { font-size: 200% } rem-doubling rule is
    intentionally not inherited so Tailwind utilities and clamp() ranges scale
@@ -82,7 +108,7 @@
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --font-sans:
-    "Inter Variable", ui-sans-serif, system-ui, -apple-system,
+    "Inter Variable", "Inter Fallback", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   /* Display tier — Geist Variable (Vercel). Used for H1, H2.display, kinetic
      phrase, the magenta hero mark, and the founder signed line so the display
@@ -90,7 +116,7 @@
      weight-only (no slnt axis); italic on .why-mark uses synthetic obliqueing
      via font-style: italic, which Geist's clean letterforms handle cleanly. */
   --font-display:
-    "Geist Variable", ui-sans-serif, system-ui, -apple-system,
+    "Geist Variable", "Geist Fallback", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
