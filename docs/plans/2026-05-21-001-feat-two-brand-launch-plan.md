@@ -1,9 +1,10 @@
 ---
 title: "feat: Launch Ribar.ai content + productise Capita Advisory"
-status: active
+status: completed
 depth: deep
 type: feat
 created: 2026-05-21
+completed: 2026-05-21
 origin: docs/brainstorms/ribar-ai-pitch-2026-05-21.md
 ---
 
