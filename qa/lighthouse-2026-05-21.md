@@ -1,7 +1,7 @@
 ---
 title: "Lighthouse notes — Capita Advisory copy + packages update 2026-05-21"
 status: draft
-plan: docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
+plan: ../ribar-ai-web/docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
 unit: U10
 ---
 

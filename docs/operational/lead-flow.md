@@ -2,7 +2,7 @@
 title: "Capita Advisory — lead-to-engagement flow"
 status: ready
 created: 2026-05-21
-plan: docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
+plan: ../ribar-ai-web/docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
 unit: U14
 ---
 
@@ -87,7 +87,7 @@ If you and the prospect agree the next step is a proposal, move the Notion row t
 
 ### Step 4 — SOW
 
-Draft the SOW from the SOW template (`docs/ribar-ai/outreach/sow-template.md` for Ribar.ai work; for Capita advisory, use a parallel Capita SOW kept outside the public repo).
+Draft the SOW from the Capita Advisory SOW template (kept outside the public repo).
 
 Include:
 - Engagement scope (pulled from the package definition; modified per the discovery call).

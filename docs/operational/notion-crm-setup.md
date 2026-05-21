@@ -2,7 +2,7 @@
 title: "Notion CRM — Capita Leads setup runbook"
 status: ready
 created: 2026-05-21
-plan: docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
+plan: ../ribar-ai-web/docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
 unit: U13
 ---
 

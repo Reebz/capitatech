@@ -2,7 +2,7 @@
 title: "Truth-gates — capitatech.com.au copy update 2026-05-21"
 status: open
 created: 2026-05-21
-plan: docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
+plan: ../ribar-ai-web/docs/plans/2026-05-21-001-feat-two-brand-launch-plan.md
 ogilvy_direction: qa/copy-review/ogilvy-review.md
 ---
 
