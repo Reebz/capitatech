@@ -1536,6 +1536,20 @@ h2.display {
   color: var(--muted);
 }
 
+/* Contact aside Cal.com booking block — rendered only when the
+   PUBLIC_CAL_BOOKING_URL env var is set. Sits beneath the aside's
+   pain-point list; the button reuses the standard chunky button idiom. */
+.contact-cal {
+  margin-top: clamp(20px, 3vw, 28px);
+  padding-top: clamp(16px, 2vw, 20px);
+  border-top: 1px solid var(--border);
+}
+
+.contact-cal .micro {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
 /* Mobile overrides for the new sections — id+class specificity (1,1,0)
    wins regardless of cascade order, which matters because Astro+Tailwind
    reorders top-level rules after media-query blocks at bundle time. */

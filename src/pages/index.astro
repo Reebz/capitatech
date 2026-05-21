@@ -7,6 +7,27 @@ import Layout from "../layouts/Layout.astro";
 // is verifiable against a citable source.
 const SHOW_FOUNDER = true;
 
+// Cal.com discovery-call booking — opt-in via env var. When unset, the
+// contact section renders only the form. When set to a Cal.com booking
+// URL (e.g. "https://cal.com/mitch/capita-discovery"), the contact
+// aside renders a popup-trigger button that opens the Cal.com booking
+// flow on click. Popup is preferred over inline iframe so LCP is not
+// affected by the embed loader paint. See docs/operational/cal-com-setup.md.
+const CAL_BOOKING_URL = import.meta.env.PUBLIC_CAL_BOOKING_URL ?? "";
+// Derive the namespace path the Cal.com embed expects (e.g.
+// "mitch/capita-discovery") from the full URL. If the env var is set
+// but doesn't look like a Cal.com URL, fall back to empty so the
+// button is not rendered.
+const CAL_BOOKING_NAMESPACE = (() => {
+  if (!CAL_BOOKING_URL) return "";
+  try {
+    const u = new URL(CAL_BOOKING_URL);
+    return u.pathname.replace(/^\/+|\/+$/g, "");
+  } catch {
+    return "";
+  }
+})();
+
 // Single kinetic phrase per the Ogilvy direction — repetition reads as
 // art-direction theatre, not positioning. Rendered once between Method
 // and Packages so the page has one rhythmic interruption without
@@ -571,9 +592,65 @@ const faqs = [
               <li>You suspect customers drop off at renewal, but no one can size it.</li>
               <li>The roadmap your team signed off in January no longer matches what is shipping in March.</li>
             </ul>
+
+            {CAL_BOOKING_NAMESPACE && (
+              <div class="contact-cal" aria-label="Or book a discovery call">
+                <p class="micro">Or skip the form and put a thirty-minute discovery call on the calendar:</p>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-cal-link={CAL_BOOKING_NAMESPACE}
+                  data-cal-namespace=""
+                  data-cal-config='{"layout":"month_view"}'
+                >
+                  Book a discovery call
+                </button>
+              </div>
+            )}
           </aside>
         </div>
       </div>
     </section>
   </main>
+
+  {CAL_BOOKING_NAMESPACE && (
+    <script is:inline define:vars={{ namespace: CAL_BOOKING_NAMESPACE }}>
+      // Cal.com inline loader — minimal version of the official snippet,
+      // wired only when an env-var booking link is present. The loader
+      // appends the embed.js script to <head> on first use; subsequent
+      // Cal() calls reuse it. `data-cal-link` buttons in the document
+      // (see #contact .contact-cal) are auto-wired by embed.js once it
+      // resolves. Loader is intentionally below-the-fold so it does not
+      // contend with the LCP paint.
+      (function (C, A, L) {
+        const p = function (a, ar) { a.q.push(ar); };
+        const d = C.document;
+        C.Cal = C.Cal || function () {
+          const cal = C.Cal;
+          const ar = arguments;
+          if (!cal.loaded) {
+            cal.ns = {};
+            cal.q = cal.q || [];
+            d.head.appendChild(d.createElement("script")).src = A;
+            cal.loaded = true;
+          }
+          if (ar[0] === L) {
+            const api = function () { p(api, arguments); };
+            const ns = ar[1];
+            api.q = api.q || [];
+            if (typeof ns === "string") {
+              cal.ns[ns] = cal.ns[ns] || api;
+              p(cal.ns[ns], ar);
+              p(cal, ["initNamespace", ns]);
+            } else {
+              p(cal, ar);
+            }
+            return;
+          }
+          p(cal, ar);
+        };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+      window.Cal("init", { origin: "https://cal.com" });
+    </script>
+  )}
 </Layout>
