@@ -18,8 +18,8 @@ interface Props {
 }
 
 const {
-  title = "Capita Technology",
-  description = "Capita Technology helps leadership teams unlock measurable retention and lifetime value by designing AI-powered decision systems, operating models, and customer experience measurement.",
+  title = "Capita Technology — productised advisory",
+  description = "Capita Technology is the advisory firm ex-operators run. We diagnose retention, pricing, and AI delivery for boards in telco, banking, insurance, and SaaS. Productised 90-day engagements from $45,000. Bespoke advisory on request.",
 } = Astro.props;
 
 // Server-rendered ASCII grid. Generous size to cover ultrawide displays at the
@@ -119,10 +119,11 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         </a>
 
         <nav class="nav" aria-label="Primary">
-          <a href="#method">Method</a>
+          <a href="#packages">Packages</a>
+          <a href="#bespoke">Bespoke</a>
           <a href="#outcomes">Outcomes</a>
           <a href="#faq">FAQ</a>
-          <a class="nav-cta" href="#contact">Request intro</a>
+          <a class="nav-cta" href="#contact">Talk to us</a>
         </nav>
       </div>
     </header>
@@ -135,13 +136,13 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
       </div>
       <div class="container">
         <div class="footer-inner">
-          <p>© <span id="y"></span> Capita Technology. Sydney, Australia.</p>
+          <p>© <span id="y"></span> Capita Technology. Advisory by ex-operators.</p>
           <div class="footer-links">
             <a href="#top">Top</a>
-            <a href="#method">Method</a>
+            <a href="#packages">Packages</a>
             <a href="#outcomes">Outcomes</a>
             <a href="#faq">FAQ</a>
-            <a href="#contact">Contact</a>
+            <a href="#contact">Talk to us</a>
           </div>
         </div>
 
@@ -149,19 +150,19 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           <div class="tile">
             <h3>Contact</h3>
             <p class="micro">consulting@capitatech.com.au</p>
-            <p class="micro">Sydney, NSW · Australia</p>
+            <p class="micro">Sydney, NSW · Working with boards across Australia, New Zealand, and Southeast Asia.</p>
           </div>
           <div class="tile">
-            <h3>Services</h3>
-            <p class="micro">Strategy · Maturity assessments · Architecture review · Roadmaps</p>
-            <p class="micro">Executive workshops · Requirements definition · Decision frameworks</p>
+            <h3>Engagements</h3>
+            <p class="micro">Diagnosis · Operating model · Roadmap · Measurement · Bespoke</p>
           </div>
           <div class="tile">
             <h3>Industries</h3>
-            <p class="micro">Telecommunications · Banking · Insurance · Property · SaaS · Subscription businesses</p>
-            <p class="micro">Regulated delivery · Governance · Security · Privacy-by-design</p>
+            <p class="micro">Telco · Banking · Insurance · Property · SaaS</p>
           </div>
         </div>
+
+        <p class="footer-nda micro">All work delivered under mutual NDA.</p>
       </div>
     </footer>
 
@@ -523,6 +524,19 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         const digits = raw.replace(/\D/g, "");
         return digits.length >= 4 && digits.length <= 14;
       }
+      function isValidFreeText(value, min, max) {
+        const v = normalizeSpaces(value);
+        return v.length >= min && v.length <= max;
+      }
+      // Allowed package slugs — keep in sync with the <select> in the
+      // contact form. Any value outside this set falls back to "not-sure"
+      // so the operator's notification email never carries a tampered
+      // value from a manipulated form payload.
+      const PACKAGE_SLUGS = ["not-sure", "om-and-a", "diagnosis", "roadmap", "measurement", "bespoke"];
+      function normalizePackage(value) {
+        const v = stripControls(value);
+        return PACKAGE_SLUGS.includes(v) ? v : "not-sure";
+      }
 
       // 3. FAQ accordion — single-open.
       (function initFAQ() {
@@ -776,7 +790,10 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         const ok = document.getElementById("formSuccess");
         const nameEl = document.getElementById("name");
         const emailEl = document.getElementById("email");
+        const companyEl = document.getElementById("company");
+        const roleEl = document.getElementById("role");
         const phoneEl = document.getElementById("phone");
+        const packageEl = document.getElementById("package");
         const msgEl = document.getElementById("message");
         const ccDial = document.getElementById("ccDial");
         const ccISO3 = document.getElementById("ccISO3");
@@ -807,12 +824,12 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           }
         }
         function clearAllFieldErrors() {
-          for (const id of ["name", "email", "phone"]) clearFieldError(id);
+          for (const id of ["name", "email", "company", "role", "phone"]) clearFieldError(id);
         }
         // Per-field errors clear on next input keystroke (per the per-field
         // error lifecycle decision: errors persist until the user starts
         // correcting, not on every keystroke and not only at re-submit).
-        for (const id of ["name", "email", "phone"]) {
+        for (const id of ["name", "email", "company", "role", "phone"]) {
           const el = document.getElementById(id);
           if (el) el.addEventListener("input", function () { clearFieldError(id); });
         }
@@ -833,7 +850,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           pending = value;
           if (submitBtn) {
             submitBtn.disabled = value;
-            submitBtn.textContent = value ? "Sending…" : "Send enquiry";
+            submitBtn.textContent = value ? "Sending…" : "Send this to Capita";
           }
         }
 
@@ -843,16 +860,20 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           setError("");
           clearAllFieldErrors();
 
-          const hp = form.querySelector('input[name="company"]')?.value;
+          // Honeypot is now `website` (the real Company field claims `company`).
+          const hp = form.querySelector('input[name="website"]')?.value;
           if (hp && hp.trim().length) return;
 
-          if (!nameEl || !emailEl) {
+          if (!nameEl || !emailEl || !companyEl || !roleEl) {
             setError("Form is missing required fields.");
             return;
           }
           const name = normalizeSpaces(nameEl.value);
           const email = normalizeSpaces(emailEl.value);
+          const company = normalizeSpaces(companyEl.value);
+          const role = normalizeSpaces(roleEl.value);
           const phone = normalizeSpaces(phoneEl ? phoneEl.value : "");
+          const pkg = normalizePackage(packageEl ? packageEl.value : "not-sure");
           const message = safeBodyText(msgEl ? msgEl.value : "");
 
           // Collect per-field errors first, then short-circuit if any fired
@@ -868,6 +889,14 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           }
           if (!emailEl.checkValidity() || !isValidEmail(emailEl)) {
             setFieldError("email", "Enter a valid email address.");
+            hasFieldError = true;
+          }
+          if (!companyEl.checkValidity() || !isValidFreeText(company, 2, 120)) {
+            setFieldError("company", "Company must be 2–120 characters.");
+            hasFieldError = true;
+          }
+          if (!roleEl.checkValidity() || !isValidFreeText(role, 2, 120)) {
+            setFieldError("role", "Role must be 2–120 characters.");
             hasFieldError = true;
           }
           if (!isValidPhoneLocal(phone)) {
@@ -886,7 +915,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           const iso3 = stripControls(ccISO3 ? ccISO3.value : "AUS") || "AUS";
           const fullPhone = phone ? `${dial} (${iso3}) ${phone}` : "";
 
-          const payload = { name, email, phone: fullPhone, message };
+          const payload = { name, email, company, role, package: pkg, phone: fullPhone, message };
 
           setPending(true);
           // 30s ceiling so a stalled Formspree edge can't leave the user
@@ -918,7 +947,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             if (typeof window.__capitaResetCountryPicker === "function") {
               window.__capitaResetCountryPicker();
             }
-            setSuccess("Thank you. We will respond shortly.");
+            setSuccess("Received. You will hear from us within two business days.");
           } catch (caught) {
             const isAbort = caught && caught.name === "AbortError";
             setError(
@@ -930,6 +959,49 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             setPending(false);
           }
         });
+      })();
+
+      // 6. Package pre-fill — package cards carry data-package on their
+      // CTA so a click sets the contact form's <select> to the matching
+      // slug. URL fragments like `#contact?package=om-and-a` set the
+      // value the same way (lets sales send shareable deep links). The
+      // slug list mirrors PACKAGE_SLUGS in the form handler; an unknown
+      // value falls back to "not-sure" silently.
+      (function initPackagePrefill() {
+        const select = document.getElementById("package");
+        if (!select) return;
+        const allowed = new Set([
+          "not-sure", "om-and-a", "diagnosis", "roadmap", "measurement", "bespoke",
+        ]);
+
+        function apply(slug) {
+          if (!slug || !allowed.has(slug)) return;
+          select.value = slug;
+        }
+
+        // Click-handler: any anchor with [data-package] sets the select
+        // before the browser scrolls to #contact, so by the time the
+        // contact section is on screen the option is already chosen.
+        document.querySelectorAll("a[data-package]").forEach(function (a) {
+          a.addEventListener("click", function () {
+            apply(a.getAttribute("data-package"));
+          });
+        });
+
+        // URL fragment with embedded query — Astro single-page anchors
+        // mean `location.hash` carries the package= segment when
+        // shareable links land. Parse on initial load and on subsequent
+        // hashchange so back/forward nav re-applies the selection.
+        function fromHash() {
+          const raw = String(location.hash || "");
+          const q = raw.indexOf("?");
+          if (q < 0) return;
+          const search = new URLSearchParams(raw.slice(q + 1));
+          const slug = search.get("package");
+          if (slug) apply(slug);
+        }
+        fromHash();
+        window.addEventListener("hashchange", fromHash);
       })();
     </script>
   </body>

@@ -1385,3 +1385,166 @@ h2.display {
     padding-block: clamp(28px, 6vw, 40px);
   }
 }
+
+/* Trusted-by structural fallback — small commitment block that replaces
+   the anonymous logo wall per Ogilvy direction + truth-gate C6. Visual
+   weight intentionally light: this is a placeholder for named, titled
+   testimonials, not the proof itself. */
+.trusted-commitment {
+  margin: 0;
+  font-size: var(--type-body);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 56ch;
+}
+
+/* Packages — four cards on a 2×2 grid above 720px, single column below.
+   Each card reuses the chunky-border + shadow idiom from .faq-card so
+   the page visual language stays coherent. CTA pinned to the bottom via
+   flex so cards with longer/shorter inclusion lists line up across rows. */
+.package-stack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 2.5vw, 32px);
+  margin-top: clamp(24px, 3vw, 40px);
+}
+
+.package-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: clamp(24px, 3vw, 32px);
+  border: var(--chunky-border);
+  border-radius: var(--chunky-radius);
+  box-shadow: var(--chunky-shadow);
+  background: var(--bg);
+}
+
+.package-eyebrow {
+  margin: 0;
+  font-size: var(--type-h3);
+  font-weight: 700;
+  font-family: var(--font-sans);
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+
+.package-name {
+  margin: 0;
+  font-size: var(--type-h2);
+  font-weight: 700;
+  font-family: var(--font-sans);
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.package-duration {
+  margin: 0;
+  font-size: var(--type-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-strong);
+}
+
+.package-promise {
+  margin: 0 0 4px;
+  font-size: var(--type-body);
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.package-inclusions {
+  margin: 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 8px;
+  font-size: var(--type-body);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.package-inclusions li {
+  margin: 0;
+}
+
+.package-cta {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+/* Bespoke band — beneath the package grid. Visually quieter than a
+   card; reads as a continuation of the packages section. */
+.bespoke-band {
+  margin-top: clamp(28px, 4vw, 48px);
+  padding: clamp(24px, 3vw, 32px);
+  border-top: var(--chunky-border-width) solid var(--border);
+  display: grid;
+  gap: 12px;
+}
+
+.bespoke-body {
+  margin: 0;
+  font-size: var(--type-body);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 64ch;
+}
+
+.bespoke-body strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* 90-day commitment band — small-caps eyebrow, body copy capped at
+   ~64ch so the prose reads as commitment, not marketing. Sits
+   immediately after Packages. */
+.commitment-band {
+  padding-block: clamp(40px, 5vw, 64px);
+}
+
+.commitment-body {
+  margin: 12px 0 0;
+  font-size: var(--type-body);
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 64ch;
+}
+
+/* Cross-brand crosslink under the founder letter — single line, low
+   contrast so it doesn't compete with the primary Capita CTA. */
+.founder-crosslink {
+  margin: 24px 0 0;
+  font-size: var(--type-micro);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.founder-crosslink a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.founder-crosslink a:hover,
+.founder-crosslink a:focus-visible {
+  color: var(--accent);
+}
+
+/* Footer NDA line — quiet single-line declaration beneath the tiles. */
+.footer-nda {
+  margin: clamp(20px, 3vw, 28px) 0 0;
+  color: var(--muted);
+}
+
+/* Mobile overrides for the new sections — id+class specificity (1,1,0)
+   wins regardless of cascade order, which matters because Astro+Tailwind
+   reorders top-level rules after media-query blocks at bundle time. */
+@media (max-width: 720px) {
+  /* Packages collapse to a single column below 720px so each card has
+     full width — at 2×2 the cards become too narrow for the inclusion
+     bullets to read comfortably. */
+  #packages .package-stack {
+    grid-template-columns: 1fr;
+    gap: clamp(20px, 5vw, 28px);
+  }
+}
