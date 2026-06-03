@@ -18,8 +18,8 @@ interface Props {
 }
 
 const {
-  title = "Capita Technology — productised advisory",
-  description = "Capita Technology is the advisory firm ex-operators run. We diagnose retention, pricing, and AI delivery for boards in telco, banking, insurance, and SaaS. Productised 90-day engagements from $45,000. Bespoke advisory on request.",
+  title = "Capita Technology. Advisory for boards and executives.",
+  description = "Capita Technology helps boards and executives with AI strategy and delivery, customer retention and growth, and productivity. Principal-led, independent advisory. Engagements scoped and priced from $35,000. Bespoke advisory on request.",
 } = Astro.props;
 
 // Server-rendered ASCII grid. Generous size to cover ultrawide displays at the
@@ -616,7 +616,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         // notification email; emoji renders inconsistently across clients
         // and undercuts a senior-advisory premise.
         function formatItem(c) {
-          return `${c.dial}  ${c.iso3} — ${c.name}`;
+          return `${c.dial}  ${c.iso3}  ${c.name}`;
         }
         const defaultAU = COUNTRY_CODES.find((c) => c.iso2 === "AU") || COUNTRY_CODES[0];
         const defaultDisplay = formatItem(defaultAU);
@@ -637,11 +637,12 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           closeList();
         }
         function isFormattedDisplay(value) {
-          // The formatted display value of the selected country contains
-          // chars (dial + em-dash) that do not appear in the haystack, so
-          // a literal includes() check would return zero matches on first
-          // focus. Treat "field still shows the selected formatted text"
-          // as no-query so the dropdown shows the full list.
+          // The formatted display value of the selected country (dial code
+          // plus ISO plus name with double-space separators) does not match
+          // the haystack as a literal substring, so an includes() check
+          // would return zero matches on first focus. Treat "field still
+          // shows the selected formatted text" as no-query so the dropdown
+          // shows the full list.
           const trimmed = String(value || "").trim();
           if (!trimmed) return true;
           const selected =

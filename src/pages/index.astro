@@ -34,37 +34,38 @@ const CAL_BOOKING_NAMESPACE = (() => {
 // labouring it.
 const KINETIC_PHRASE = "Operators, not consultants.";
 
-// Method blocks — outcome-named, artifact-specific per Ogilvy direction.
-// Each block names the deliverable the engagement closes with so the
-// reader can picture what they get, not what happens inside the room.
+// Method blocks — methodology principles that apply across every
+// engagement. Distinct from Packages, which describe specific scoped
+// engagements with prices. Method is the operating model. Packages
+// are the products.
 const methodBlocks = [
   {
     number: "01",
-    eyebrow: "Diagnosis",
-    heading: "Six to eight weeks to a written diagnosis.",
+    eyebrow: "Principal-led",
+    heading: "The senior name on your statement of work delivers it.",
     prose:
-      "We map churn drivers, pricing leaks, journey breakpoints, and the gap between your AI roadmap and what is actually shipping. You receive a written current-state assessment, named accountabilities, and the three to five decisions that, if made next quarter, will move the number.",
+      "The principal who scopes your engagement is the one writing the document, attending the workshop, and signing the deliverable. No analyst layer. No project office tax. If you call, that is who picks up.",
   },
   {
     number: "02",
-    eyebrow: "Operating model and architecture",
-    heading: "Eight to twelve weeks to a signed-off model.",
+    eyebrow: "Workshop-based",
+    heading: "We sit at the table with the executives who own the decision.",
     prose:
-      "Decision rights, ownership boundaries, and the target architecture written as artefacts your engineering and product leads sign off on. No build — but no ambiguity either. Includes one executive workshop, one architecture review with your CTO, and the written model.",
+      "We come prepared, run a working session, and leave with decisions named. We do not shadow your team for six weeks before forming a view. The result is faster, sharper, and respectful of your time.",
   },
   {
     number: "03",
-    eyebrow: "Roadmap",
-    heading: "Four weeks to a 90-day plan that ships.",
+    eyebrow: "Written deliverables",
+    heading: "Every engagement closes with a written document, signed.",
     prose:
-      "Sequenced workstreams, named owners, exec-ready milestones, and the dependency map. Written so your steering committee can govern it and your delivery leads can ship against it without re-opening scope every fortnight.",
+      "Decision rights, named owners, and sequenced actions in a written document. Your engineering, product, and operations leads can read it, sign off on it, and execute against it. Yours to redistribute internally.",
   },
   {
     number: "04",
-    eyebrow: "Measurement and governance",
-    heading: "Four weeks to a framework risk will sign.",
+    eyebrow: "Independent",
+    heading: "We optimise for one thing: your result.",
     prose:
-      "Leading indicators, a quarterly review cadence, and the AI evaluation framework your risk and audit teams will sign. The deliverable answers one question: when this engagement closes, how does your board know the work moved the business?",
+      "We have no software, no implementation partner taking a cut, and no managed service waiting on the back end. Independence is the entire business model. It is what makes the advice worth its price.",
   },
 ];
 
@@ -77,7 +78,7 @@ const packages = [
     slug: "om-and-a",
     name: "Operating Model and Architecture",
     eyebrow: "From $85,000",
-    duration: "Eight to twelve weeks",
+    duration: "8 to 12 weeks",
     promise:
       "The advisory engagement boards hire us for most: who owns what, decided in writing.",
     inclusions: [
@@ -85,7 +86,6 @@ const packages = [
       "One architecture review with your engineering and data leads.",
       "A written operating-model document covering decision rights, ownership boundaries, and the target-state architecture.",
       "A 30-day implementation check-in, included.",
-      "Principal-led from kickoff to signoff. No analyst layer.",
     ],
     cta: "Begin scoping a build",
   },
@@ -93,12 +93,12 @@ const packages = [
     slug: "diagnosis",
     name: "90-Day Diagnosis",
     eyebrow: "From $45,000",
-    duration: "Six to eight weeks",
+    duration: "6 to 8 weeks",
     promise:
-      "A written diagnosis of why your number is not moving — retention, pricing, or AI delivery.",
+      "A written diagnosis of why your numbers are not moving. Retention, pricing, or AI delivery.",
     inclusions: [
-      "Current-state assessment of churn drivers, pricing leaks, journey breakpoints, or AI delivery gaps.",
-      "Named accountabilities and the three to five decisions that, if made next quarter, will move the number.",
+      "Current-state assessment of where customers are leaving, where pricing is leaking, where journeys break down, or where AI delivery is falling short.",
+      "Named owners and the 3 to 5 decisions that, made next quarter, will matter most.",
       "One executive read-out and one written current-state document.",
       "A scoped 90-day plan if you want to take the work further.",
     ],
@@ -108,11 +108,11 @@ const packages = [
     slug: "roadmap",
     name: "Roadmap",
     eyebrow: "From $35,000",
-    duration: "Four weeks",
+    duration: "4 weeks",
     promise:
-      "A sequenced 90-day plan your team will ship against — not re-litigate.",
+      "A sequenced 90-day plan your team builds from instead of re-opening every fortnight.",
     inclusions: [
-      "Sequenced workstreams, named owners, exec-ready milestones, dependency map.",
+      "Sequenced workstreams, named owners, executive-ready milestones, dependency map.",
       "One steering-committee read-out.",
       "A written roadmap document signed by the engagement lead.",
     ],
@@ -122,9 +122,9 @@ const packages = [
     slug: "measurement",
     name: "Measurement and Governance",
     eyebrow: "From $35,000",
-    duration: "Four weeks",
+    duration: "4 weeks",
     promise:
-      "The framework your risk function signs, the cadence your board reviews — written in four weeks.",
+      "The framework your risk function signs, the cadence your board reviews, written in four weeks.",
     inclusions: [
       "Leading indicators defined for the outcome you're moving.",
       "Quarterly review cadence drafted and trialled with your team.",
@@ -141,24 +141,24 @@ const packages = [
 const outcomes = [
   {
     number: "I",
-    label: "Retention",
-    heading: "Retention.",
+    label: "AI",
+    heading: "AI strategy and delivery.",
     prose:
-      "We diagnose why customers leave, size the revenue at risk, and write the intervention roadmap. Every engagement names the operator who owns the work and the metric your finance team will verify.",
+      "We review the gap between your AI roadmap and what is actually shipping. The deliverable is the evaluation framework your risk function signs, the governance cadence your board reviews, and the named owners that hold your delivery leads accountable. We do not build models. We make the ones you build, or buy, answer for themselves.",
   },
   {
     number: "II",
-    label: "Revenue",
-    heading: "Revenue.",
+    label: "Retention",
+    heading: "Customer retention and growth.",
     prose:
-      "We find the revenue your business is already entitled to and is losing — to pricing leaks, eligibility errors, service-recovery failures, and friction in renewal journeys. The output is a prioritised, sized list and a 90-day plan to recover the top three.",
+      "We diagnose why customers leave, size the revenue at risk, and write the intervention plan. Every engagement names the operator who owns the work and the metric your finance team will verify. Where renewal, eligibility, or service-recovery friction is leaking revenue, we size the leak and write the 90-day plan to recover the top three.",
   },
   {
     number: "III",
-    label: "AI",
-    heading: "AI delivery.",
+    label: "Productivity",
+    heading: "Productivity acceleration.",
     prose:
-      "We review the gap between your AI roadmap and what is shipping, write the evaluation framework your risk function will sign, and set the governance cadence that keeps the programme accountable to the board. We do not build models. We make sure the ones you build, or buy, are answering for themselves.",
+      "We find where your operating model is leaking time. Duplicate decisions, ambiguous ownership, meetings that produce nothing. The deliverable is a sequenced 90-day plan to reclaim the capacity your business already has, with named owners, milestones your executives will recognise, and the dependency map your steering committee can govern.",
   },
 ];
 
@@ -169,7 +169,7 @@ const faqs = [
   {
     id: 1,
     q: "What do I receive in writing at the end of the engagement, and who signs it?",
-    a: "A written deliverable — diagnosis, operating model, roadmap, or measurement framework, depending on the package — signed by the engagement lead. For bespoke work, the engagement principal signs. Every deliverable is yours to redistribute internally. We do not retain confidential client work in case studies without written permission.",
+    a: "A written deliverable, signed by the engagement lead: diagnosis, operating model, roadmap, or measurement framework, depending on the package. For bespoke work, the engagement principal signs. Every deliverable is yours to redistribute internally. We do not retain confidential client work in case studies without written permission.",
   },
   {
     id: 2,
@@ -183,18 +183,18 @@ const faqs = [
   },
   {
     id: 4,
-    q: "Who actually does the work — the principal, or a junior team?",
+    q: "Who does the work: the principal, or a junior team?",
     a: "The principal named on your statement of work leads every engagement and writes the final deliverable. We are deliberately a small firm. There is no analyst layer to bill against your retainer.",
   },
   {
     id: 5,
-    q: "How do we know the work moved the business after you leave?",
-    a: "Every engagement includes the leading indicators we expect to move, the review cadence we expect your team to run, and a written 90-day check-in (included in price). If the indicators have not moved at the 90-day mark, we re-scope a no-fee follow-up week to find out why.",
+    q: "How do we know the work has changed the business after you leave?",
+    a: "Every engagement includes the leading indicators we expect to move, the review cadence we expect your team to run, and a written 90-day check-in, included in price. If the indicators have not moved at the 90-day mark, we re-scope a no-fee follow-up week to find out why.",
   },
   {
     id: 6,
     q: "Why do you publish prices when most advisory firms do not?",
-    a: "Because executives who are spending their company's money should be able to estimate the cost of a conversation with us before they have it. The four packages on this page — Operating Model and Architecture, 90-Day Diagnosis, Roadmap, and Measurement and Governance — cover the engagements we are most often asked to scope. Bespoke engagements are quoted on request and start at $120,000.",
+    a: "Because executives spending their company's money should be able to estimate the cost of a conversation with us before they have it. The four packages on this page cover the work we are most often asked to scope: Operating Model and Architecture, 90-Day Diagnosis, Roadmap, and Measurement and Governance. Bespoke engagements are quoted on request and start at $120,000.",
   },
 ];
 ---
@@ -203,15 +203,15 @@ const faqs = [
   <main id="main">
     <section class="hero" aria-label="Hero">
       <div class="container">
-        <p class="eyebrow">Independent. Operator-led. Advisory only — never the implementer.</p>
-        <h1 class="display">Capita Technology now publishes packaged advisory, with prices. Bespoke continues by request.</h1>
+        <p class="eyebrow">Independent. Run by ex-operators. Advisory only.</p>
+        <h1 class="display">We help with AI, customer retention, and productivity.</h1>
         <p class="lede">
-          Until now, every engagement was a bespoke retainer scoped over weeks. From this quarter, the four engagements we are most often asked to scope — retention diagnosis, AI delivery review, pricing-leak audit, and operating-model build — are dated, scoped, and priced on this page. Bespoke work continues for boards that need it.
+          We've done the job. Every engagement ends with a written plan signed by the principal. Packages from $35,000. Bespoke on request.
         </p>
 
         <div class="actions">
           <a class="btn btn-primary" href="#packages">See the four packages and prices.</a>
-          <a class="btn btn-secondary" href="#bespoke">Discuss a bespoke engagement.</a>
+          <a class="btn btn-secondary" href="#bespoke">Talk to us about a bespoke engagement.</a>
         </div>
       </div>
     </section>
@@ -221,20 +221,6 @@ const faqs = [
         it's still visible (user is at/near hero), grid renders at full
         intensity. Observed by the inline script in Layout.astro. */}
     <div id="grid-calm-sentinel" aria-hidden="true" style="height: 1px;"></div>
-
-    {/* Trusted-by — structural fallback per Ogilvy direction + truth-gate
-        C6. Anonymous-logo wall is removed; named, titled, photographed
-        testimonials are the only acceptable replacement. Until at least
-        two are sourced with written permission, the section renders this
-        small commitment block in their place. */}
-    <section class="trusted section-plate" id="experience" aria-label="Named references">
-      <div class="container">
-        <p class="eyebrow">Named references</p>
-        <p class="trusted-commitment">
-          Named references available on request. Every engagement we list names the operator who led it, the package that scoped it, and the deliverable that closed it.
-        </p>
-      </div>
-    </section>
 
     <div class="kinetic-phrase" aria-hidden="true">
       <div class="kinetic-phrase-track">
@@ -246,7 +232,7 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">How we work</p>
-          <h2 class="display">Four engagements. Each one ends with a written plan your teams ship against.</h2>
+          <h2 class="display">Four principles built into every engagement.</h2>
         </div>
 
         {
@@ -270,7 +256,7 @@ const faqs = [
           <p class="section-label">Packages</p>
           <h2 class="display">Four packages, with prices. Highest first.</h2>
           <p class="lede">
-            Each package below is dated, scoped, and priced. "From $X" reflects honest range — engagements run longer or wider when the scope warrants. The four cover the engagements we are most often asked for. Bespoke continues beneath them.
+            Each package below is dated, scoped, and priced. "From $X" is an honest range. Engagements run longer or wider when the scope warrants it. The four cover the engagements we are most often asked to scope. Bespoke continues beneath them.
           </p>
         </div>
 
@@ -296,10 +282,10 @@ const faqs = [
         <div class="bespoke-band" id="bespoke">
           <p class="eyebrow">Bespoke advisory</p>
           <p class="bespoke-body">
-            For boards running programmes the four packages above do not cover — multi-business-unit operating-model redesigns, board-led transformations, regulated-entity governance builds. Engagement principal sits on your steering committee for the duration. <strong>From $120,000, scoped within five business days.</strong>
+            For boards running programmes the four packages above do not cover: multi-business-unit operating-model redesigns, board-led transformations, regulated-entity governance builds. The engagement principal sits on your steering committee for the duration. <strong>From $120,000, scoped within five business days.</strong>
           </p>
           <div class="package-cta">
-            <a class="btn btn-secondary" href="#contact" data-package="bespoke">Discuss a bespoke engagement.</a>
+            <a class="btn btn-secondary" href="#contact" data-package="bespoke">Talk to us about a bespoke engagement.</a>
           </div>
         </div>
       </div>
@@ -319,7 +305,7 @@ const faqs = [
     </section>
 
     {SHOW_FOUNDER && (
-      <section class="founder-section" id="founder" aria-label="From the founder">
+      <section class="founder-section section-plate" id="founder" aria-label="From the founder">
         <div class="container">
           <div class="section-head">
             <p class="section-label">From the founder</p>
@@ -334,21 +320,21 @@ const faqs = [
 
             <div class="founder-bio">
               <p>
-                Until now, Capita Technology has operated only on bespoke retainers. Every engagement was scoped to the client and priced in a back-and-forth that took two to six weeks before the work could begin.
+                Until now, Capita Technology has operated only on bespoke retainers. Every engagement was scoped to the client and priced in a back-and-forth that took 2 to 6 weeks before the work could begin.
               </p>
               <p>
-                We are changing that for one reason. Boards and executive teams have told us, repeatedly, that the cost of figuring out what an advisory engagement costs — three meetings, four follow-ups, an internal procurement cycle — is itself a tax on getting the work done. If you are a Chief Customer Officer with a quarterly board commitment to move retention by two hundred basis points, the last thing you need is a six-week procurement process to hire the advisory firm that will help you do it.
+                We are changing that for one reason. Boards and executive teams have told us, repeatedly, that the cost of figuring out what an advisory engagement costs is itself a tax on getting the work done. 3 meetings, 4 follow-ups, an internal procurement cycle, all before the work can begin. If you are a Chief Customer Officer with a quarterly board commitment to move retention by 200 basis points, the last thing you need is a 6-week procurement process to hire the advisory firm that will help you do it.
               </p>
               <p>
-                So we are publishing the four engagements we are most often asked to scope, with their inclusions, durations, and prices, on this page. The rest are bespoke — usually a board-led programme, a multi-business-unit operating-model redesign, or an AI governance build for a regulated entity — and we continue to scope those on a retainer basis. Bespoke engagements start at $120,000 and are quoted within five business days.
+                So we are publishing the four engagements we are most often asked to scope, with their inclusions, durations, and prices, on this page. The rest are bespoke. Usually a board-led programme, a multi-business-unit operating-model redesign, or an AI governance build for a regulated entity. We continue to scope those on a retainer basis. Bespoke engagements start at $120,000 and are quoted within 5 business days.
               </p>
               <p>
-                We are advisory only. We do not build, we do not implement, we do not resell, we do not partner with systems integrators for revenue share. Our independence is the product.
+                We are advisory only. We do not build, implement, resell, or partner with systems integrators for revenue share. Our independence is the product.
               </p>
 
               <p class="founder-signed">
                 I am Mitchell Ribar. I started Capita Technology because I was tired of hiring consultancies that produced beautiful decks and nothing that shipped. Every engagement on this site is led by an operator who has run the role they are now advising. I have led retention recovery at Optus, the multi-year AI Personalization programme at JPMorgan Chase, P&amp;L ownership at Brand Networks, and financial-services product leadership at Quantium. If you are about to spend $50,000 to $500,000 on advisory, I think you should know who is on the other end of the email.
-                <span class="founder-signed-name">— Mitchell Ribar, Principal.</span>
+                <span class="founder-signed-name">Mitchell Ribar, Principal.</span>
               </p>
 
               {/* Cross-brand forward link (U32) — quiet, single line. */}
@@ -365,8 +351,8 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">Outcomes</p>
-          <h2 class="display">Three outcomes our advisory work is hired to move: retention, revenue, and AI delivery.</h2>
-          <p class="lede">Every engagement ends with a written plan, signed by the engagement lead. Below are three of the outcomes we are most often hired to move.</p>
+          <h2 class="display">Three outcomes we are hired to move.</h2>
+          <p class="lede">The three our advisory work is most often hired to move.</p>
         </div>
 
         <div class="outcome-grid">
@@ -417,7 +403,7 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">Talk to us</p>
-          <h2 class="display">Tell us the number you need to move in the next 90 days. We reply within two business days with a scoped proposal and a price.</h2>
+          <h2 class="display">Tell us what you need to change in the next 90 days. We reply within 2 business days with a scoped proposal and a price.</h2>
         </div>
 
         <div class="contact-grid">
@@ -549,28 +535,28 @@ const faqs = [
 
             <div class="field-row single">
               <label class="field-label">
-                <span class="micro">Which package — or describe the bespoke problem you need solved</span>
+                <span class="micro">Which package, or describe the bespoke problem you need solved</span>
                 <select id="package" name="package" class="field-input" aria-describedby="error-package">
-                  <option value="not-sure">Not sure yet — let's discuss.</option>
+                  <option value="not-sure">Not sure yet. Let's discuss.</option>
                   <option value="om-and-a">Operating Model and Architecture (from $85k)</option>
                   <option value="diagnosis">90-Day Diagnosis (from $45k)</option>
                   <option value="roadmap">Roadmap (from $35k)</option>
                   <option value="measurement">Measurement and Governance (from $35k)</option>
-                  <option value="bespoke">Bespoke — tell us more below</option>
+                  <option value="bespoke">Bespoke. Tell us more below.</option>
                 </select>
               </label>
             </div>
 
             <div class="field-row single">
               <label class="field-label">
-                <span class="micro">The number you need to move and the deadline you're working to</span>
+                <span class="micro">What you need to change, and by when</span>
                 <textarea
                   id="message"
                   name="message"
                   class="field-textarea"
                   rows="5"
                   maxlength="2000"
-                  placeholder="e.g. Move annualised churn down 200 bps by the end of FY27."></textarea>
+                  placeholder="e.g. Bring annualised churn down 200 bps by the end of FY27."></textarea>
               </label>
             </div>
 
@@ -584,18 +570,18 @@ const faqs = [
 
           <aside class="contact-pains" aria-label="What we understand">
             <h3>If any of these are on your executive's worry list, we should talk.</h3>
-            <p>These are five of the problems boards have hired us to fix:</p>
+            <p>These are 5 of the problems boards have hired us to fix:</p>
             <ul>
               <li>No one owns retention end-to-end, so no one is accountable when it slips.</li>
-              <li>A strategy your CFO cannot measure is a slide deck, not a strategy.</li>
-              <li>Decisions take six weeks because no one knows who is allowed to make them.</li>
+              <li>If your CFO cannot measure your strategy, you have a slide deck.</li>
+              <li>Decisions take 6 weeks because no one knows who is allowed to make them.</li>
               <li>You suspect customers drop off at renewal, but no one can size it.</li>
               <li>The roadmap your team signed off in January no longer matches what is shipping in March.</li>
             </ul>
 
             {CAL_BOOKING_NAMESPACE && (
               <div class="contact-cal" aria-label="Or book a discovery call">
-                <p class="micro">Or skip the form and put a thirty-minute discovery call on the calendar:</p>
+                <p class="micro">Or skip the form and put a 30-minute discovery call on the calendar:</p>
                 <button
                   type="button"
                   class="btn btn-secondary"

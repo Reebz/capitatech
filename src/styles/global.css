@@ -58,7 +58,7 @@
   --radius-lg: 18px;
   --container: 1120px;
   --pad-x: clamp(20px, 3.6vw, 40px);
-  --pad-y: clamp(72px, 9vw, 144px);
+  --pad-y: clamp(36px, 4.5vw, 72px);
 
   /* Layout. */
   --header-height: 64px;
@@ -67,13 +67,13 @@
      drama (H1 144px ceiling, H2 56px, H3 28px) rather than marketing-site
      defaults. */
   --type-eyebrow: clamp(11px, 0.78vw, 13px);
-  --type-h1: clamp(56px, 11vw, 144px);
+  --type-h1: clamp(40px, 6.5vw, 88px);
   --type-h2: clamp(32px, 4.4vw, 56px);
   --type-h3: clamp(20px, 1.8vw, 28px);
   --type-body: clamp(16px, 1.1vw, 18px);
   --type-lede: clamp(20px, 1.8vw, 26px);
   --type-micro: 13px;
-  --type-kinetic: clamp(56px, 12vw, 168px);
+  --type-kinetic: clamp(64px, 13vw, 184px);
   --type-signature: clamp(24px, 2.4vw, 34px);
 
   /* Chunky-control idiom — thick border + hard offset shadow + scale-on-active,
@@ -90,8 +90,8 @@
 
   /* ASCII grid resting tint — used as the flat layer beneath the radial
      spotlight gradient so the grid is faintly visible at rest. */
-  --grid-dot-default: color-mix(in srgb, var(--text) 8%, transparent);
-  --grid-dot-calm: color-mix(in srgb, var(--text) 3%, transparent);
+  --grid-dot-default: color-mix(in srgb, var(--text) 10%, transparent);
+  --grid-dot-calm: color-mix(in srgb, var(--text) 9%, transparent);
 }
 
 @theme inline {
@@ -432,7 +432,7 @@ img {
 .footer-mark {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 14vw, 11rem);
+  font-size: clamp(4rem, 20vw, 18rem);
   font-weight: 700;
   line-height: 0.86;
   color: var(--accent);
@@ -676,11 +676,11 @@ h2.display {
 /* Hero region — single-purpose: eyebrow, H1, lede, two CTAs. Logo grid moved
    out to its own "Trusted by" section. */
 .hero {
-  padding-block: clamp(96px, 12vw, 168px);
+  padding-block: clamp(56px, 7vw, 112px);
 }
 
 .hero h1 {
-  max-width: 14ch;
+  max-width: 20ch;
 }
 
 .hero .lede {
@@ -745,20 +745,23 @@ h2.display {
    plate edge meet the viewport on narrow screens without an awkward
    margin gutter. */
 .section-plate {
-  background: rgba(255, 255, 255, 0.82);
-  /* Lightning CSS (Tailwind v4 build) deduplicates the prefixed +
-     unprefixed pair and drops the unprefixed form, leaving Chromium
-     with no backdrop-filter at all. Writing only the unprefixed
-     property keeps the rule intact — Chrome 76+, Firefox 103+, and
-     Safari 18+ all read it. Older Safari falls through to the
-     @supports fallback below, which raises plate opacity so text
-     legibility is preserved when the blur isn't available. */
-  backdrop-filter: blur(8px) saturate(110%);
+  /* 85% opaque plate over the ASCII grid. No blur — the user should see
+     the grid characters (dots, +, *, ∙) clearly through the plate as a
+     subtle moving texture, not smoothed into nothing. The slight
+     saturation lift keeps colors from going flat under the white wash. */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(105%);
+  /* Inter-section breathing room at 2.5× the previous spacing tier so the
+     animated ASCII band between sections is the dominant rhythmic feature
+     of the page transitions. Adjacent margins collapse, so the gap
+     between two plated sections is the larger of their margin-block
+     values — 240px on desktop max, 140px on mobile floor. */
+  margin-block: clamp(140px, 15vw, 240px);
 }
 
-@supports not (backdrop-filter: blur(2px)) {
+@supports not (backdrop-filter: saturate(105%)) {
   .section-plate {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.90);
   }
 }
 
@@ -1009,7 +1012,6 @@ h2.display {
 .faq-stack {
   display: grid;
   gap: clamp(16px, 1.6vw, 24px);
-  max-width: 64ch;
 }
 
 .faq-card {
@@ -1275,7 +1277,7 @@ h2.display {
    browsers see the same phrase static + center-bleeding-left. */
 .kinetic-phrase {
   display: block;
-  padding-block: clamp(64px, 8vw, 128px);
+  padding-block: clamp(28px, 3.5vw, 56px);
   padding-inline: 0;
   font-family: var(--font-display);
   font-size: var(--type-kinetic);
@@ -1302,10 +1304,12 @@ h2.display {
   will-change: transform;
   /* Scroll-driven horizontal travel. --kinetic-progress runs -1 (band
      below viewport) → 0 (band centered) → +1 (band above viewport), set
-     by the inline script. Full-bleed band + -60% translate gives a true
-     right-to-left sweep across the viewport, not the 1120px-contained
-     nudge that -25% inside the original container produced. */
-  transform: translateX(calc(var(--kinetic-progress, 0) * -60%));
+     by the inline script. The track is wider than the viewport, so the
+     -130% multiplier ensures the entire phrase moves through the viewport
+     during the visible scroll arc — a reader can follow "Operators, not
+     consultants." end-to-end without it disappearing upward before it's
+     fully read. */
+  transform: translateX(calc(var(--kinetic-progress, 0) * -130%));
   transition: transform 16ms linear;
 }
 
@@ -1344,12 +1348,10 @@ h2.display {
   }
 
   .kinetic-phrase {
-    padding-block: clamp(36px, 9vw, 64px);
-    /* Cap kinetic font-size on mobile so it doesn't outshout the H2.
-       Without this cap the kinetic phrase floors at 56px while H2
-       floors at 32px — a 1.75× ratio that reads as decorative noise
-       rather than rhythmic interruption. */
-    font-size: clamp(36px, 11vw, 56px);
+    padding-block: clamp(40px, 10vw, 72px);
+    /* Mobile kinetic cap — small enough to not outshout H2 (which floors
+       at 32px on mobile) while still reading as a deliberate divider. */
+    font-size: clamp(40px, 12vw, 62px);
   }
 
   .section-head {
