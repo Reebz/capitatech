@@ -34,8 +34,11 @@
 :root {
   /* Palette — preserved exactly from the current site, plus a darker eyebrow
      tier (`--muted-strong`) so 12–13px small caps text against white can
-     pass WCAG AA without dropping below the 4.5:1 threshold. */
-  --bg: #ffffff;
+     pass WCAG AA without dropping below the 4.5:1 threshold.
+     v1 BLUE POSTER: page ground shifts off pure white to a warm-gray-50
+     (#f6f6f3) so the saturated Capita-blue hero band reads as a poster
+     plate, not a sheet of paper. */
+  --bg: #f6f6f3;
   --text: #0b0b0d;
   --muted: #4b4b57;
   --muted-strong: #3a3a44;
@@ -63,11 +66,12 @@
   /* Layout. */
   --header-height: 64px;
 
-  /* Editorial type scale — bumped after the design audit to land at editorial
-     drama (H1 144px ceiling, H2 56px, H3 28px) rather than marketing-site
-     defaults. */
-  --type-eyebrow: clamp(11px, 0.78vw, 13px);
-  --type-h1: clamp(40px, 6.5vw, 88px);
+  /* Editorial type scale — v1 BLUE POSTER bumps H1 to a browserbase-class
+     ceiling (clamp(56px, 9vw, 120px)) so the saturated hero plate reads
+     as a poster, not a banner. Eyebrow holds at 13px max — the mono
+     accent face does the heavy lifting on the small-caps tier. */
+  --type-eyebrow: 13px;
+  --type-h1: clamp(56px, 9vw, 120px);
   --type-h2: clamp(32px, 4.4vw, 56px);
   --type-h3: clamp(20px, 1.8vw, 28px);
   --type-body: clamp(16px, 1.1vw, 18px);
@@ -76,10 +80,11 @@
   --type-kinetic: clamp(64px, 13vw, 184px);
   --type-signature: clamp(24px, 2.4vw, 34px);
 
-  /* Chunky-control idiom — thick border + hard offset shadow + scale-on-active,
-     borrowed from the Cavaro landing page. Clamp ranges keep the system from
-     feeling fat on small screens or thin on ultrawide. Tokens live on :root
-     (not @theme inline) because they're composite values, not single colors. */
+  /* Chunky-control idiom — kept for fields/cards (FAQ, package card,
+     form inputs, back-to-top) which still wear the thick border + hard
+     offset shadow language. Buttons in v1 BLUE POSTER move to pill
+     idiom via the --pill tokens below, so the .btn family no longer
+     consumes these. */
   --chunky-border-width: clamp(1.8px, 0.225vw, 2.7px);
   --chunky-border: var(--chunky-border-width) solid var(--text);
   --chunky-radius: clamp(10.8px, 1.44vw, 14.4px);
@@ -87,6 +92,15 @@
   --chunky-shadow: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--text);
   --chunky-shadow-accent: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--accent);
   --chunky-shadow-highlight: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--highlight);
+
+  /* v1 BLUE POSTER pill-button idiom — borderless, generous padding,
+     full pill radius at rest. Hover morphs to a 12px radius (softer than
+     browserbase's full-square morph, which read jarring against the
+     editorial copy register). */
+  --pill-radius: 9999px;
+  --pill-radius-hover: 12px;
+  --pill-padding-x: 32px;
+  --pill-padding-y: 16px;
 
   /* ASCII grid resting tint — used as the flat layer beneath the radial
      spotlight gradient so the grid is faintly visible at rest. */
@@ -118,6 +132,15 @@
   --font-display:
     "Geist Variable", "Geist Fallback", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Mono accent face — applied to every small-caps tier (eyebrow,
+     section-label, package-eyebrow, micro, footer tile h3,
+     contact-pains h3, package-duration, founder-signed-name) so the
+     editorial register has its own typographic voice instead of borrowing
+     Inter's small-caps. Geist Mono variable ships weight-only; the
+     uppercased + tracked treatment carries the small-caps optic. */
+  --font-mono:
+    "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Monaco, Consolas,
+    "Courier New", monospace;
 }
 
 *,
@@ -133,6 +156,11 @@ body {
 
 body {
   margin: 0;
+  /* v1 BLUE POSTER: --bg is warm-gray-50 (#f6f6f3), not pure white.
+     The quilted band rhythm (warm-gray under sections, white plates
+     over the grid, saturated Capita-blue hero, saturated magenta
+     commitment band, saturated Capita-blue footer wordmark) all draws
+     contrast against this base. */
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
@@ -273,13 +301,16 @@ img {
   margin-inline: auto;
 }
 
-/* Header — sticky with backdrop-blur. */
+/* Header — sticky with backdrop-blur. Backdrop wash tuned to the
+   warm-gray-50 page ground; pure white at 84% would read clinical
+   against the warm body, so the wash drops to 78% and lets the warm
+   ground tint through. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
   height: var(--header-height);
-  background: rgba(255, 255, 255, 0.84);
+  background: rgba(246, 246, 243, 0.84);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -332,21 +363,26 @@ img {
   color: var(--text);
 }
 
+/* v1 BLUE POSTER nav-cta — pill idiom matching the .btn family.
+   Solid Capita-blue fill, white text. The header sits above the hero
+   so it doesn't need the inverted treatment the hero CTAs get; primary
+   blue reads correctly against the warm-gray-50 backdrop wash. */
 .nav .nav-cta {
-  padding: 8px 16px;
-  border: var(--chunky-border-width) solid var(--text);
-  border-radius: var(--chunky-radius);
-  box-shadow: 3px 3px 0 var(--text);
-  background: var(--bg);
-  color: var(--text);
+  padding: 10px 20px;
+  border: 2px solid var(--accent);
+  border-radius: 9999px;
+  background: var(--accent);
+  color: var(--accent-fg);
   font-weight: 600;
-  transition: transform 100ms ease, box-shadow 150ms ease, border-color 150ms ease, color 150ms ease;
+  transition: background 180ms ease, border-color 180ms ease, border-radius 180ms ease, transform 100ms ease;
 }
 
 .nav .nav-cta:hover {
   text-decoration: none;
-  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
-  color: var(--text);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--accent-fg);
+  border-radius: 12px;
 }
 
 .nav .nav-cta:active {
@@ -354,10 +390,8 @@ img {
 }
 
 .nav .nav-cta:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--text);
   outline-offset: 3px;
-  box-shadow: 3px 3px 0 var(--accent);
-  border-color: var(--accent);
 }
 
 @media (max-width: 840px) {
@@ -417,16 +451,19 @@ img {
   margin-top: clamp(48px, 6vw, 96px);
 }
 
-/* Oversized Cavaro-style closing wordmark band. Sits ABOVE the existing
-   footer content (contact email + Sydney location are preserved per the
-   ce-doc-review residual concern). The band is the page's closing
-   crescendo — biggest, boldest visual moment. */
+/* v1 BLUE POSTER closing wordmark band — full-bleed saturated Capita
+   blue (the same hue as the hero) so the page bookends in brand color.
+   The wordmark paints white at the same oversized scale; the band
+   sits flush against the warm-gray-50 ground and the next-section
+   plates. */
 .footer-band {
   overflow: hidden;
-  padding: clamp(24px, 4vw, 56px) var(--pad-x);
+  padding: clamp(40px, 6vw, 96px) var(--pad-x);
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid var(--border);
+  background: var(--accent);
+  border-bottom: 0;
+  margin-inline: 0;
 }
 
 .footer-mark {
@@ -435,7 +472,7 @@ img {
   font-size: clamp(4rem, 20vw, 18rem);
   font-weight: 700;
   line-height: 0.86;
-  color: var(--accent);
+  color: #ffffff;
   letter-spacing: -0.04em;
   white-space: nowrap;
   user-select: none;
@@ -506,10 +543,10 @@ img {
 
 .tile h3 {
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--type-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted-strong);
 }
@@ -519,18 +556,32 @@ img {
   color: var(--muted);
 }
 
+/* v1 BLUE POSTER micro tier — mono accent face, default body case (not
+   uppercase) so email addresses, location lines, and form-field labels
+   stay readable while still carrying the mono voice. The footer-tile
+   labels above and the field-label .micro spans below both consume
+   this rule. */
 .micro {
   margin: 14px 0 0 0;
   color: var(--muted);
+  font-family: var(--font-mono);
   font-size: var(--type-micro);
+  letter-spacing: 0.01em;
 }
 
-/* Type primitives. */
+/* Type primitives. v1 BLUE POSTER: every small-caps tier (eyebrow,
+   section-label, package-eyebrow, tile h3, package-duration,
+   contact-pains h3, micro, footer tile labels) renders in Geist Mono
+   uppercase at 13px / 0.05em tracking so the editorial accent has its
+   own voice apart from Inter body. Letter-spacing dropped from 0.08em
+   to 0.05em because mono letterforms already advance wider — the same
+   visual tracking lands tighter. */
 .eyebrow {
   margin: 0 0 16px 0;
   color: var(--muted-strong);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-size: var(--type-eyebrow);
 }
@@ -541,28 +592,29 @@ h1.display {
   font-weight: 600;
   font-style: normal;
   letter-spacing: -0.025em;
-  line-height: 0.96;
+  line-height: 1.02;
   font-size: var(--type-h1);
 }
 
-/* Magenta hero mark — the single in-body magenta location per R8. Geist
-   italic via synthetic obliqueing (Geist doesn't ship slnt), slight
-   size bump so the marked word reads as a deliberate emphasis rather
-   than a colored word in a sentence. The text-shadow halo provides
-   separation when the cursor spotlight passes underneath in the ASCII
-   grid behind — without it, the magenta word would blur visually into
-   the magenta hot center of the gradient. */
+/* v1 BLUE POSTER marker block — wraps a 1–3 word phrase in the H1
+   (here "unleash"). The browserbase mechanic: a saturated color box
+   that hugs the text on every line (box-decoration-break: clone) so a
+   wrapped phrase paints two adjoining boxes rather than one over-long
+   pill. Magenta fill keeps the second register present even when the
+   surrounding plate is Capita blue. Inside the H1 the mark inherits
+   the display font but the saturated block makes the phrase pop as a
+   marker, not an italicised word. */
 mark.why-mark {
-  background: transparent;
-  color: var(--highlight);
+  background: var(--highlight);
+  color: #ffffff;
   font-family: inherit;
-  font-style: italic;
+  font-style: normal;
   font-weight: 600;
-  letter-spacing: 0.002em;
-  padding: 0 0.04em;
-  text-shadow:
-    0 0 1px var(--bg),
-    0 0 2px var(--bg);
+  letter-spacing: -0.025em;
+  padding: 0.05em 0.2em;
+  border-radius: 6px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 h2.display {
@@ -585,43 +637,46 @@ h2.display {
 
 .section-label {
   margin: 0 0 12px 0;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-size: var(--type-eyebrow);
   color: var(--muted-strong);
 }
 
-/* Buttons — chunky idiom: thick border + hard offset shadow + scale-on-active.
-   Both primary and secondary share the chunk; primary fills with --accent,
-   secondary is white with foreground border. Focus swaps the shadow to
-   --chunky-shadow-accent (Capita blue) so focus-visible reads at a glance
-   on both states. Focus ring uses outline as a WCAG 2.2 SC 2.4.11 perimeter
-   complement to the offset shadow (which only covers two sides). */
+/* v1 BLUE POSTER buttons — pill idiom: borderless, generous padding,
+   full pill radius at rest, morphing to a 12px radius on hover (softer
+   than browserbase's full-square morph). No chunky offset shadow on
+   any .btn — the saturated fill is the visual weight. Focus uses an
+   outline ring only (SC 2.4.11). The .hero scope inverts primary to
+   white-on-blue and secondary to outlined-white because the band
+   beneath is already Capita-blue saturated. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   min-height: 44px;
-  padding: 14px 22px;
-  border: var(--chunky-border);
-  border-radius: var(--chunky-radius);
-  box-shadow: var(--chunky-shadow);
-  background: var(--bg);
-  color: var(--text);
+  padding: var(--pill-padding-y) var(--pill-padding-x);
+  border: 2px solid transparent;
+  border-radius: var(--pill-radius);
+  box-shadow: none;
+  background: var(--text);
+  color: var(--bg);
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: -0.005em;
   font-size: 15px;
   cursor: pointer;
-  transition: transform 100ms ease, background 150ms ease, box-shadow 150ms ease, border-color 150ms ease, color 150ms ease;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease, border-radius 180ms ease, transform 100ms ease;
   white-space: nowrap;
   text-decoration: none;
 }
 
 .btn:hover {
   text-decoration: none;
+  border-radius: var(--pill-radius-hover);
 }
 
 .btn:active:not(:disabled) {
@@ -631,8 +686,6 @@ h2.display {
 .btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  box-shadow: var(--chunky-shadow-accent);
-  border-color: var(--accent);
 }
 
 .btn:disabled {
@@ -642,27 +695,80 @@ h2.display {
 
 .btn-primary {
   background: var(--accent);
-  border-color: var(--text);
   color: var(--accent-fg);
+  border-color: var(--accent);
 }
 
 .btn-primary:hover {
   background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn-primary:focus-visible {
-  background: var(--accent);
-  border-color: var(--text);
-  outline-color: var(--accent);
+  outline-color: var(--text);
 }
 
 .btn-secondary {
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
+  border-color: var(--text);
 }
 
 .btn-secondary:hover {
-  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Hero scope inversion — the hero band is Capita-blue saturated, so
+   the primary CTA flips to white-fill / Capita-blue text and the
+   secondary CTA becomes outlined-white on the blue. The .hero .btn
+   selector wins over the base .btn-* declarations because (0,1,1)
+   beats (0,1,0). */
+.hero .btn-primary {
+  background: #ffffff;
+  color: var(--accent);
+  border-color: #ffffff;
+}
+
+.hero .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.92);
+  color: var(--accent-hover);
+}
+
+.hero .btn-primary:focus-visible {
+  outline-color: #ffffff;
+}
+
+.hero .btn-secondary {
+  background: transparent;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.hero .btn-secondary:hover {
+  background: #ffffff;
+  color: var(--accent);
+  border-color: #ffffff;
+}
+
+.hero .btn-secondary:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Commitment band scope inversion — the band runs full-bleed magenta,
+   so any CTAs inside (none in current copy, but the rule is here for
+   parity with the hero) take the white-fill / magenta-text shape. */
+.commitment-band .btn-primary {
+  background: #ffffff;
+  color: var(--highlight);
+  border-color: #ffffff;
+}
+
+.commitment-band .btn-secondary {
+  background: transparent;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .actions {
@@ -673,19 +779,52 @@ h2.display {
   align-items: center;
 }
 
-/* Hero region — single-purpose: eyebrow, H1, lede, two CTAs. Logo grid moved
-   out to its own "Trusted by" section. */
+/* v1 BLUE POSTER hero — full-bleed saturated Capita-blue band. The H1
+   prints white on blue at editorial scale (clamp(56px, 9vw, 120px)),
+   carrying a magenta marker block on "unleash". Eyebrow and lede paint
+   white/85% so the secondary information register doesn't fight the H1.
+   The band uses the same 50%-of-50vw escape as .kinetic-phrase to
+   bleed outside the 1120px container. */
 .hero {
-  padding-block: clamp(56px, 7vw, 112px);
+  position: relative;
+  background: var(--accent);
+  color: #ffffff;
+  padding-block: clamp(80px, 10vw, 144px);
+  margin-inline: calc(50% - 50vw);
+  width: 100vw;
+  max-width: none;
+  /* No internal radius — the saturated plate ends flush at the band
+     edges so the bookend with the magenta commitment band carries the
+     same poster-plate geometry. */
+}
+
+.hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero .eyebrow {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .hero h1 {
-  max-width: 20ch;
+  max-width: 16ch;
+  color: #ffffff;
 }
 
 .hero .lede {
   margin-top: 28px;
   max-width: 50ch;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Hero ::selection — page-wide ::selection paints magenta-on-white
+   which clashes on the blue hero plate. Inverting here gives the
+   selection a white-on-magenta read inside the blue band that still
+   echoes the page-level highlight palette. */
+.hero ::selection {
+  background: #ffffff;
+  color: var(--accent);
 }
 
 /* Trusted-by logo strip — pulled out of the hero so it earns its own real
@@ -745,12 +884,14 @@ h2.display {
    plate edge meet the viewport on narrow screens without an awkward
    margin gutter. */
 .section-plate {
-  /* 85% opaque plate over the ASCII grid. No blur — the user should see
-     the grid characters (dots, +, *, ∙) clearly through the plate as a
-     subtle moving texture, not smoothed into nothing. The slight
-     saturation lift keeps colors from going flat under the white wash. */
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: saturate(105%);
+  /* v1 BLUE POSTER: warm-gray ground means a slightly warmer plate
+     wash. The body sits on #f6f6f3; the plate paints rgba(255,255,255,
+     0.62) over the ASCII grid so the page reads as a quilted multi-band
+     rhythm (warm-gray under sections, cooler white on plates) rather
+     than a single sheet. The grid characters stay legible through the
+     translucent wash. */
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: saturate(110%);
   /* Inter-section breathing room at 2.5× the previous spacing tier so the
      animated ASCII band between sections is the dominant rhythmic feature
      of the page transitions. Adjacent margins collapse, so the gap
@@ -759,9 +900,9 @@ h2.display {
   margin-block: clamp(140px, 15vw, 240px);
 }
 
-@supports not (backdrop-filter: saturate(105%)) {
+@supports not (backdrop-filter: saturate(110%)) {
   .section-plate {
-    background: rgba(255, 255, 255, 0.90);
+    background: rgba(255, 255, 255, 0.78);
   }
 }
 
@@ -878,9 +1019,10 @@ h2.display {
 .founder-photo figcaption {
   margin-top: 12px;
   color: var(--muted-strong);
+  font-family: var(--font-mono);
   font-size: var(--type-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -910,11 +1052,11 @@ h2.display {
   margin-top: 14px;
   color: var(--muted-strong);
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: var(--type-eyebrow);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
 }
 
 @media (max-width: 900px) {
@@ -1101,10 +1243,10 @@ h2.display {
 
 .contact-pains h3 {
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--type-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted-strong);
 }
@@ -1344,7 +1486,9 @@ h2.display {
   }
 
   .hero {
-    padding-block: clamp(56px, 14vw, 96px);
+    /* Mobile saturated band — keep the floor tall enough that the
+       full-bleed blue plate reads as a poster, not a banner. */
+    padding-block: clamp(72px, 18vw, 120px);
   }
 
   .kinetic-phrase {
@@ -1424,26 +1568,30 @@ h2.display {
 
 .package-eyebrow {
   margin: 0;
-  font-size: var(--type-h3);
-  font-weight: 700;
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
+  font-size: var(--type-eyebrow);
+  font-weight: 500;
   color: var(--accent);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .package-name {
   margin: 0;
   font-size: var(--type-h2);
-  font-weight: 700;
-  font-family: var(--font-sans);
-  line-height: 1.2;
+  font-weight: 600;
+  font-family: var(--font-display);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   color: var(--text);
 }
 
 .package-duration {
   margin: 0;
+  font-family: var(--font-mono);
   font-size: var(--type-eyebrow);
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted-strong);
 }
@@ -1478,8 +1626,8 @@ h2.display {
    card; reads as a continuation of the packages section. */
 .bespoke-band {
   margin-top: clamp(28px, 4vw, 48px);
-  padding: clamp(24px, 3vw, 32px);
-  border-top: var(--chunky-border-width) solid var(--border);
+  padding: clamp(24px, 3vw, 32px) 0;
+  border-top: 1px solid var(--border);
   display: grid;
   gap: 12px;
 }
@@ -1497,19 +1645,41 @@ h2.display {
   font-weight: 700;
 }
 
-/* 90-day commitment band — small-caps eyebrow, body copy capped at
-   ~64ch so the prose reads as commitment, not marketing. Sits
-   immediately after Packages. */
-.commitment-band {
-  padding-block: clamp(40px, 5vw, 64px);
+/* v1 BLUE POSTER 90-day commitment — full-bleed magenta band that
+   bookends the page's saturated rhythm with the Capita-blue hero +
+   Capita-blue footer-band. The .section-plate vertical margin from
+   the base class gets reset so the band paints to the section edges
+   without the translucent white plate stacking under it. White copy
+   on saturated magenta; eyebrow uses the white/85% same as the hero. */
+.commitment-band.section-plate {
+  background: var(--highlight);
+  backdrop-filter: none;
+  padding-block: clamp(64px, 8vw, 112px);
+  margin-inline: calc(50% - 50vw);
+  width: 100vw;
+  max-width: none;
+}
+
+.commitment-band > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.commitment-band .eyebrow {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .commitment-body {
   margin: 12px 0 0;
   font-size: var(--type-body);
   line-height: 1.6;
-  color: var(--text);
+  color: #ffffff;
   max-width: 64ch;
+}
+
+.commitment-band ::selection {
+  background: #ffffff;
+  color: var(--highlight);
 }
 
 /* Cross-brand crosslink under the founder letter — single line, low
