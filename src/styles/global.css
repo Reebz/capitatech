@@ -635,14 +635,31 @@ h2.display {
   font-family: var(--font-sans);
 }
 
+/* v1 BLUE POSTER extension — every top-of-section label across the
+   six untreated middle sections (method, packages, founder, outcomes,
+   FAQ, contact) carries a short magenta rule beneath it. The rule
+   individuates each section's heading group against the translucent-
+   white plate it sits on, without changing the plate ground. Width is
+   fixed (not text-width) so the accent reads as a typographic motif,
+   not a text decoration. */
 .section-label {
-  margin: 0 0 12px 0;
+  display: block;
+  margin: 0 0 14px 0;
   font-family: var(--font-mono);
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-size: var(--type-eyebrow);
   color: var(--muted-strong);
+}
+
+.section-label::after {
+  content: "";
+  display: block;
+  width: clamp(40px, 5vw, 64px);
+  height: 2px;
+  margin-top: 12px;
+  background: var(--highlight);
 }
 
 /* v1 BLUE POSTER buttons — pill idiom: borderless, generous padding,
@@ -941,23 +958,20 @@ h2.display {
   border-top: 0;
 }
 
+/* v1 BLUE POSTER extension — method anchor sheds the chunky-bordered
+   box and becomes a display-scale mono numeral in Capita blue. The
+   poster idiom is that typography is the visual weight; the chunky
+   container chrome is reserved for cards (packages, FAQ) and form
+   fields, where containment serves a structural purpose. */
 .method-anchor {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: clamp(56px, 6vw, 80px);
-  height: clamp(56px, 6vw, 80px);
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2vw, 28px);
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 5vw, 64px);
   font-weight: 600;
-  font-style: normal;
-  color: var(--text);
+  color: var(--accent);
   line-height: 1;
   letter-spacing: -0.02em;
-  border: var(--chunky-border);
-  border-radius: var(--chunky-radius);
-  box-shadow: var(--chunky-shadow);
-  background: var(--bg);
 }
 
 .method-content {
@@ -1047,9 +1061,16 @@ h2.display {
   color: var(--text);
 }
 
+/* v1 BLUE POSTER extension — signed name gets a magenta left-accent
+   bar so the closing signature carries a brand-register flourish
+   without raising the type size or weight. Same magenta as the
+   section-label rule, threading the second register through the
+   founder section. */
 .founder-signed-name {
   display: block;
   margin-top: 14px;
+  padding-left: 14px;
+  border-left: 3px solid var(--highlight);
   color: var(--muted-strong);
   font-style: normal;
   font-weight: 500;
@@ -1106,6 +1127,21 @@ h2.display {
 
 .outcome-col:last-child {
   padding-right: 0;
+}
+
+/* v1 BLUE POSTER extension — Roman numeral above the small-caps label,
+   at display-scale mono in Capita blue. Numeral carries the column's
+   identity; label sits underneath in the existing small-caps eyebrow
+   register. Together they replace the old "I · AI" inline eyebrow with
+   a clearer typographic hierarchy. */
+.outcome-numeral {
+  margin: 0 0 8px 0;
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .outcome-col .eyebrow {
@@ -1177,6 +1213,21 @@ h2.display {
   cursor: pointer;
   color: var(--text);
   box-sizing: border-box;
+}
+
+/* v1 BLUE POSTER extension — Q## mono prefix inline with the question
+   text. Sits at ~0.65em of the surrounding h3 so it reads as an
+   editorial caption next to each question. Capita blue ties the
+   accent through the page's secondary register. */
+.faq-q-num {
+  display: inline-block;
+  margin-right: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.65em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  vertical-align: 0.18em;
 }
 
 .faq-q::after {
@@ -1566,14 +1617,35 @@ h2.display {
   background: var(--bg);
 }
 
+/* v1 BLUE POSTER extension — package price split into a small "From"
+   prefix and a display-scale mono amount. The amount becomes the
+   second-loudest element in each card (after the package name),
+   pulling the eye through the price hierarchy Ogilvy direction asks
+   for. Flex baseline keeps "From" sitting on the amount's lower edge. */
 .package-eyebrow {
   margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.from-prefix {
   font-family: var(--font-mono);
   font-size: var(--type-eyebrow);
   font-weight: 500;
-  color: var(--accent);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  color: var(--muted-strong);
+}
+
+.from-amount {
+  font-family: var(--font-mono);
+  font-size: clamp(24px, 2.8vw, 36px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+  line-height: 1;
 }
 
 .package-name {

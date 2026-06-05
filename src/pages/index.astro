@@ -232,7 +232,7 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">How we work</p>
-          <h2 class="display">Four principles built into every engagement.</h2>
+          <h2 class="display">Four principles <mark class="why-mark">built into</mark> every engagement.</h2>
         </div>
 
         {
@@ -254,7 +254,7 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">Packages</p>
-          <h2 class="display">Four packages, with prices. Highest first.</h2>
+          <h2 class="display">Four packages, <mark class="why-mark">with prices</mark>. Highest first.</h2>
           <p class="lede">
             Each package below is dated, scoped, and priced. "From $X" is an honest range. Engagements run longer or wider when the scope warrants it. The four cover the engagements we are most often asked to scope. Bespoke continues beneath them.
           </p>
@@ -264,7 +264,10 @@ const faqs = [
           {
             packages.map((p) => (
               <article class="package-card" id={`package-${p.slug}`}>
-                <p class="package-eyebrow">{p.eyebrow}</p>
+                <p class="package-eyebrow">
+                  <span class="from-prefix">From</span>
+                  <span class="from-amount">{p.eyebrow.replace(/^From\s+/, "")}</span>
+                </p>
                 <h3 class="package-name">{p.name}</h3>
                 <p class="package-duration">{p.duration}</p>
                 <p class="package-promise"><em>{p.promise}</em></p>
@@ -309,7 +312,7 @@ const faqs = [
         <div class="container">
           <div class="section-head">
             <p class="section-label">From the founder</p>
-            <h2 class="display">Why we publish prices, and why we are advisory only.</h2>
+            <h2 class="display">Why we <mark class="why-mark">publish prices</mark>, and why we are advisory only.</h2>
           </div>
 
           <div class="founder-grid">
@@ -351,7 +354,7 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">Outcomes</p>
-          <h2 class="display">Three outcomes we are hired to move.</h2>
+          <h2 class="display">Three outcomes we are <mark class="why-mark">hired to move</mark>.</h2>
           <p class="lede">The three our advisory work is most often hired to move.</p>
         </div>
 
@@ -359,7 +362,8 @@ const faqs = [
           {
             outcomes.map((o) => (
               <article class="outcome-col">
-                <p class="eyebrow">{o.number} · {o.label}</p>
+                <p class="outcome-numeral" aria-hidden="true">{o.number}</p>
+                <p class="eyebrow">{o.label}</p>
                 <h3>{o.heading}</h3>
                 <p>{o.prose}</p>
               </article>
@@ -373,7 +377,7 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">FAQ</p>
-          <h2 class="display">What boards ask us before they sign.</h2>
+          <h2 class="display">What boards ask us <mark class="why-mark">before they sign</mark>.</h2>
         </div>
 
         <div class="faq-stack">
@@ -387,7 +391,8 @@ const faqs = [
                   aria-controls={`faq-a${f.id}`}
                   id={`faq-q${f.id}`}
                 >
-                  {f.q}
+                  <span class="faq-q-num" aria-hidden="true">Q{String(f.id).padStart(2, "0")}</span>
+                  <span class="faq-q-text">{f.q}</span>
                 </button>
                 <div class="faq-a" id={`faq-a${f.id}`} role="region" aria-labelledby={`faq-q${f.id}`} hidden>
                   <p>{f.a}</p>
@@ -403,7 +408,7 @@ const faqs = [
       <div class="container">
         <div class="section-head">
           <p class="section-label">Talk to us</p>
-          <h2 class="display">Tell us what you need to change in the next 90 days. We reply within 2 business days with a scoped proposal and a price.</h2>
+          <h2 class="display">Tell us what you need to change in the <mark class="why-mark">next 90 days</mark>. We reply within 2 business days with a scoped proposal and a price.</h2>
         </div>
 
         <div class="contact-grid">
