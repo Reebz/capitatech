@@ -309,6 +309,28 @@ const clientLogos = [
       </div>
     </div>
 
+    <section class="section section-plate" id="outcomes" aria-label="Outcomes">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Outcomes</p>
+          <h2 class="display">Three outcomes we are <mark class="why-mark">hired to move</mark>.</h2>
+          <p class="lede">Most advisors are built for strategy or for delivery, not both. Two decades operating on both is what lets us move these three.</p>
+        </div>
+
+        <div class="outcome-grid">
+          {
+            outcomes.map((o) => (
+              <article class="outcome-col">
+                <p class="outcome-label">{o.label}</p>
+                <h3>{o.heading}</h3>
+                <p>{o.prose}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
     <section class="section section-plate" id="method" aria-label="How we work">
       <div class="container">
         <div class="section-head">
@@ -330,60 +352,53 @@ const clientLogos = [
       </div>
     </section>
 
-    <section class="section section-plate" id="packages" aria-label="Packages and prices">
+    {/* The Capita Growth Method — full-bleed dark "engine-room" centerpiece:
+        the 5-step delivery loop. Numbered mono 01–05 (05 Compound in magenta
+        marks the loop-back). Distinct from the "Four principles" section
+        above (how we engage vs how the work gets done). <ol> carries the real
+        ordering for assistive tech; the big numerals are decorative. */}
+    <section class="growth-method" id="operating-method" aria-label="The Capita Growth Method">
       <div class="container">
         <div class="section-head">
-          <p class="section-label">Packages</p>
-          <h2 class="display">Four packages, <mark class="why-mark">with prices</mark>. Highest first.</h2>
-          <p class="lede">
-            Each package below is dated, scoped, and priced. "From $X" is an honest range. Engagements run longer or wider when the scope warrants it. The four cover the engagements we are most often asked to scope. Bespoke continues beneath them.
-          </p>
+          <p class="section-label">The Operating Method</p>
+          <h2 class="display">The Capita Growth Method.</h2>
+          <p class="lede gm-lede">A continuous cycle that transforms operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage.</p>
         </div>
 
-        <div class="package-stack">
+        <ol class="gm-steps">
           {
-            packages.map((p) => (
-              <article class="package-card" id={`package-${p.slug}`}>
-                <p class="package-eyebrow">
-                  <span class="from-prefix">From</span>
-                  <span class="from-amount">{p.eyebrow.replace(/^From\s+/, "")}</span>
-                </p>
-                <h3 class="package-name">{p.name}</h3>
-                <p class="package-duration">{p.duration}</p>
-                <p class="package-promise"><em>{p.promise}</em></p>
-                <ul class="package-inclusions">
-                  {p.inclusions.map((line) => (<li>{line}</li>))}
-                </ul>
-                <div class="package-cta">
-                  <a class="btn btn-primary" href="#contact" data-package={p.slug}>{p.cta}</a>
+            growthMethod.map((s) => (
+              <li class="gm-step">
+                <span class="gm-num" aria-hidden="true">{s.n}</span>
+                <div class="gm-body">
+                  <h3 class="gm-name">{s.name}</h3>
+                  <p class="gm-tagline">{s.tagline}</p>
+                  <p class="gm-prose">{s.prose}</p>
+                  <p class="gm-outcome">
+                    <span class="gm-outcome-label">Outcome</span>
+                    <span>{s.outcome}</span>
+                  </p>
                 </div>
-              </article>
+              </li>
             ))
           }
-        </div>
+        </ol>
 
-        <div class="bespoke-band" id="bespoke">
-          <p class="eyebrow">Bespoke advisory</p>
-          <p class="bespoke-body">
-            For boards running programmes the four packages above do not cover: multi-business-unit operating-model redesigns, board-led transformations, regulated-entity governance builds. The engagement principal sits on your steering committee for the duration. <strong>From $120,000, scoped within five business days.</strong>
+        <div class="gm-loop">
+          <p class="gm-loop-chain" aria-hidden="true">
+            <span>Go, See, Understand</span>
+            <span class="gm-arrow">→</span>
+            <span>Radically Simplify</span>
+            <span class="gm-arrow">→</span>
+            <span>Accelerate &amp; Measure</span>
+            <span class="gm-arrow">→</span>
+            <span>Build &amp; Automate</span>
+            <span class="gm-arrow">→</span>
+            <span>Compound</span>
+            <span class="gm-repeat" title="repeats">↻</span>
           </p>
-          <div class="package-cta">
-            <a class="btn btn-secondary" href="#contact" data-package="bespoke">Talk to us about a bespoke engagement.</a>
-          </div>
+          <p class="gm-loop-thesis">A continuous cycle that transforms operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage for the AI-first era.</p>
         </div>
-      </div>
-    </section>
-
-    {/* 90-day commitment - risk-reversal band, immediately after Packages
-        per Ogilvy direction. Visually quiet (small-caps eyebrow,
-        constrained width) but unmistakable. Applies to every package and
-        every bespoke engagement; the commitment is written into the SOW. */}
-    <section class="commitment-band section-plate" id="commitment" aria-label="Our 90-day commitment">
-      <div class="container">
-        <p class="eyebrow">Our 90-day commitment</p>
-        <p class="commitment-body">
-          If, at the 90-day mark after your engagement closes, the leading indicators we defined together have not moved, we return for a no-fee follow-up week to find out why. This is written into every statement of work. It applies to every package on this page and to bespoke engagements.
-        </p>
       </div>
     </section>
 
@@ -430,75 +445,59 @@ const clientLogos = [
       </section>
     )}
 
-    <section class="section section-plate" id="outcomes" aria-label="Outcomes">
+    {/* 90-day commitment - risk-reversal band. Sits just ahead of Packages so
+        the guarantee primes the priced offer that follows. Visually quiet
+        (small-caps eyebrow, constrained width) but unmistakable. Applies to
+        every package and every bespoke engagement; written into the SOW. */}
+    <section class="commitment-band section-plate" id="commitment" aria-label="Our 90-day commitment">
+      <div class="container">
+        <p class="eyebrow">Our 90-day commitment</p>
+        <p class="commitment-body">
+          If, at the 90-day mark after your engagement closes, the leading indicators we defined together have not moved, we return for a no-fee follow-up week to find out why. This is written into every statement of work. It applies to every package on this page and to bespoke engagements.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-plate" id="packages" aria-label="Packages and prices">
       <div class="container">
         <div class="section-head">
-          <p class="section-label">Outcomes</p>
-          <h2 class="display">Three outcomes we are <mark class="why-mark">hired to move</mark>.</h2>
-          <p class="lede">Most advisors are built for strategy or for delivery, not both. Two decades operating on both is what lets us move these three.</p>
+          <p class="section-label">Packages</p>
+          <h2 class="display">Four packages, <mark class="why-mark">with prices</mark>. Highest first.</h2>
+          <p class="lede">
+            Each package below is dated, scoped, and priced. "From $X" is an honest range. Engagements run longer or wider when the scope warrants it. The four cover the engagements we are most often asked to scope. Bespoke continues beneath them.
+          </p>
         </div>
 
-        <div class="outcome-grid">
+        <div class="package-stack">
           {
-            outcomes.map((o) => (
-              <article class="outcome-col">
-                <p class="outcome-label">{o.label}</p>
-                <h3>{o.heading}</h3>
-                <p>{o.prose}</p>
+            packages.map((p) => (
+              <article class="package-card" id={`package-${p.slug}`}>
+                <p class="package-eyebrow">
+                  <span class="from-prefix">From</span>
+                  <span class="from-amount">{p.eyebrow.replace(/^From\s+/, "")}</span>
+                </p>
+                <h3 class="package-name">{p.name}</h3>
+                <p class="package-duration">{p.duration}</p>
+                <p class="package-promise"><em>{p.promise}</em></p>
+                <ul class="package-inclusions">
+                  {p.inclusions.map((line) => (<li>{line}</li>))}
+                </ul>
+                <div class="package-cta">
+                  <a class="btn btn-primary" href="#contact" data-package={p.slug}>{p.cta}</a>
+                </div>
               </article>
             ))
           }
         </div>
-      </div>
-    </section>
 
-    {/* The Capita Growth Method — full-bleed dark "engine-room" centerpiece
-        between Outcomes and FAQ. The 5-step delivery loop; numbered mono
-        01–05 (05 Compound in magenta marks the loop-back). Distinct from
-        the "Four principles" section above (how we engage vs how the work
-        gets done). <ol> carries the real ordering for assistive tech; the
-        big numerals are decorative. */}
-    <section class="growth-method" id="operating-method" aria-label="The Capita Growth Method">
-      <div class="container">
-        <div class="section-head">
-          <p class="section-label">The Operating Method</p>
-          <h2 class="display">The Capita Growth Method.</h2>
-          <p class="lede gm-lede">A continuous cycle that transforms operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage.</p>
-        </div>
-
-        <ol class="gm-steps">
-          {
-            growthMethod.map((s) => (
-              <li class="gm-step">
-                <span class="gm-num" aria-hidden="true">{s.n}</span>
-                <div class="gm-body">
-                  <h3 class="gm-name">{s.name}</h3>
-                  <p class="gm-tagline">{s.tagline}</p>
-                  <p class="gm-prose">{s.prose}</p>
-                  <p class="gm-outcome">
-                    <span class="gm-outcome-label">Outcome</span>
-                    <span>{s.outcome}</span>
-                  </p>
-                </div>
-              </li>
-            ))
-          }
-        </ol>
-
-        <div class="gm-loop">
-          <p class="gm-loop-chain" aria-hidden="true">
-            <span>Go, See, Understand</span>
-            <span class="gm-arrow">→</span>
-            <span>Radically Simplify</span>
-            <span class="gm-arrow">→</span>
-            <span>Accelerate &amp; Measure</span>
-            <span class="gm-arrow">→</span>
-            <span>Build &amp; Automate</span>
-            <span class="gm-arrow">→</span>
-            <span>Compound</span>
-            <span class="gm-repeat" title="repeats">↻</span>
+        <div class="bespoke-band" id="bespoke">
+          <p class="eyebrow">Bespoke advisory</p>
+          <p class="bespoke-body">
+            For boards running programmes the four packages above do not cover: multi-business-unit operating-model redesigns, board-led transformations, regulated-entity governance builds. The engagement principal sits on your steering committee for the duration. <strong>From $120,000, scoped within five business days.</strong>
           </p>
-          <p class="gm-loop-thesis">A continuous cycle that transforms operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage for the AI-first era.</p>
+          <div class="package-cta">
+            <a class="btn btn-secondary" href="#contact" data-package="bespoke">Talk to us about a bespoke engagement.</a>
+          </div>
         </div>
       </div>
     </section>
