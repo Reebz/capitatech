@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout.astro";
 // source.
 const SHOW_FOUNDER = true;
 
-// Cal.com discovery-call booking — opt-in via env var. When unset, the
+// Cal.com discovery-call booking - opt-in via env var. When unset, the
 // contact section renders only the form. When set to a Cal.com booking
 // URL (e.g. "https://cal.com/mitch/capita-discovery"), the contact
 // aside renders a popup-trigger button that opens the Cal.com booking
@@ -28,40 +28,36 @@ const CAL_BOOKING_NAMESPACE = (() => {
   }
 })();
 
-// Single kinetic phrase per the Ogilvy direction — repetition reads as
+// Single kinetic phrase per the Ogilvy direction - repetition reads as
 // art-direction theatre, not positioning. Rendered once between Method
 // and Packages so the page has one rhythmic interruption without
 // labouring it.
 const KINETIC_PHRASE = "Operators, not consultants.";
 
-// Method blocks — methodology principles that apply across every
+// Method blocks - methodology principles that apply across every
 // engagement. Distinct from Packages, which describe specific scoped
 // engagements with prices. Method is the operating model. Packages
 // are the products.
 const methodBlocks = [
   {
-    number: "01",
     eyebrow: "Principal-led",
     heading: "The senior name on your statement of work delivers it.",
     prose:
       "The principal who scopes your engagement is the one writing the document, attending the workshop, and signing the deliverable. No analyst layer. No project office tax. If you call, that is who picks up.",
   },
   {
-    number: "02",
     eyebrow: "Workshop-based",
     heading: "We sit at the table with the executives who own the decision.",
     prose:
       "We come prepared, run a working session, and leave with decisions named. We do not shadow your team for six weeks before forming a view. The result is faster, sharper, and respectful of your time.",
   },
   {
-    number: "03",
     eyebrow: "Written deliverables",
     heading: "Every engagement closes with a written document, signed.",
     prose:
       "Decision rights, named owners, and sequenced actions in a written document. Your engineering, product, and operations leads can read it, sign off on it, and execute against it. Yours to redistribute internally.",
   },
   {
-    number: "04",
     eyebrow: "Independent",
     heading: "We optimise for one thing: your result.",
     prose:
@@ -69,7 +65,7 @@ const methodBlocks = [
   },
 ];
 
-// Packages — outcome-named, "from $X" pricing, highest first per Ogilvy
+// Packages - outcome-named, "from $X" pricing, highest first per Ogilvy
 // anchoring. Slugs flow through to the contact form's package selector.
 // Pricing is operationally committed (truth-gate C11); durations match
 // the Method block durations one-for-one.
@@ -135,26 +131,23 @@ const packages = [
   },
 ];
 
-// Outcomes — three columns, proof-driven framing per Ogilvy direction.
+// Outcomes - three columns, proof-driven framing per Ogilvy direction.
 // Specific number ranges (e.g., 180–320 bps) are held back per
 // qa/truth-gates-2026-05-21.md (C2) until verifiable.
 const outcomes = [
   {
-    number: "I",
     label: "AI",
     heading: "AI strategy and delivery.",
     prose:
       "We review the gap between your AI roadmap and what is actually shipping. The deliverable is the evaluation framework your risk function signs, the governance cadence your board reviews, and the named owners that hold your delivery leads accountable. We do not build models. We make the ones you build, or buy, answer for themselves.",
   },
   {
-    number: "II",
     label: "Retention",
     heading: "Customer retention and growth.",
     prose:
       "We diagnose why customers leave, size the revenue at risk, and write the intervention plan. Every engagement names the operator who owns the work and the metric your finance team will verify. Where renewal, eligibility, or service-recovery friction is leaking revenue, we size the leak and write the 90-day plan to recover the top three.",
   },
   {
-    number: "III",
     label: "Productivity",
     heading: "Productivity acceleration.",
     prose:
@@ -162,7 +155,57 @@ const outcomes = [
   },
 ];
 
-// FAQ — procurement-grade buyer-objection handlers per Ogilvy direction.
+// The Capita Growth Method — the 5-step delivery loop. This is the real
+// step sequence the numbered mono idiom is reserved for. Distinct from the
+// methodBlocks "Four principles" (how we engage): this is how the work
+// actually gets done. Rendered as the full-bleed dark centerpiece between
+// Outcomes and FAQ. NOTE: the print flyer's Operating Method (docs/flyer)
+// still runs the older linear "order is the method" steps — re-sync it to
+// this Loop in a later pass.
+const growthMethod = [
+  {
+    n: "01",
+    name: "Go, See, Understand",
+    tagline: "We go where the work happens.",
+    prose:
+      "We start at the source. We speak with frontline experts, operators, and customers to observe real work and understand how decisions are actually made. Rather than relying on assumptions, reports, or second-hand requirements, we learn directly from the people closest to the problem.",
+    outcome: "A clear understanding of requirements: who, what, where, and how.",
+  },
+  {
+    n: "02",
+    name: "Radically Simplify",
+    tagline: "Complexity is the enemy of scale.",
+    prose:
+      "Before adding technology, we challenge assumptions, eliminate unnecessary steps, and remove anything that doesn't create value. We reduce the problem to its essential components and focus on the smallest solution capable of creating meaningful impact.",
+    outcome: "A simplified value-chain focused on what truly matters.",
+  },
+  {
+    n: "03",
+    name: "Accelerate & Measure",
+    tagline: "Speed is a learning advantage.",
+    prose:
+      "We move rapidly, test ideas in the real world, and measure outcomes. Fast feedback loops reveal what works, what doesn't, and where the greatest opportunities lie. Each iteration strengthens the solution and builds confidence through evidence rather than opinion.",
+    outcome: "A repeatable, battle-tested blueprint.",
+  },
+  {
+    n: "04",
+    name: "Build & Automate",
+    tagline: "Automate proven processes, not assumptions.",
+    prose:
+      "Once the blueprint is proven, we build systems, workflows, and AI around it. Automation handles repeatable work while people focus on judgment, creativity, and continuous improvement. The goal is not automation for its own sake, but greater leverage, consistency, and scale.",
+    outcome: "Scalable execution with less effort and higher performance.",
+  },
+  {
+    n: "05",
+    name: "Compound",
+    tagline: "Every cycle makes the next one smarter.",
+    prose:
+      "Better processes generate better data. Better data powers better AI. Better AI frees capacity for people to focus on higher-value work and uncover the next opportunity for improvement. Over time, the organisation develops a self-reinforcing cycle of learning, automation, and growth.",
+    outcome: "A self-improving system that compounds performance over time.",
+  },
+];
+
+// FAQ - procurement-grade buyer-objection handlers per Ogilvy direction.
 // Six entries: five existing rewrites + a price-question (Q6) that
 // references the packages on this page.
 const faqs = [
@@ -197,13 +240,30 @@ const faqs = [
     a: "Because executives spending their company's money should be able to estimate the cost of a conversation with us before they have it. The four packages on this page cover the work we are most often asked to scope: Operating Model and Architecture, 90-Day Diagnosis, Roadmap, and Measurement and Governance. Bespoke engagements are quoted on request and start at $120,000.",
   },
 ];
+
+// Operator track record — organisations the principals have worked at and
+// with. Framed as experience, not "our clients": several are prior
+// employers, not Capita engagements, so the band's eyebrow says "worked at
+// and with". Add a file to /public/logos and a line here to grow the wall.
+const clientLogos = [
+  { src: "/logos/logo-01.png", alt: "American Express" },
+  { src: "/logos/logo-02.png", alt: "JPMorgan Chase" },
+  { src: "/logos/logo-03.png", alt: "PwC" },
+  { src: "/logos/logo-04.png", alt: "Macy's" },
+  { src: "/logos/logo-05.png", alt: "The New York Times" },
+  { src: "/logos/logo-06.png", alt: "Marriott / Starwood Hotels and Resorts" },
+  { src: "/logos/logo-07.png", alt: "Wells Fargo" },
+  { src: "/logos/logo-08.png", alt: "Singtel / Optus" },
+  // Mirvac (AU property/construction) — placeholder wordmark SVG; swap
+  // /public/logos/logo-09.svg for the official brand asset when available.
+  { src: "/logos/logo-09.svg", alt: "Mirvac" },
+];
 ---
 
 <Layout>
   <main id="main">
     <section class="hero" aria-label="Hero">
       <div class="container">
-        <p class="eyebrow">Independent. Run by ex-operators. Advisory only.</p>
         <h1 class="display">We <mark class="why-mark">unleash</mark> your AI, customer growth, and productivity.</h1>
         <p class="lede">
           We've done the job. Every engagement ends with a written plan signed by the principal. Packages from $35,000. Bespoke on request.
@@ -213,6 +273,7 @@ const faqs = [
           <a class="btn btn-primary" href="#packages">See the four packages and prices.</a>
           <a class="btn btn-secondary" href="#bespoke">Talk to us about a bespoke engagement.</a>
         </div>
+        <p class="hero-credential">Independent. Run by ex-operators. Advisory only.</p>
       </div>
     </section>
 
@@ -221,6 +282,26 @@ const faqs = [
         it's still visible (user is at/near hero), grid renders at full
         intensity. Observed by the inline script in Layout.astro. */}
     <div id="grid-calm-sentinel" aria-hidden="true" style="height: 1px;"></div>
+
+    {/* Operator track record — logos of organisations the principals have
+        worked at and with (not Capita clients; several are prior employers,
+        hence "worked at and with"). Symmetrical bordered grid so the wall
+        reads as an even printed grid with no ragged whitespace; grows by
+        whole rows as logos are added to clientLogos. */}
+    <section class="trusted section-plate" aria-label="Where we have worked">
+      <div class="container">
+        <p class="eyebrow">Companies we've worked at and with</p>
+        <div class="logo-grid">
+          {
+            clientLogos.map((logo) => (
+              <div class="logo-cell">
+                <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
     <div class="kinetic-phrase" aria-hidden="true">
       <div class="kinetic-phrase-track">
@@ -238,7 +319,6 @@ const faqs = [
         {
           methodBlocks.map((b) => (
             <article class="method-block">
-              <div class="method-anchor" aria-hidden="true">{b.number}</div>
               <div class="method-content">
                 <p class="eyebrow">{b.eyebrow}</p>
                 <h3>{b.heading}</h3>
@@ -294,7 +374,7 @@ const faqs = [
       </div>
     </section>
 
-    {/* 90-day commitment — risk-reversal band, immediately after Packages
+    {/* 90-day commitment - risk-reversal band, immediately after Packages
         per Ogilvy direction. Visually quiet (small-caps eyebrow,
         constrained width) but unmistakable. Applies to every package and
         every bespoke engagement; the commitment is written into the SOW. */}
@@ -336,11 +416,11 @@ const faqs = [
               </p>
 
               <p class="founder-signed">
-                I am Mitchell Ribar. I started Capita Technology because I was tired of hiring consultancies that produced beautiful decks and nothing that shipped. Every engagement on this site is led by an operator who has run the role they are now advising. I have led retention recovery at Optus, the multi-year AI Personalization programme at JPMorgan Chase, P&amp;L ownership at Brand Networks, and financial-services product leadership at Quantium. If you are about to spend $50,000 to $500,000 on advisory, I think you should know who is on the other end of the email.
+                I am Mitchell Ribar. I started Capita Technology because I was tired of hiring consultancies that produced beautiful decks and nothing that shipped. Every engagement on this site is led by an operator who has run the role they are now advising. I rebuilt customer growth at Optus after major public crises, and built and scaled the multi-year AI Personalization programme to nearly 100 million customers at JPMorgan Chase. Before that, I owned the P&amp;L at Brand Networks and led financial-services product at Quantium. If you are about to spend $50,000 to $500,000 on advisory, I think you should know who is on the other end of the email.
                 <span class="founder-signed-name">Mitchell Ribar, Principal.</span>
               </p>
 
-              {/* Cross-brand forward link (U32) — quiet, single line. */}
+              {/* Cross-brand forward link (U32) - quiet, single line. */}
               <p class="founder-crosslink">
                 Mitch also runs <a href="https://ribar.ai" rel="noopener">Ribar.ai</a>, a 12-week 1:1 AI executive program for senior leaders.
               </p>
@@ -355,20 +435,70 @@ const faqs = [
         <div class="section-head">
           <p class="section-label">Outcomes</p>
           <h2 class="display">Three outcomes we are <mark class="why-mark">hired to move</mark>.</h2>
-          <p class="lede">The three our advisory work is most often hired to move.</p>
+          <p class="lede">Most advisors are built for strategy or for delivery, not both. Two decades operating on both is what lets us move these three.</p>
         </div>
 
         <div class="outcome-grid">
           {
             outcomes.map((o) => (
               <article class="outcome-col">
-                <p class="outcome-numeral" aria-hidden="true">{o.number}</p>
-                <p class="eyebrow">{o.label}</p>
+                <p class="outcome-label">{o.label}</p>
                 <h3>{o.heading}</h3>
                 <p>{o.prose}</p>
               </article>
             ))
           }
+        </div>
+      </div>
+    </section>
+
+    {/* The Capita Growth Method — full-bleed dark "engine-room" centerpiece
+        between Outcomes and FAQ. The 5-step delivery loop; numbered mono
+        01–05 (05 Compound in magenta marks the loop-back). Distinct from
+        the "Four principles" section above (how we engage vs how the work
+        gets done). <ol> carries the real ordering for assistive tech; the
+        big numerals are decorative. */}
+    <section class="growth-method" id="operating-method" aria-label="The Capita Growth Method">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">The Operating Method</p>
+          <h2 class="display">The Capita Growth Method.</h2>
+          <p class="lede gm-lede">A continuous cycle that transforms operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage.</p>
+        </div>
+
+        <ol class="gm-steps">
+          {
+            growthMethod.map((s) => (
+              <li class="gm-step">
+                <span class="gm-num" aria-hidden="true">{s.n}</span>
+                <div class="gm-body">
+                  <h3 class="gm-name">{s.name}</h3>
+                  <p class="gm-tagline">{s.tagline}</p>
+                  <p class="gm-prose">{s.prose}</p>
+                  <p class="gm-outcome">
+                    <span class="gm-outcome-label">Outcome</span>
+                    <span>{s.outcome}</span>
+                  </p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="gm-loop">
+          <p class="gm-loop-chain" aria-hidden="true">
+            <span>Go, See, Understand</span>
+            <span class="gm-arrow">→</span>
+            <span>Radically Simplify</span>
+            <span class="gm-arrow">→</span>
+            <span>Accelerate &amp; Measure</span>
+            <span class="gm-arrow">→</span>
+            <span>Build &amp; Automate</span>
+            <span class="gm-arrow">→</span>
+            <span>Compound</span>
+            <span class="gm-repeat" title="repeats">↻</span>
+          </p>
+          <p class="gm-loop-thesis">A continuous cycle that transforms operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage for the AI-first era.</p>
         </div>
       </div>
     </section>
@@ -418,7 +548,7 @@ const faqs = [
             method="post"
             novalidate
           >
-            {/* Honeypot — renamed to `website` so the real Company field below
+            {/* Honeypot - renamed to `website` so the real Company field below
                 can claim `company`. Hidden offscreen; populated honeypot
                 aborts submission. */}
             <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
@@ -606,7 +736,7 @@ const faqs = [
 
   {CAL_BOOKING_NAMESPACE && (
     <script is:inline define:vars={{ namespace: CAL_BOOKING_NAMESPACE }}>
-      // Cal.com inline loader — minimal version of the official snippet,
+      // Cal.com inline loader - minimal version of the official snippet,
       // wired only when an env-var booking link is present. The loader
       // appends the embed.js script to <head> on first use; subsequent
       // Cal() calls reuse it. `data-cal-link` buttons in the document

@@ -77,7 +77,7 @@
   --type-body: clamp(16px, 1.1vw, 18px);
   --type-lede: clamp(20px, 1.8vw, 26px);
   --type-micro: 13px;
-  --type-kinetic: clamp(64px, 13vw, 184px);
+  --type-kinetic: clamp(40px, 6.5vw, 92px);
   --type-signature: clamp(24px, 2.4vw, 34px);
 
   /* Chunky-control idiom — kept for fields/cards (FAQ, package card,
@@ -835,6 +835,20 @@ h2.display {
   color: rgba(255, 255, 255, 0.88);
 }
 
+/* Credential line under the hero CTAs — the old top eyebrow copy, moved
+   below the buttons where it reads as trust microcopy (independent, ex-
+   operators, advisory only) rather than a section kicker. Mono, quiet
+   white so it sits beneath the CTAs without competing. */
+.hero-credential {
+  margin: 28px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--type-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 /* Hero ::selection — page-wide ::selection paints magenta-on-white
    which clashes on the blue hero plate. Inverting here gives the
    selection a white-on-magenta read inside the blue band that still
@@ -854,38 +868,48 @@ h2.display {
   margin-bottom: 28px;
 }
 
+/* Symmetrical bordered grid — 3 columns so the 9-logo wall reads as an even
+   printed grid with no ragged whitespace. Cells share hairline borders: the
+   grid paints the top + left edges, each cell paints its right + bottom, so
+   the frame closes without doubled lines. Grows by whole rows as logos are
+   added to clientLogos (a 9th–12th logo just fills the next row). */
 .logo-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 28px;
-  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
 }
 
-.logo-grid img {
-  max-height: 32px;
+.logo-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 3vw, 40px);
+  min-height: clamp(120px, 14vw, 180px);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Logos ~3× the old strip height, centred and filling the cell; width caps
+   at the cell so wide wordmarks (JPMorgan, NYT, Wells Fargo) scale down by
+   width rather than overflowing. */
+.logo-cell img {
+  max-height: clamp(64px, 7vw, 96px);
+  max-width: 100%;
   width: auto;
-  margin: 0 auto;
-  opacity: 0.5;
+  opacity: 0.6;
   filter: grayscale(1);
   transition: opacity 200ms ease, filter 200ms ease;
 }
 
-.logo-grid img:hover {
+.logo-cell img:hover {
   opacity: 1;
   filter: grayscale(0);
 }
 
-@media (max-width: 1100px) {
-  .logo-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px 36px;
-  }
-}
-
-@media (max-width: 540px) {
+@media (max-width: 720px) {
   .logo-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px 36px;
   }
 }
 
@@ -940,38 +964,18 @@ h2.display {
   max-width: 56ch;
 }
 
-/* Method body — single-column prose with offset margin (editorial
-   restraint over decorative two-column with placeholders). The previous
-   1.4fr / 0.6fr grid + tonal placeholders read as wireframe; this drops
-   the right column entirely so each method block is content-only with the
-   eyebrow + section number anchored in a left margin column. */
+/* Method body — single-column prose (editorial restraint over decorative
+   two-column with placeholders). The method blocks list four principles,
+   not an ordered sequence, so they carry no numeral anchor; the eyebrow
+   and heading do the work. The numbered-anchor idiom is reserved for a
+   real step sequence (a future ways-of-working / N-step section). */
 .method-block {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: clamp(24px, 3vw, 48px);
-  align-items: start;
   padding-block: clamp(40px, 5vw, 80px);
   border-top: 1px solid var(--border);
 }
 
 .method-block:first-of-type {
   border-top: 0;
-}
-
-/* v1 BLUE POSTER extension — method anchor sheds the chunky-bordered
-   box and becomes a display-scale mono numeral in Capita blue. The
-   poster idiom is that typography is the visual weight; the chunky
-   container chrome is reserved for cards (packages, FAQ) and form
-   fields, where containment serves a structural purpose. */
-.method-anchor {
-  display: block;
-  width: clamp(56px, 6vw, 80px);
-  font-family: var(--font-mono);
-  font-size: clamp(40px, 5vw, 64px);
-  font-weight: 600;
-  color: var(--accent);
-  line-height: 1;
-  letter-spacing: -0.02em;
 }
 
 .method-content {
@@ -1000,8 +1004,6 @@ h2.display {
 
 @media (max-width: 720px) {
   .method-block {
-    grid-template-columns: 1fr;
-    gap: 20px;
     padding-block: clamp(32px, 4vw, 56px);
   }
 }
@@ -1061,16 +1063,15 @@ h2.display {
   color: var(--text);
 }
 
-/* v1 BLUE POSTER extension — signed name gets a magenta left-accent
-   bar so the closing signature carries a brand-register flourish
-   without raising the type size or weight. Same magenta as the
-   section-label rule, threading the second register through the
-   founder section. */
+/* v1 BLUE POSTER extension — signed name carries a brand-register
+   flourish via the same magenta rule motif the section-labels use
+   (a short fixed-width bar), not a side-stripe border. The rule sits
+   above the name so it reads as a divider between the script signature
+   and the printed name, threading the second register through the
+   founder section without the AI side-tab tell. */
 .founder-signed-name {
   display: block;
-  margin-top: 14px;
-  padding-left: 14px;
-  border-left: 3px solid var(--highlight);
+  margin-top: 18px;
   color: var(--muted-strong);
   font-style: normal;
   font-weight: 500;
@@ -1078,6 +1079,15 @@ h2.display {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-family: var(--font-mono);
+}
+
+.founder-signed-name::before {
+  content: "";
+  display: block;
+  width: clamp(32px, 4vw, 48px);
+  height: 2px;
+  margin-bottom: 12px;
+  background: var(--highlight);
 }
 
 @media (max-width: 900px) {
@@ -1090,19 +1100,16 @@ h2.display {
   }
 }
 
-/* Outcome columns — column-prose layout, not SaaS cards. Vertical hairline
-   rules separate columns 2 and 3 from the previous one. The horizontal gap
-   gives adjacent column prose breathing room without pushing the hairlines
-   apart (gap renders as space between, hairlines sit on the column edge).
-   The border-top + padding-top tie the grid visually back up to its
-   section heading so the three columns don't read as floating below a
-   gap of dead air. */
+/* Outcome columns — column-prose layout, not SaaS cards. v1 BLUE POSTER:
+   each column is headed by a full-width magenta top rule (the editorial
+   second register) with a bold mono label beneath it, so the three
+   categories read as printed poster columns. The rules replace the old
+   hairline separators and the Roman numerals — the numerals implied a
+   ranking these three parallel categories do not have. */
 .outcome-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0 clamp(24px, 3vw, 40px);
-  border-top: 1px solid var(--border);
-  padding-top: clamp(28px, 3vw, 40px);
+  gap: clamp(24px, 3vw, 40px);
 }
 
 /* Tighten the heading-to-grid gap on the outcomes section specifically.
@@ -1114,38 +1121,21 @@ h2.display {
 }
 
 .outcome-col {
-  padding: 0 clamp(20px, 2vw, 32px);
+  padding-top: clamp(18px, 2vw, 24px);
+  border-top: clamp(3px, 0.35vw, 4px) solid var(--highlight);
 }
 
-.outcome-col + .outcome-col {
-  border-left: 1px solid var(--border);
-}
-
-.outcome-col:first-child {
-  padding-left: 0;
-}
-
-.outcome-col:last-child {
-  padding-right: 0;
-}
-
-/* v1 BLUE POSTER extension — Roman numeral above the small-caps label,
-   at display-scale mono in Capita blue. Numeral carries the column's
-   identity; label sits underneath in the existing small-caps eyebrow
-   register. Together they replace the old "I · AI" inline eyebrow with
-   a clearer typographic hierarchy. */
-.outcome-numeral {
-  margin: 0 0 8px 0;
+/* Column label — bold mono small caps, near-black for poster weight (one
+   tier heavier and larger than the muted .eyebrow used elsewhere). */
+.outcome-label {
+  margin: 0 0 12px 0;
   font-family: var(--font-mono);
-  font-size: clamp(40px, 5vw, 64px);
-  font-weight: 600;
-  color: var(--accent);
+  font-weight: 700;
+  font-size: clamp(15px, 1.3vw, 18px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
   line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.outcome-col .eyebrow {
-  margin-bottom: 10px;
 }
 
 .outcome-col h3 {
@@ -1167,19 +1157,160 @@ h2.display {
 @media (max-width: 900px) {
   .outcome-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: clamp(28px, 5vw, 36px);
   }
-  .outcome-col,
-  .outcome-col + .outcome-col,
-  .outcome-col:first-child,
-  .outcome-col:last-child {
-    padding: 0 0 28px;
-    border-left: 0;
-    border-bottom: 1px solid var(--border);
+}
+
+/* The Capita Growth Method — full-bleed dark centerpiece. A tonal break
+   from the warm-gray middle (not the blue/magenta bookend saturation), so
+   it reads as the page's engine room without crowding the "rest in the
+   middle" rhythm. Full-bleed via the same 50%-of-50vw escape as the
+   commitment band; vertical separation comes from the neighbouring
+   section-plates' margins, so this band carries padding only. */
+.growth-method {
+  background: var(--text);
+  color: #fff;
+  margin-inline: calc(50% - 50vw);
+  width: 100vw;
+  max-width: none;
+  padding-block: clamp(72px, 9vw, 140px);
+}
+
+/* Heading sits on dark — section-label / display / lede colours flip from
+   their dark-on-light page-ground defaults to light-on-dark. The
+   section-label keeps its magenta rule motif (::before bar reads fine on
+   dark); only its text colour is lightened. */
+.growth-method .section-label {
+  color: color-mix(in srgb, var(--accent) 55%, #fff);
+}
+.growth-method .display {
+  color: #fff;
+}
+.gm-lede {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.gm-steps {
+  list-style: none;
+  margin: clamp(40px, 5vw, 72px) 0 0;
+  padding: 0;
+}
+
+/* Each step is an index row: large mono numeral, then the body. Hairline
+   rules between rows (light-on-dark) give the spec-sheet read. Not cards. */
+.gm-step {
+  display: grid;
+  grid-template-columns: clamp(56px, 7vw, 104px) 1fr;
+  gap: clamp(18px, 3vw, 48px);
+  padding-block: clamp(28px, 3.5vw, 48px);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.gm-step:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.gm-num {
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+/* Compound is the loop-back / payoff — magenta marks it. */
+.gm-step:last-child .gm-num {
+  color: var(--highlight);
+}
+
+.gm-body {
+  max-width: 62ch;
+}
+.gm-name {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: var(--type-h3);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: #fff;
+}
+.gm-tagline {
+  margin: 0 0 14px;
+  font-size: clamp(17px, 1.4vw, 20px);
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
+}
+.gm-prose {
+  margin: 0;
+  font-size: var(--type-body);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.74);
+}
+.gm-outcome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: var(--type-body);
+  color: #fff;
+}
+.gm-outcome-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 55%, #fff);
+}
+
+/* The Loop — bordered band restating the cycle as a chain + thesis. */
+.gm-loop {
+  margin-top: clamp(40px, 5vw, 72px);
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-lg);
+}
+.gm-loop-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: 0 0 18px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.gm-arrow {
+  color: var(--accent);
+}
+.gm-repeat {
+  color: var(--highlight);
+  font-size: 1.3em;
+  line-height: 1;
+}
+.gm-loop-thesis {
+  margin: 0;
+  max-width: 70ch;
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+@media (max-width: 600px) {
+  .gm-step {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
-  .outcome-col:last-child {
-    border-bottom: 0;
-    padding-bottom: 0;
+  .gm-num {
+    font-size: clamp(36px, 12vw, 52px);
   }
 }
 
@@ -1495,15 +1626,16 @@ h2.display {
 .kinetic-phrase-track {
   display: inline-block;
   will-change: transform;
-  /* Scroll-driven horizontal travel. --kinetic-progress runs -1 (band
-     below viewport) → 0 (band centered) → +1 (band above viewport), set
-     by the inline script. The track is wider than the viewport, so the
-     -130% multiplier ensures the entire phrase moves through the viewport
-     during the visible scroll arc — a reader can follow "Operators, not
-     consultants." end-to-end without it disappearing upward before it's
-     fully read. */
-  transform: translateX(calc(var(--kinetic-progress, 0) * -130%));
-  transition: transform 16ms linear;
+  /* Scroll-driven horizontal drift. --kinetic-progress runs -1 (band below
+     viewport) → 0 (band centered) → +1 (band above), set per frame by the
+     inline script. NO transition: a scroll-linked transform must track the
+     scroll position directly — a CSS transition tries to interpolate
+     between per-frame values and lags a frame behind, which is what made
+     this judder. translate3d promotes it to its own compositor layer. The
+     drift is a gentle ±28% (was a -130% full sweep that flung the phrase
+     off-screen before it could be read); the phrase now sits legible near
+     centre and only parallaxes as you pass it. */
+  transform: translate3d(calc(var(--kinetic-progress, 0) * -28%), 0, 0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1557,7 +1689,6 @@ h2.display {
      clamp(32px, 4vw, 56px) — last declaration wins so this one applies. */
   .method-block {
     padding-block: clamp(24px, 5vw, 40px);
-    gap: 16px;
   }
 
   .contact-grid {
