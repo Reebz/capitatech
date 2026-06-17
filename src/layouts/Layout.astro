@@ -119,13 +119,31 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           <span class="brand-text">Capita<span style="color: var(--text)">.</span>Technology</span>
         </a>
 
-        <nav class="nav" aria-label="Primary">
-          <a href="#packages">Packages</a>
-          <a href="#bespoke">Bespoke</a>
-          <a href="#outcomes">Outcomes</a>
-          <a href="#faq">FAQ</a>
+        {/* Right cluster: the collapsible link list (#primaryNav), the always-
+            visible "Talk to us" CTA, and the mobile hamburger. The CTA and the
+            toggle are SIBLINGS of #primaryNav — not children — so when the panel
+            collapses to display:none at <=840px the CTA stays in the bar. */}
+        <div class="header-right">
+          <nav class="nav" id="primaryNav" aria-label="Primary">
+            <a href="#packages">Packages</a>
+            <a href="#bespoke">Bespoke</a>
+            <a href="#outcomes">Outcomes</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+
           <a class="nav-cta" href="#contact">Talk to us</a>
-        </nav>
+
+          <button
+            id="navToggle"
+            class="nav-toggle"
+            type="button"
+            aria-label="Menu"
+            aria-expanded="false"
+            aria-controls="primaryNav"
+          >
+            <span class="nav-toggle-glyph" aria-hidden="true">☰</span>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -147,6 +165,11 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           </div>
         </div>
 
+        {/* Visually-hidden group heading so the footer tile <h3>s have a
+            parent <h2> in the document outline (no sr-only utility exists in
+            global.css, so the clip pattern is inlined on this one element —
+            zero visible change, lowest-disruption outline fix). */}
+        <h2 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Capita Technology details</h2>
         <div class="footer-tiles">
           <div class="tile">
             <h3>Contact</h3>
@@ -475,6 +498,52 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         );
         footerObserver.observe(footer);
       })();
+
+      // Mobile nav toggle: the hamburger flips a data-nav-open attribute on
+      // the <header> (CSS turns #primaryNav into a dropdown panel at
+      // max-width:840px) and keeps aria-expanded in sync. The panel closes on
+      // Escape, on tapping any nav link, and on an outside click. Tiny and
+      // dependency-free, matching the other inline behaviors here.
+      (function initMobileNav() {
+        const toggle = document.getElementById("navToggle");
+        const header = document.getElementById("top");
+        const panel = document.getElementById("primaryNav");
+        if (!toggle || !header || !panel) return;
+
+        function setOpen(open) {
+          if (open) {
+            header.setAttribute("data-nav-open", "");
+          } else {
+            header.removeAttribute("data-nav-open");
+          }
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        }
+        function isOpen() {
+          return header.hasAttribute("data-nav-open");
+        }
+
+        toggle.addEventListener("click", function () {
+          setOpen(!isOpen());
+        });
+        // Close after a nav link is chosen so the panel doesn't sit over the
+        // section the user just jumped to.
+        panel.addEventListener("click", function (e) {
+          if (e.target && e.target.closest("a")) setOpen(false);
+        });
+        // Escape closes and returns focus to the toggle.
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && isOpen()) {
+            setOpen(false);
+            toggle.focus();
+          }
+        });
+        // Outside click closes (taps on the toggle or inside the panel don't).
+        document.addEventListener("click", function (e) {
+          if (!isOpen()) return;
+          if (toggle.contains(e.target) || panel.contains(e.target)) return;
+          setOpen(false);
+        });
+      })();
     </script>
 
     <script is:inline>
@@ -629,6 +698,9 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         function closeList() {
           list.style.display = "none";
           search.setAttribute("aria-expanded", "false");
+          // Active descendant only has meaning while the listbox is open;
+          // clear it on close so AT doesn't announce a stale option.
+          search.removeAttribute("aria-activedescendant");
         }
         function setSelection(c) {
           ccDial.value = c.dial;
@@ -664,10 +736,17 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         function render(filtered) {
           optionsHost.innerHTML = "";
           const items = filtered.slice(0, 30);
+          // The currently-selected dial is keyed off the hidden ISO2 field so
+          // the matching option renders aria-selected="true" — the active
+          // descendant of the listbox per the ARIA 1.2 combobox pattern.
+          const selectedISO2 = ccISO2.value;
           for (const c of items) {
             const btn = document.createElement("button");
             btn.type = "button";
             btn.className = "cc-option";
+            btn.id = "cc-opt-" + c.iso2;
+            btn.setAttribute("role", "option");
+            btn.setAttribute("aria-selected", c.iso2 === selectedISO2 ? "true" : "false");
             btn.textContent = formatItem(c);
             btn.addEventListener("click", () => setSelection(c));
             optionsHost.appendChild(btn);
@@ -690,6 +769,10 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           const opts = visibleOptions();
           if (!opts.length) return;
           const clamped = Math.max(0, Math.min(opts.length - 1, index));
+          // Pure roving DOM focus: focus moves onto the option <button> itself,
+          // so Enter/Space activate it natively via its click handler. No
+          // aria-activedescendant — combining roving focus with active-descendant
+          // is a contradictory ARIA 1.2 model and left Enter ambiguous.
           opts[clamped].focus();
         }
 
@@ -701,11 +784,48 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           render(filter(search.value));
           openList();
         });
+        // Empty-country desync guard: if the field is cleared to blank, the
+        // hidden dial/ISO must not keep a stale previously-selected value —
+        // a visually-empty country would otherwise submit the old dial code.
+        // Snap the hidden fields back to the AU default the moment the text
+        // goes empty (display is left blank here so the user can keep typing;
+        // the AU display is restored on blur if they leave it empty).
+        search.addEventListener("input", () => {
+          if (!String(search.value || "").trim()) {
+            ccDial.value = defaultAU.dial;
+            ccISO2.value = defaultAU.iso2;
+            ccISO3.value = defaultAU.iso3;
+          }
+        });
+        // On blur with an empty field, restore the full AU default display so
+        // the field never rests visually-empty out of sync with its hidden
+        // value. A delay lets an option click land before this fires.
+        search.addEventListener("blur", () => {
+          setTimeout(() => {
+            if (!String(search.value || "").trim()) {
+              ccDial.value = defaultAU.dial;
+              ccISO2.value = defaultAU.iso2;
+              ccISO3.value = defaultAU.iso3;
+              search.value = defaultDisplay;
+            }
+          }, 120);
+        });
         // ARIA 1.2 combobox keyboard contract on the search input:
         // ArrowDown opens (if closed) and moves focus into the listbox;
         // ArrowUp focuses the last option; Home/End jump to bounds;
         // Escape closes the list.
         search.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            // Never let Enter in the combobox submit the whole form. If the
+            // list is open, commit the first match (type-ahead); otherwise
+            // swallow it so focus stays put.
+            e.preventDefault();
+            if (search.getAttribute("aria-expanded") === "true") {
+              const opts = visibleOptions();
+              if (opts.length) opts[0].click();
+            }
+            return;
+          }
           if (e.key === "Escape") {
             closeList();
             return;
@@ -750,6 +870,9 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             e.preventDefault();
             if (currentIndex <= 0) {
               search.focus();
+              // Focus is back on the input with no active option beneath the
+              // cursor; drop the active-descendant pointer.
+              search.removeAttribute("aria-activedescendant");
             } else {
               focusOption(currentIndex - 1);
             }
@@ -780,6 +903,22 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           ccISO3.value = defaultAU.iso3;
           search.value = defaultDisplay;
           render(COUNTRY_CODES);
+        };
+
+        // Expose a restore hook so the draft-persistence layer can re-apply a
+        // saved country selection (display + hidden fields) on page load.
+        // Unknown ISO2 falls back to the AU default. Returns true when a
+        // non-default country was restored so the caller can tell a real
+        // saved value from a no-op.
+        window.__capitaSetCountryPickerByISO2 = function (iso2) {
+          const match = COUNTRY_CODES.find((c) => c.iso2 === String(iso2 || "").toUpperCase());
+          const c = match || defaultAU;
+          ccDial.value = c.dial;
+          ccISO2.value = c.iso2;
+          ccISO3.value = c.iso3;
+          search.value = formatItem(c);
+          render(COUNTRY_CODES);
+          return Boolean(match);
         };
       })();
 
@@ -835,6 +974,72 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           const el = document.getElementById(id);
           if (el) el.addEventListener("input", function () { clearFieldError(id); });
         }
+
+        // Single source of truth for per-field validity — the exact same
+        // predicates and copy the submit pass uses, so blur-time and
+        // submit-time validation can never drift. Returns true when valid.
+        // An empty field is treated as not-yet-validated on blur (no error
+        // shown for a field the user merely tabbed through) — the submit
+        // pass still enforces presence via checkValidity(required).
+        function validateField(id) {
+          const el = document.getElementById(id);
+          if (!el) return true;
+          if (id === "phone") {
+            const phone = normalizeSpaces(el.value);
+            if (!isValidPhoneLocal(phone)) {
+              setFieldError(
+                "phone",
+                "Phone must contain digits only (spaces/dashes allowed) and be 4–14 digits.",
+              );
+              return false;
+            }
+            clearFieldError("phone");
+            return true;
+          }
+          // Don't nag on an empty optional-looking field at blur; let submit
+          // handle required-but-empty so tabbing through stays quiet.
+          if (!String(el.value || "").trim()) {
+            clearFieldError(id);
+            return true;
+          }
+          if (id === "name") {
+            const name = normalizeSpaces(el.value);
+            if (!el.checkValidity() || !isValidName(name)) {
+              setFieldError(
+                "name",
+                "Name must be 2–60 characters of letters (and spaces, apostrophes, or hyphens).",
+              );
+              return false;
+            }
+          } else if (id === "email") {
+            if (!el.checkValidity() || !isValidEmail(el)) {
+              setFieldError("email", "Enter a valid email address.");
+              return false;
+            }
+          } else if (id === "company") {
+            const company = normalizeSpaces(el.value);
+            if (!el.checkValidity() || !isValidFreeText(company, 2, 120)) {
+              setFieldError("company", "Company must be 2–120 characters.");
+              return false;
+            }
+          } else if (id === "role") {
+            const role = normalizeSpaces(el.value);
+            if (!el.checkValidity() || !isValidFreeText(role, 2, 120)) {
+              setFieldError("role", "Role must be 2–120 characters.");
+              return false;
+            }
+          }
+          clearFieldError(id);
+          return true;
+        }
+        // On-blur validation: each field validates when the user leaves it,
+        // so problems surface field-by-field instead of only at submit. The
+        // submit-time all-at-once pass remains the backstop. Blur only reads
+        // and reports — it never preventDefaults or blocks submit.
+        for (const id of ["name", "email", "company", "role", "phone"]) {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener("blur", function () { validateField(id); });
+        }
         function setSuccess(m) {
           // textContent + DOM-built <strong> instead of innerHTML so any
           // future contributor extending this with a non-static message
@@ -854,6 +1059,151 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             submitBtn.disabled = value;
             submitBtn.textContent = value ? "Sending…" : "Send this to Capita";
           }
+        }
+
+        // ── Draft persistence ────────────────────────────────────────────
+        // Saves the visible fields to localStorage so a prospect who gets
+        // interrupted mid-form doesn't lose their typing. Versioned key lets
+        // a future schema change invalidate old drafts cleanly. The honeypot
+        // (`website`) is never persisted. Writes are debounced and only fire
+        // once the user has actually typed something, so an untouched form
+        // never creates a draft. Per-field length caps mirror the input
+        // maxlengths so a tampered localStorage value can't overflow a field.
+        const DRAFT_KEY = "capita-lead-draft-v1";
+        const DRAFT_CAPS = { name: 60, email: 254, company: 120, role: 120, ccSearch: 80, phone: 24, message: 2000 };
+        // `search` lives in the country-picker closure; resolve it here by id
+        // so this closure can read/restore the country field too. Declared up
+        // top so the autosave wiring below can reference it without hitting
+        // the temporal dead zone.
+        const search = document.getElementById("ccSearch");
+        function lsAvailable() {
+          try {
+            const k = "__capita_probe__";
+            window.localStorage.setItem(k, "1");
+            window.localStorage.removeItem(k);
+            return true;
+          } catch (_) {
+            return false;
+          }
+        }
+        const STORAGE_OK = lsAvailable();
+        function clearDraft() {
+          if (!STORAGE_OK) return;
+          try {
+            window.localStorage.removeItem(DRAFT_KEY);
+          } catch (_) {
+            /* storage gone mid-session — nothing to clear. */
+          }
+        }
+        function capValue(key, value) {
+          const cap = DRAFT_CAPS[key];
+          const s = String(value == null ? "" : value);
+          return cap ? s.slice(0, cap) : s;
+        }
+        function readForm() {
+          // ccISO2 is captured alongside the display so the picker can be
+          // restored to the exact saved country, not just its text.
+          const ccISO2El = document.getElementById("ccISO2");
+          return {
+            name: nameEl ? nameEl.value : "",
+            email: emailEl ? emailEl.value : "",
+            company: companyEl ? companyEl.value : "",
+            role: roleEl ? roleEl.value : "",
+            ccSearch: search ? search.value : "",
+            ccISO2: ccISO2El ? ccISO2El.value : "",
+            phone: phoneEl ? phoneEl.value : "",
+            package: packageEl ? packageEl.value : "",
+            message: msgEl ? msgEl.value : "",
+          };
+        }
+        function hasAnyContent(d) {
+          // Only persist once the user has typed a field that isn't a default.
+          // The country picker text defaults to the AU display, so it alone
+          // doesn't count as "typed".
+          return Boolean(
+            (d.name && d.name.trim()) ||
+            (d.email && d.email.trim()) ||
+            (d.company && d.company.trim()) ||
+            (d.role && d.role.trim()) ||
+            (d.phone && d.phone.trim()) ||
+            (d.message && d.message.trim()) ||
+            (d.package && d.package !== "not-sure")
+          );
+        }
+        function saveDraft() {
+          if (!STORAGE_OK) return;
+          const d = readForm();
+          if (!hasAnyContent(d)) {
+            // Nothing meaningful typed — don't leave an empty draft behind.
+            clearDraft();
+            return;
+          }
+          try {
+            window.localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+          } catch (_) {
+            /* quota / private-mode write failure is non-fatal. */
+          }
+        }
+        let saveTimer = 0;
+        function scheduleSave() {
+          if (!STORAGE_OK) return;
+          window.clearTimeout(saveTimer);
+          saveTimer = window.setTimeout(saveDraft, 400);
+        }
+        // Debounced autosave on input across the visible fields (incl. the
+        // country search + package select + message). The honeypot is omitted
+        // by construction (it is not in this list).
+        for (const el of [nameEl, emailEl, companyEl, roleEl, phoneEl, msgEl, search]) {
+          if (el) el.addEventListener("input", scheduleSave);
+        }
+        if (packageEl) packageEl.addEventListener("change", scheduleSave);
+        function restoreDraft() {
+          if (!STORAGE_OK) return;
+          let raw;
+          try {
+            raw = window.localStorage.getItem(DRAFT_KEY);
+          } catch (_) {
+            return;
+          }
+          if (!raw) return;
+          let d;
+          try {
+            d = JSON.parse(raw);
+          } catch (_) {
+            // Corrupt draft — drop it rather than acting on garbage.
+            clearDraft();
+            return;
+          }
+          if (!d || typeof d !== "object") return;
+          if (nameEl && d.name) nameEl.value = capValue("name", d.name);
+          if (emailEl && d.email) emailEl.value = capValue("email", d.email);
+          if (companyEl && d.company) companyEl.value = capValue("company", d.company);
+          if (roleEl && d.role) roleEl.value = capValue("role", d.role);
+          if (phoneEl && d.phone) phoneEl.value = capValue("phone", d.phone);
+          if (msgEl && d.message) msgEl.value = capValue("message", d.message);
+          // Restore the package <select> only to a value the option list
+          // actually offers, else leave the default.
+          if (packageEl && d.package) {
+            const has = Array.prototype.some.call(
+              packageEl.options,
+              function (o) { return o.value === d.package; },
+            );
+            if (has) packageEl.value = d.package;
+          }
+          // Restore the country picker via its exposed hook (re-applies the
+          // formatted display AND the hidden dial/ISO fields). Prefer the
+          // saved ISO2; fall back to matching the saved display text.
+          if (d.ccISO2 && typeof window.__capitaSetCountryPickerByISO2 === "function") {
+            window.__capitaSetCountryPickerByISO2(d.ccISO2);
+          }
+        }
+        // Restore once the DOM is parsed. The country-picker IIFE runs earlier
+        // in this same inline script, so its restore hook already exists; the
+        // DOMContentLoaded guard just covers the (already-fired) ready state.
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", restoreDraft, { once: true });
+        } else {
+          restoreDraft();
         }
 
         form.addEventListener("submit", async (e) => {
@@ -910,6 +1260,15 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           }
           if (hasFieldError) {
             setError("Complete the highlighted fields and try again.");
+            // Move focus to the FIRST invalid field (the fields are tested in
+            // DOM order above, so the earliest aria-invalid is the first one).
+            // The #formError summary is aria-live=assertive (set in markup) so
+            // it announces; focusing the field lets a keyboard/AT user start
+            // correcting immediately.
+            const firstInvalid = form.querySelector('[aria-invalid="true"]');
+            if (firstInvalid && typeof firstInvalid.focus === "function") {
+              firstInvalid.focus();
+            }
             return;
           }
 
@@ -949,7 +1308,21 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             if (typeof window.__capitaResetCountryPicker === "function") {
               window.__capitaResetCountryPicker();
             }
+            // The submitted draft is now stale — drop it so a returning
+            // prospect doesn't get last lead's data restored on next visit.
+            clearDraft();
             setSuccess("Received. You will hear from us within two business days.");
+            // Scroll the confirmation into the middle of the viewport so it
+            // is never hidden behind a mobile thumb / on-screen keyboard.
+            if (ok && typeof ok.scrollIntoView === "function") {
+              const reducedMotion = window.matchMedia(
+                "(prefers-reduced-motion: reduce)",
+              ).matches;
+              ok.scrollIntoView({
+                behavior: reducedMotion ? "auto" : "smooth",
+                block: "center",
+              });
+            }
           } catch (caught) {
             const isAbort = caught && caught.name === "AbortError";
             setError(

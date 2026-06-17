@@ -344,6 +344,16 @@ img {
   color: var(--accent-hover);
 }
 
+/* Right-side header cluster: nav links + persistent CTA + mobile toggle.
+   The CTA and toggle live here (siblings of #primaryNav) so the CTA stays
+   in the bar when the link panel collapses at <=840px. */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 14px;
+}
+
 .nav {
   display: flex;
   align-items: center;
@@ -367,17 +377,24 @@ img {
    Solid Capita-blue fill, white text. The header sits above the hero
    so it doesn't need the inverted treatment the hero CTAs get; primary
    blue reads correctly against the warm-gray-50 backdrop wash. */
-.nav .nav-cta {
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* P0: tap target — at least 44px tall (SC 2.5.8). */
+  min-height: 44px;
   padding: 10px 20px;
-  border: 2px solid var(--accent);
+  /* P0: fill darkened from --accent #0078f0 (white = 4.25:1, fails) to
+     #0069d1 (white = 5.33:1). Border matches so the pill edge stays solid. */
+  border: 2px solid #0069d1;
   border-radius: 9999px;
-  background: var(--accent);
+  background: #0069d1;
   color: var(--accent-fg);
   font-weight: 600;
   transition: background 180ms ease, border-color 180ms ease, border-radius 180ms ease, transform 100ms ease;
 }
 
-.nav .nav-cta:hover {
+.nav-cta:hover {
   text-decoration: none;
   background: var(--accent-hover);
   border-color: var(--accent-hover);
@@ -385,18 +402,94 @@ img {
   border-radius: 12px;
 }
 
-.nav .nav-cta:active {
+.nav-cta:active {
   transform: scale(0.97);
 }
 
-.nav .nav-cta:focus-visible {
+.nav-cta:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 3px;
 }
 
+/* Mobile nav toggle (hamburger) — hidden on desktop; revealed at the 840px
+   breakpoint where the inline nav links collapse into a dropdown panel. It is
+   a 44×44 tap target (SC 2.5.8) carrying the chunky border idiom so it reads
+   as a control, not an icon. Driven by JS in Layout.astro: aria-expanded
+   flips true/false and the boolean data-nav-open attribute lands on the
+   <header> to reveal #primaryNav. */
+.nav-toggle {
+  display: none;
+}
+
 @media (max-width: 840px) {
-  .nav a:not(.nav-cta) {
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    border: var(--chunky-border);
+    border-radius: var(--chunky-radius);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .nav-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* #primaryNav becomes a single bordered dropdown panel: hidden by default,
+     revealed only when the <header> carries data-nav-open. It leaves the bar's
+     flex flow (absolute) and anchors under the sticky header at the right edge.
+     The sticky .site-header is the positioning context. z-index sits above page
+     content and the back-to-top (60) but below the skip-link (1000), matching
+     the existing scale. The bar keeps brand (left), .nav-cta + .nav-toggle
+     (right) visible at all sizes — the .nav-cta is a DOM child of #primaryNav,
+     so it is lifted back into the bar below rather than collapsing with it. */
+  #primaryNav {
     display: none;
+    position: absolute;
+    top: calc(var(--header-height) - 1px);
+    right: var(--pad-x);
+    left: auto;
+    z-index: 70;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    min-width: min(260px, calc(100vw - var(--pad-x) * 2));
+    padding: 8px;
+    border: var(--chunky-border);
+    border-radius: var(--chunky-radius);
+    box-shadow: var(--chunky-shadow);
+    background: var(--bg);
+  }
+
+  .site-header[data-nav-open] #primaryNav {
+    display: flex;
+  }
+
+  /* Each plain link fills the panel width as a >=44px tap row. */
+  #primaryNav a:not(.nav-cta) {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: calc(var(--chunky-radius) - 4px);
+    color: var(--text);
+  }
+
+  #primaryNav a:not(.nav-cta):hover {
+    text-decoration: none;
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  }
+
+  /* The "Talk to us" CTA and the toggle are siblings of #primaryNav inside
+     .header-right, so they stay in the bar when the panel collapses — no
+     repositioning needed. Tighten the cluster gap on narrow viewports. */
+  .header-right {
+    gap: 12px;
   }
 }
 
@@ -589,7 +682,9 @@ img {
 h1.display {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 600;
+  /* Display tier at 700 (was 600) to widen the gulf against the 400 Inter
+     body/prose tier so the pairing reads as a real type relationship. */
+  font-weight: 700;
   font-style: normal;
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -609,7 +704,10 @@ mark.why-mark {
   color: #ffffff;
   font-family: inherit;
   font-style: normal;
-  font-weight: 600;
+  /* Matches the H1 display weight (700) so the marker word doesn't render
+     lighter than the text it sits inside. Ground stays --highlight #d946ef
+     (white = 3.46:1, large+bold clears the 3:1 large-text floor). */
+  font-weight: 700;
   letter-spacing: -0.025em;
   padding: 0.05em 0.2em;
   border-radius: 6px;
@@ -620,7 +718,8 @@ mark.why-mark {
 h2.display {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 600;
+  /* Display tier at 700 (was 600) — see h1.display. */
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.04;
   font-size: var(--type-h2);
@@ -631,6 +730,10 @@ h2.display {
   max-width: 48ch;
   color: var(--muted);
   font-size: var(--type-lede);
+  /* Body/prose tier pinned to 400 (Inter) so the gap to the Geist display
+     tier at 700 reads as a deliberate weight relationship, not "same sans,
+     slightly bigger." Weight is contrast-neutral, so AA is unaffected. */
+  font-weight: 400;
   line-height: 1.45;
   font-family: var(--font-sans);
 }
@@ -710,15 +813,18 @@ h2.display {
   cursor: not-allowed;
 }
 
+/* P0: base primary fill darkened from --accent #0078f0 (white label = 4.25:1,
+   fails AA small text) to --accent-hover #0069d1 (= 5.33:1). Covers the package
+   CTAs and the contact submit button. Hover steps one shade darker for feedback. */
 .btn-primary {
-  background: var(--accent);
+  background: var(--accent-hover);
   color: var(--accent-fg);
-  border-color: var(--accent);
+  border-color: var(--accent-hover);
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
+  background: #005cc0;
+  border-color: #005cc0;
 }
 
 .btn-primary:focus-visible {
@@ -741,9 +847,11 @@ h2.display {
    secondary CTA becomes outlined-white on the blue. The .hero .btn
    selector wins over the base .btn-* declarations because (0,1,1)
    beats (0,1,0). */
+/* P0: white-fill primary CTA label darkened from --accent #0078f0 (4.25:1 on
+   white, fails small text) to --accent-hover #0069d1 (5.33:1 on white). */
 .hero .btn-primary {
   background: #ffffff;
-  color: var(--accent);
+  color: #0069d1;
   border-color: #ffffff;
 }
 
@@ -804,7 +912,11 @@ h2.display {
    bleed outside the 1120px container. */
 .hero {
   position: relative;
-  background: var(--accent);
+  /* WCAG AA (P0): hero ground darkened from --accent #0078f0 (white = 4.25:1,
+     fails small text) to the --accent-hover value #0069d1 so small white copy
+     clears 4.5:1 (white on #0069d1 = 5.33:1). The global --accent token is
+     unchanged; only this band ground takes the darker value. */
+  background: #0069d1;
   color: #ffffff;
   padding-block: clamp(80px, 10vw, 144px);
   margin-inline: calc(50% - 50vw);
@@ -820,8 +932,11 @@ h2.display {
   z-index: 1;
 }
 
+/* Hero secondary text (P0): eyebrow + lede + credential paint solid #ffffff
+   (was rgba white at 0.85 / 0.88 / 0.70). On the #0069d1 ground solid white
+   is 5.33:1; the translucent tiers dropped below 4.5:1, so they go opaque. */
 .hero .eyebrow {
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffff;
 }
 
 .hero h1 {
@@ -832,7 +947,7 @@ h2.display {
 .hero .lede {
   margin-top: 28px;
   max-width: 50ch;
-  color: rgba(255, 255, 255, 0.88);
+  color: #ffffff;
 }
 
 /* Credential line under the hero CTAs — the old top eyebrow copy, moved
@@ -846,7 +961,20 @@ h2.display {
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  /* P0: opaque white (5.33:1 on #0069d1); was rgba 0.70 which failed AA. */
+  color: #ffffff;
+}
+
+/* Named operator-proof line — seeds the seniority evidence (Optus / JPMorgan)
+   into the first viewport so a <60s CFO meets the proof before the methodology
+   sections, not at ~70% scroll. Quiet but legible: opaque white body text on
+   the blue plate (5.33:1), measure-capped so it reads as prose, not a label. */
+.hero-proof {
+  margin: 14px 0 0;
+  max-width: 54ch;
+  font-size: var(--type-body);
+  line-height: 1.5;
+  color: #ffffff;
 }
 
 /* Hero ::selection — page-wide ::selection paints magenta-on-white
@@ -1030,6 +1158,23 @@ h2.display {
   aspect-ratio: 4 / 5;
   background: color-mix(in srgb, var(--text) 6%, var(--bg));
   border-radius: var(--radius-md);
+  /* Center the monogram inside the tonal plate until the real founder photo
+     lands. */
+  display: grid;
+  place-items: center;
+}
+
+/* Founder monogram (MR) — stands in for the photo on the tonal plate. Brand
+   display face at large clamp scale, muted so it reads as a placeholder mark
+   rather than active copy. aria-hidden in the markup (decorative). */
+.tonal-monogram {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(56px, 9vw, 104px);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--muted-strong);
+  user-select: none;
 }
 
 .founder-photo figcaption {
@@ -1230,7 +1375,8 @@ h2.display {
   margin: 0 0 8px;
   font-family: var(--font-display);
   font-size: var(--type-h3);
-  font-weight: 600;
+  /* Display tier at 700 (was 600) — see h1.display. */
+  font-weight: 700;
   letter-spacing: -0.015em;
   line-height: 1.15;
   color: #fff;
@@ -1495,6 +1641,14 @@ h2.display {
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
+/* Placeholder ground was the UA default (~#757575 = 4.26:1, just under AA).
+   #666 = 5.36:1 on the #f6f6f3 field ground; opacity:1 stops Firefox dimming. */
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: #666;
+  opacity: 1;
+}
+
 .field-input:focus-visible,
 .field-textarea:focus-visible {
   outline: 2px solid var(--accent);
@@ -1553,8 +1707,12 @@ h2.display {
 .cc-option {
   all: unset;
   width: 100%;
-  display: block;
-  padding: 10px 12px;
+  /* P0: tap target — flex + min-height 44px guarantees each option row meets
+     SC 2.5.8 regardless of the option's line count (was ~40–42px tall). */
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 12px;
   border-radius: calc(var(--chunky-radius) - 4px);
   cursor: pointer;
   font-size: var(--type-body);
@@ -1581,6 +1739,16 @@ h2.display {
   color: var(--text);
 }
 
+/* Form reassurance line — sits directly under the submit button (markup
+   carries `form-reassurance micro`, so it inherits the mono micro type and
+   top margin from .micro). This rule layers on the darker muted tone for a
+   touch more presence than a footnote, and caps the measure to the form
+   column so it wraps with the fields rather than running the full width. */
+.form-reassurance {
+  max-width: 56ch;
+  color: var(--muted-strong);
+}
+
 @media (max-width: 900px) {
   .contact-grid,
   .field-row {
@@ -1594,11 +1762,10 @@ h2.display {
   }
 }
 
-/* Kinetic phrase — recurring section divider. The page ships with TWO
-   mandatory occurrences (after hero, after founder when founder is on);
-   marquee fallback is frozen static (the 20s loop read as "stock website"
-   in the design audit). Modern browsers see the scroll-driven fade; older
-   browsers see the same phrase static + center-bleeding-left. */
+/* Kinetic phrase — section divider. The page renders it exactly once (after
+   the hero); the marquee fallback is frozen static (the 20s loop read as
+   "stock website" in the design audit). Modern browsers see the scroll-driven
+   fade; older browsers see the same phrase static + center-bleeding-left. */
 .kinetic-phrase {
   display: block;
   padding-block: clamp(28px, 3.5vw, 56px);
@@ -1782,7 +1949,8 @@ h2.display {
 .package-name {
   margin: 0;
   font-size: var(--type-h2);
-  font-weight: 600;
+  /* Display tier at 700 (was 600) — see h1.display. */
+  font-weight: 700;
   font-family: var(--font-display);
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -1854,8 +2022,12 @@ h2.display {
    the base class gets reset so the band paints to the section edges
    without the translucent white plate stacking under it. White copy
    on saturated magenta; eyebrow uses the white/85% same as the hero. */
+/* P0: band ground darkened from --highlight #d946ef (white = 3.46:1, fails
+   small text) to --highlight-hover #c026d3 so the white body run clears AA —
+   white on #c026d3 = 4.71:1 (passes 4.5:1 at any weight). The global
+   --highlight token is unchanged; only this band ground takes the value. */
 .commitment-band.section-plate {
-  background: var(--highlight);
+  background: #c026d3;
   backdrop-filter: none;
   padding-block: clamp(64px, 8vw, 112px);
   margin-inline: calc(50% - 50vw);
@@ -1868,13 +2040,18 @@ h2.display {
   z-index: 1;
 }
 
+/* P0: eyebrow opaque white (was rgba 0.85) — 4.71:1 on #c026d3 clears AA. */
 .commitment-band .eyebrow {
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffff;
 }
 
+/* Body prose tier (weight 400 per the display/body weight split) on the
+   darkened band. White on #c026d3 = 4.71:1, so the 16–18px run passes 4.5:1
+   without needing a weight or size bump. */
 .commitment-body {
   margin: 12px 0 0;
   font-size: var(--type-body);
+  font-weight: 400;
   line-height: 1.6;
   color: #ffffff;
   max-width: 64ch;
