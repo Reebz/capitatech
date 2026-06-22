@@ -1,0 +1,88 @@
+/* Capita Technology — design tokens (readable reference).
+ *
+ * Canonical values live in _ds_bundle.css's :root (the compiled site CSS); this
+ * file is the human/agent-readable map of the same tokens, grouped by role.
+ * Refreshed brand palette: blue is primary, fuchsia is the rare second register.
+ * Colored text on light grounds uses --blue-ink so it clears WCAG AA — keep the
+ * bright --accent / --highlight for fills, bars, icons, markers, and large type.
+ */
+:root {
+  /* ── Palette ─────────────────────────────────────────────────────────── */
+  --bg: #f6f6f3;              /* page ground — warm gray-50 (poster plate, not paper) */
+  --text: #0b0b0d;           /* near-black ink */
+  --muted: #4b4b57;          /* body-muted prose */
+  --muted-strong: #3a3a44;   /* small-caps eyebrows on white — AA at 12–13px */
+
+  --accent: #0a6fe0;         /* Capita blue — fills, bars, icons, large display, focus rings */
+  --accent-hover: #0856c2;   /* darker blue — grounds carrying white text (hero, nav-cta, buttons); white = 6.7:1 */
+  --accent-fg: #ffffff;
+  --blue-ink: #0a55ad;       /* small colored TEXT / links on light grounds — AA (on #f6f6f3 = 6.65:1) */
+
+  --highlight: #c61c79;                 /* fuchsia base (hex fallback) — second register: markers, bars, selection */
+  --highlight: oklch(0.55 0.205 352);   /* same fuchsia, wide-gamut where supported */
+  --highlight-hover: #a81765;           /* darker fuchsia — grounds carrying white text (commitment band); white = 7.1:1 */
+  --highlight-fg: #ffffff;
+
+  --border: rgba(11, 11, 13, 0.12);
+  --border-strong: rgba(11, 11, 13, 0.22);
+  --shadow: 0 12px 40px rgba(11, 11, 13, 0.08);
+
+  /* ── Radius / spacing / container ────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --container: 1120px;
+  --pad-x: clamp(20px, 3.6vw, 40px);
+  --pad-y: clamp(36px, 4.5vw, 72px);
+  --header-height: 64px;
+
+  /* ── Editorial type scale ────────────────────────────────────────────── */
+  --type-eyebrow: 13px;
+  --type-h1: clamp(56px, 9vw, 120px);
+  --type-h2: clamp(32px, 4.4vw, 56px);
+  --type-h3: clamp(20px, 1.8vw, 28px);
+  --type-body: clamp(16px, 1.1vw, 18px);
+  --type-lede: clamp(20px, 1.8vw, 26px);
+  --type-micro: 13px;
+  --type-kinetic: clamp(40px, 6.5vw, 92px);
+  --type-signature: clamp(24px, 2.4vw, 34px);
+
+  /* Font stacks (defined in _ds_bundle.css @theme): --font-sans = Inter Variable,
+     --font-display = Geist Variable, --font-mono = Geist Mono Variable. */
+
+  /* ── Chunky-control idiom (fields, FAQ cards, package cards, back-to-top) ─ */
+  --chunky-border-width: clamp(1.8px, 0.225vw, 2.7px);
+  --chunky-border: var(--chunky-border-width) solid var(--text);
+  --chunky-radius: clamp(10.8px, 1.44vw, 14.4px);
+  --chunky-shadow-offset: clamp(2.7px, 0.36vw, 3.6px);
+  --chunky-shadow: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--text);
+  --chunky-shadow-accent: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--accent);
+  --chunky-shadow-highlight: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--highlight);
+
+  /* ── Diagram-node idiom (lighter chunky weight for diagram boxes) ──────── */
+  /* One step below the --chunky-* control idiom: a 1.5px ink outline, ~10px
+     radius, and a HARD offset shadow — for the boxes in a flow diagram, not
+     interactive controls. .is-active earns the solid blue lift; .is-future goes
+     dashed with no shadow. Reuses --text/--accent/--highlight (no new hexes). */
+  --node-border-width: 1.5px;
+  --node-border: var(--node-border-width) solid var(--text);
+  --node-radius: 10px;
+  --node-shadow-offset: 3px;
+  --node-shadow: var(--node-shadow-offset) var(--node-shadow-offset) 0
+    color-mix(in srgb, var(--text) 16%, transparent);    /* default resting lift */
+  --node-shadow-accent: 5px 5px 0 var(--accent);          /* active / "shipping now" */
+  --node-shadow-highlight: 5px 5px 0 var(--highlight);    /* rare second register */
+
+  /* ── Pill-button idiom (the .btn family) ─────────────────────────────── */
+  --pill-radius: 9999px;
+  --pill-radius-hover: 12px;
+  --pill-padding-x: 32px;
+  --pill-padding-y: 16px;
+
+  /* ── ASCII spotlight grid ────────────────────────────────────────────── */
+  --grid-dot-default: color-mix(in srgb, var(--text) 10%, transparent);
+  --grid-dot-calm: color-mix(in srgb, var(--text) 9%, transparent);
+  --mx: -300px;
+  --my: -300px;
+  --spot: clamp(140px, 16vw, 260px);
+}

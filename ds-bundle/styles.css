@@ -1,0 +1,16 @@
+/* Capita Technology — design-system entry stylesheet.
+ *
+ * This is the single stylesheet every rendered design receives: its transitive
+ * @import closure (this file -> _ds_bundle.css -> fonts/*.woff2) is the whole
+ * look. _ds_bundle.css is the real, Tailwind-4-compiled global.css shipped by
+ * capitatech.com.au — tokens resolved to :root custom properties, preflight
+ * reset included, every @font-face inlined. Do not hand-edit _ds_bundle.css;
+ * it is regenerated from the site build on each sync.
+ *
+ * Style with the design system's own idiom: the CSS custom properties
+ * (var(--accent), var(--highlight), var(--font-display), …) and the component
+ * class names (.btn, .hero, .faq-card, .method-quad, .gm-step, …). See
+ * README.md for the full convention guide and tokens/tokens.css for a readable
+ * map of every token.
+ */
+@import "./_ds_bundle.css";

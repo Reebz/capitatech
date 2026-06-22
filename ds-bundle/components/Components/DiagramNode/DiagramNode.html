@@ -1,0 +1,187 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- DS fonts + base layer (styles.css @imports _ds_bundle.css -> fonts). -->
+    <link rel="stylesheet" href="../../../styles.css" />
+    <title>DiagramNode — Capita Technology</title>
+    <style>
+      /* ============================================================
+         DiagramNode — the chunky-outline node idiom for flow diagrams.
+         A lighter-weight relative of the .package-card / FAQ chunky
+         idiom, tuned for the dense boxes that make up a system diagram
+         (sources → hub → outputs). Bolder 1.5px ink outline, rounded
+         corners, and a HARD offset shadow that reads as a confident
+         "lift" rather than a soft blur.
+
+         These tokens + classes are the canonical definition — copy the
+         :root block into tokens/tokens.css (and the compiled :root in
+         _ds_bundle.css), and the .diagram-* classes into the site CSS.
+         Palette values are mirrored here so the card is self-contained.
+         ============================================================ */
+      :root {
+        /* mirror of DS base palette (canonical home: _ds_bundle.css :root) */
+        --text: #0b0b0d;
+        --muted: #4b4b57;
+        --accent: #0a6fe0;
+        --accent-hover: #0856c2;
+        --accent-fg: #fff;
+        --highlight: #c61c79;
+        --bg: #f6f6f3;
+
+        /* ── Diagram-node idiom (NEW) ─────────────────────────────
+           A lighter chunky weight for diagram boxes. The .btn / package
+           idiom is heavier (1.8–2.7px border, 2.7–3.6px shadow); nodes
+           sit one step down so a dense diagram doesn't read as noisy. */
+        --node-border-width: 1.5px;
+        --node-border: var(--node-border-width) solid var(--text);
+        --node-radius: 10px;
+        --node-shadow-offset: 3px;
+        /* default lift — a soft ink ghost so resting nodes stay quiet */
+        --node-shadow: var(--node-shadow-offset) var(--node-shadow-offset) 0
+          color-mix(in srgb, var(--text) 16%, transparent);
+        /* active lift — solid brand blue, the "you are here / shipping now" node */
+        --node-shadow-accent: 5px 5px 0 var(--accent);
+        /* rare second register — fuchsia, same weight as accent */
+        --node-shadow-highlight: 5px 5px 0 var(--highlight);
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        font-family: var(--font-sans, "Inter Variable", system-ui, sans-serif);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 940px; margin: 0 auto; padding: 56px 40px 72px; }
+
+      .card-eyebrow {
+        font-family: var(--font-mono, "Geist Mono Variable", ui-monospace, monospace);
+        font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--muted); margin: 0 0 6px;
+      }
+      .card-title {
+        font-family: var(--font-display, "Geist Variable", system-ui, sans-serif);
+        font-size: 30px; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 28px;
+      }
+      .group-label {
+        font-family: var(--font-mono, "Geist Mono Variable", ui-monospace, monospace);
+        font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--muted); margin: 40px 0 14px;
+      }
+
+      /* ── The idiom itself ──────────────────────────────────────── */
+      .diagram-node {
+        border: var(--node-border);
+        border-radius: var(--node-radius);
+        background: #fff;
+        box-shadow: var(--node-shadow);
+        padding: 14px 20px;
+      }
+      .diagram-node.is-active { box-shadow: var(--node-shadow-accent); }
+      .diagram-node.is-future { border-style: dashed; box-shadow: none; }
+
+      /* row variant — a compact source/record box */
+      .diagram-node.node-row { padding: 11px 18px; }
+      .node-row .node-name { font-size: 19px; font-weight: 500; line-height: 1.1; }
+      .node-row .node-sub {
+        display: block; margin-top: 3px;
+        font-family: var(--font-mono, "Geist Mono Variable", ui-monospace, monospace);
+        font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+      }
+
+      /* card variant — a richer output box with a status tag + blurb */
+      .node-card {
+        display: grid; grid-template-columns: 1fr auto; align-items: center;
+        column-gap: 16px; row-gap: 6px;
+      }
+      .node-card .node-name { font-size: 22px; font-weight: 500; }
+      .node-card .node-desc {
+        grid-column: 1 / -1; font-size: 15px; line-height: 1.45; color: var(--muted); margin: 0;
+      }
+      .node-tag {
+        font-family: var(--font-mono, "Geist Mono Variable", ui-monospace, monospace);
+        font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--muted); border: 1px solid var(--text);
+        border-radius: 9999px; padding: 4px 12px; white-space: nowrap;
+      }
+      .is-active .node-tag { color: var(--accent-fg); background: var(--accent); border-color: var(--accent); }
+      .is-future .node-tag { color: var(--highlight); border-color: var(--highlight); }
+
+      .stack { display: flex; flex-direction: column; gap: 12px; max-width: 460px; }
+      .stack.cards { gap: 16px; }
+
+      /* mini flow showing the three states in context */
+      .flow {
+        display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+        gap: 22px; margin-top: 8px;
+      }
+      .flow .arrow { color: var(--accent); font-size: 26px; text-align: center; }
+      .hub {
+        background: var(--text); color: #fff; border-radius: var(--node-radius);
+        padding: 22px 20px; text-align: center;
+      }
+      .hub .hub-mark {
+        font-family: var(--font-display, "Geist Variable", system-ui, sans-serif);
+        font-size: 30px; font-weight: 700; letter-spacing: -0.03em;
+      }
+      .hub .hub-mark .dot { color: var(--highlight); }
+      .hub .hub-role { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 6px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="card-eyebrow">Components</p>
+      <h1 class="card-title">Diagram node</h1>
+
+      <p class="group-label">Row variant — sources / records</p>
+      <div class="stack">
+        <div class="diagram-node node-row">
+          <span class="node-name">CRM &amp; accounts</span>
+          <span class="node-sub">contracts · cases · profile</span>
+        </div>
+        <div class="diagram-node node-row">
+          <span class="node-name">Billing &amp; payments</span>
+        </div>
+        <div class="diagram-node node-row">
+          <span class="node-name">Network usage</span>
+          <span class="node-sub">calls · texts · data</span>
+        </div>
+      </div>
+
+      <p class="group-label">Card variant — outputs with status</p>
+      <div class="stack cards">
+        <div class="diagram-node node-card is-active">
+          <span class="node-name">Team insights</span>
+          <span class="node-tag">Today</span>
+          <p class="node-desc">The morning newsfeed — ranked explanations, pushed into Slack.</p>
+        </div>
+        <div class="diagram-node node-card">
+          <span class="node-name">Agentic marketing</span>
+          <span class="node-tag">Next</span>
+          <p class="node-desc">Context-aware campaigns &amp; offers that act on the ‘why’ autonomously.</p>
+        </div>
+        <div class="diagram-node node-card is-future">
+          <span class="node-name">Context for your agents</span>
+          <span class="node-tag">Horizon</span>
+          <p class="node-desc">Sales, care &amp; retention agents acting with full relationship context.</p>
+        </div>
+      </div>
+
+      <p class="group-label">In a flow — sources → hub → active output</p>
+      <div class="flow">
+        <div class="diagram-node node-row">
+          <span class="node-name">Systems of record</span>
+          <span class="node-sub">ingest</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="hub">
+          <div class="hub-mark">Cavaro<span class="dot">.</span></div>
+          <div class="hub-role">Context layer</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

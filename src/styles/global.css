@@ -93,6 +93,19 @@
   --chunky-shadow-accent: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--accent);
   --chunky-shadow-highlight: var(--chunky-shadow-offset) var(--chunky-shadow-offset) 0 var(--highlight);
 
+  /* Diagram-node idiom — a lighter chunky weight for flow-diagram boxes,
+     one step below the --chunky-* control idiom (so a dense diagram doesn't
+     read as noisy). 1.5px ink outline, ~10px radius, HARD offset shadow.
+     Drives the .diagram-node family below. Reuses --text/--accent/--highlight. */
+  --node-border-width: 1.5px;
+  --node-border: var(--node-border-width) solid var(--text);
+  --node-radius: 10px;
+  --node-shadow-offset: 3px;
+  --node-shadow: var(--node-shadow-offset) var(--node-shadow-offset) 0
+    color-mix(in srgb, var(--text) 16%, transparent);
+  --node-shadow-accent: 5px 5px 0 var(--accent);
+  --node-shadow-highlight: 5px 5px 0 var(--highlight);
+
   /* v1 BLUE POSTER pill-button idiom — borderless, generous padding,
      full pill radius at rest. Hover morphs to a 12px radius (softer than
      browserbase's full-square morph, which read jarring against the
@@ -2114,3 +2127,62 @@ h2.display {
     gap: clamp(20px, 5vw, 28px);
   }
 }
+
+/* DiagramNode — the chunky-outline node idiom for flow diagrams. A lighter
+   relative of the .package-card / FAQ chunky idiom (it sits one weight below,
+   so a dense sources → hub → outputs diagram doesn't read as noisy). Bolder
+   1.5px ink outline, ~10px radius, and a HARD offset shadow (never a blur).
+   .is-active earns the solid blue lift (one per diagram); .is-future is the
+   dashed horizon node. Driven by the --node-* tokens in :root above. */
+.diagram-node {
+  border: var(--node-border);
+  border-radius: var(--node-radius);
+  background: #fff;
+  box-shadow: var(--node-shadow);
+  padding: 14px 20px;
+}
+.diagram-node.is-active { box-shadow: var(--node-shadow-accent); }
+.diagram-node.is-future { border-style: dashed; box-shadow: none; }
+
+/* row variant — a compact source/record box */
+.diagram-node.node-row { padding: 11px 18px; }
+.node-row .node-name { font-size: 19px; font-weight: 500; line-height: 1.1; }
+.node-row .node-sub {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* card variant — a richer output box with a status tag + blurb */
+.node-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 6px;
+}
+.node-card .node-name { font-size: 22px; font-weight: 500; }
+.node-card .node-desc {
+  grid-column: 1 / -1;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+  margin: 0;
+}
+.node-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--text);
+  border-radius: 9999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+.is-active .node-tag { color: var(--accent-fg); background: var(--accent); border-color: var(--accent); }
+.is-future .node-tag { color: var(--highlight); border-color: var(--highlight); }

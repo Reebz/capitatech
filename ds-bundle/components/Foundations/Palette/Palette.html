@@ -1,0 +1,178 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../../styles.css" />
+    <style>body { margin: 0; background: var(--bg); padding: 40px; }</style>
+    <title>Palette — Capita Technology</title>
+  </head>
+  <body>
+    <div
+      style="
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        max-width: 960px;
+        margin-inline: auto;
+      "
+    >
+      <!-- accent -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--accent);
+          "
+        ></div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--accent</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#0a6fe0</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">
+          Capita blue: fills, bars, icons, large display, focus rings
+        </p>
+      </div>
+
+      <!-- accent-hover -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--accent-hover);
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 28px;
+          "
+        >
+          Aa
+        </div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--accent-hover</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#0856c2</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">
+          Blue ground carrying white text (hero, nav-cta, buttons); white = 6.7:1
+        </p>
+      </div>
+
+      <!-- blue-ink -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--blue-ink);
+          "
+        ></div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--blue-ink</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#0a55ad</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">
+          Small colored TEXT/links on light grounds (AA: 6.65:1 on the page ground)
+        </p>
+      </div>
+
+      <!-- highlight -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--highlight);
+          "
+        ></div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--highlight</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">
+          #c61c79 / oklch(0.55 0.205 352)
+        </p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">
+          Fuchsia second register: markers, bars, ::selection
+        </p>
+      </div>
+
+      <!-- highlight-hover -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--highlight-hover);
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 28px;
+          "
+        >
+          Aa
+        </div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--highlight-hover</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#a81765</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">
+          Fuchsia ground carrying white text (commitment band); white = 7.1:1
+        </p>
+      </div>
+
+      <!-- text -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--text);
+          "
+        ></div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--text</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#0b0b0d</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">Near-black ink</p>
+      </div>
+
+      <!-- muted -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--muted);
+          "
+        ></div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--muted</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#4b4b57</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">Body-muted prose</p>
+      </div>
+
+      <!-- muted-strong -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--muted-strong);
+          "
+        ></div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--muted-strong</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#3a3a44</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">Small-caps eyebrows on white (AA)</p>
+      </div>
+
+      <!-- bg -->
+      <div>
+        <div
+          style="
+            height: 72px;
+            border-radius: var(--radius-md);
+            background: var(--bg);
+            outline: 1px solid var(--border);
+            outline-offset: -1px;
+          "
+        ></div>
+        <p class="eyebrow" style="margin: 12px 0 4px">--bg</p>
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 13px; color: var(--text)">#f6f6f3</p>
+        <p style="margin: 6px 0 0; font-size: 14px; color: var(--muted)">Page ground (warm gray-50)</p>
+      </div>
+    </div>
+  </body>
+</html>

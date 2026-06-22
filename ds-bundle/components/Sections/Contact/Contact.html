@@ -1,0 +1,141 @@
+<!-- @dsCard group="Sections" -->
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../../styles.css" />
+    <style>body { margin: 0; background: var(--bg); }</style>
+    <title>Contact — Capita Technology</title>
+  </head>
+  <body>
+    <section class="section" id="contact" aria-label="Contact">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="display">Tell us what you need to change in the next 90 days. We reply within 2 business days with a scoped proposal and a price.</h2>
+        </div>
+
+        <div class="contact-grid">
+          <form id="leadForm" action="#" method="post" novalidate>
+            <div class="field-row">
+              <label class="field-label">
+                <span class="micro">Name (required)</span>
+                <input
+                  id="name"
+                  name="name"
+                  class="field-input"
+                  required
+                  autocomplete="name"
+                  inputmode="text"
+                  maxlength="60"
+                  placeholder="Jane Smith"
+                  aria-describedby="error-name"
+                />
+                <p id="error-name" class="field-error" role="alert" hidden></p>
+              </label>
+
+              <label class="field-label">
+                <span class="micro">Work email (required)</span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  class="field-input"
+                  required
+                  autocomplete="email"
+                  maxlength="254"
+                  placeholder="jane@company.com"
+                  aria-describedby="error-email"
+                />
+                <p id="error-email" class="field-error" role="alert" hidden></p>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label class="field-label">
+                <span class="micro">Phone (optional)</span>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  class="field-input"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  maxlength="28"
+                  placeholder="+61 412 345 678"
+                  pattern="^[+0-9()\-\s]{0,28}$"
+                  aria-describedby="error-phone"
+                />
+                <p id="error-phone" class="field-error" role="alert" hidden></p>
+              </label>
+
+              <label class="field-label">
+                <span class="micro">Company (optional)</span>
+                <input
+                  id="company"
+                  name="company"
+                  class="field-input"
+                  autocomplete="organization"
+                  inputmode="text"
+                  maxlength="120"
+                  placeholder="Acme Telco"
+                  aria-describedby="error-company"
+                />
+                <p id="error-company" class="field-error" role="alert" hidden></p>
+              </label>
+            </div>
+
+            <div class="field-row single">
+              <label class="field-label">
+                <span class="micro">Which service, or describe the bespoke problem you need solved</span>
+                <select id="package" name="package" class="field-input" aria-describedby="error-package">
+                  <option value="not-sure">Not sure yet. Let's discuss.</option>
+                  <option value="om-and-a">Operating Model and Architecture (from $85k)</option>
+                  <option value="diagnosis">90-Day Diagnosis (from $45k)</option>
+                  <option value="roadmap">Roadmap (from $35k)</option>
+                  <option value="measurement">Measurement and Governance (from $35k)</option>
+                  <option value="bespoke">Bespoke. Tell us more below.</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="field-row single">
+              <label class="field-label">
+                <span class="micro">What you need to change, and by when</span>
+                <textarea
+                  id="message"
+                  name="message"
+                  class="field-textarea"
+                  rows="5"
+                  maxlength="2000"
+                  placeholder="e.g. Bring annualised churn down 200 bps by the end of FY27."></textarea>
+              </label>
+            </div>
+
+            <div id="formError" class="micro" style="margin-top: 14px;" aria-live="assertive"></div>
+            <div id="formSuccess" class="lede" style="margin-top: 14px;" role="status" aria-live="polite"></div>
+
+            <div class="actions" style="margin-top: 24px;">
+              <button class="btn btn-primary" type="submit">Send this to Capita</button>
+              <a class="btn btn-magenta" href="#">Chat on LinkedIn</a>
+            </div>
+            <p class="form-reassurance micro">We reply within two business days. Every engagement is under mutual NDA. Your details are used only to reply, never added to a list, never shared with anyone.</p>
+          </form>
+
+          <aside class="contact-pains" aria-label="What we understand">
+            <h3>If any of these are on your executive's worry list, we should talk.</h3>
+            <p>These are 5 of the problems boards have hired us to fix:</p>
+            <ul>
+              <li>No one owns retention end-to-end, so no one is accountable when it slips.</li>
+              <li>If your CFO cannot measure your strategy, you have a slide deck.</li>
+              <li>Decisions take 6 weeks because no one knows who is allowed to make them.</li>
+              <li>You suspect customers drop off at renewal, but no one can size it.</li>
+              <li>The roadmap your team signed off in January no longer matches what is shipping in March.</li>
+            </ul>
+
+            <p class="micro">Your message goes straight to Mitch Ribar, Principal — not an inbox.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
