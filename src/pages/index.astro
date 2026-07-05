@@ -1,5 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { generateAscii } from "../lib/asciiGrid";
+
+// Hero-scoped ASCII spotlight layer — same deterministic texture as the
+// page-level grid, rendered inside the blue hero so the cursor spotlight is
+// visible there too (the fixed page grid is hidden behind the opaque hero).
+const heroAscii = generateAscii(320, 80);
 
 // Founder section is live. Specific quantitative claims (Optus %, JPMC
 // $, founding year) are held back per qa/truth-gates-2026-05-21.md
@@ -34,34 +40,34 @@ const CAL_BOOKING_NAMESPACE = (() => {
 // labouring it.
 const KINETIC_PHRASE = "Operators, not consultants.";
 
-// Method blocks - methodology principles that apply across every
-// engagement. Distinct from Packages, which describe specific scoped
-// engagements with prices. Method is the operating model. Packages
-// are the products.
+// Engagement principles — how we work on every engagement (the "How we
+// engage" quadrant). Distinct from Services, which are specific scoped
+// engagements with prices, and from the Growth Method, which is how the
+// work itself gets done.
 const methodBlocks = [
   {
-    eyebrow: "Principal-led",
-    heading: "The senior name on your statement of work delivers it.",
+    eyebrow: "Operator-Led",
+    heading: "Advice from someone who has owned the outcome.",
     prose:
-      "The principal who scopes your engagement is the one writing the document, attending the workshop, and signing the deliverable. No analyst layer. No project office tax. If you call, that is who picks up.",
+      "Our recommendations are grounded in real operating experience. We have built teams, products, operating models, and AI capabilities inside startups and global enterprises. We understand the realities of budgets, competing priorities, stakeholder alignment, and execution because we've lived them.",
   },
   {
-    eyebrow: "Workshop-based",
-    heading: "We sit at the table with the executives who own the decision.",
+    eyebrow: "Action Over Analysis",
+    heading: "Progress beats perfection.",
     prose:
-      "We come prepared, run a working session, and leave with decisions named. We do not shadow your team for six weeks before forming a view. The result is faster, sharper, and respectful of your time.",
+      "Speed is a learning advantage, so rather than spending months analysing problems, we find the highest-leverage opportunities, test quickly, and build momentum. The goal is better decisions and measurable progress.",
   },
   {
-    eyebrow: "Written deliverables",
-    heading: "Every engagement closes with a written document, signed.",
+    eyebrow: "Built for Execution",
+    heading: "Every recommendation must survive contact with reality.",
     prose:
-      "Decision rights, named owners, and sequenced actions in a written document. Your engineering, product, and operations leads can read it, sign off on it, and execute against it. Yours to redistribute internally.",
+      "Strategy only matters if it can be implemented. Every engagement produces practical outputs with clear owners, priorities, sequencing, and decision points. We design solutions teams can understand, adopt, and execute. Not presentations that sit on a shelf.",
   },
   {
-    eyebrow: "Independent",
-    heading: "We optimise for one thing: your result.",
+    eyebrow: "Capability, Not Dependency",
+    heading: "Companies are stronger and more effective after working with us.",
     prose:
-      "We have no software, no implementation partner taking a cut, and no managed service waiting on the back end. Independence is the entire business model. It is what makes the advice worth its price.",
+      "We transfer knowledge, establish repeatable ways of working, and build internal capability. Success is measured by what your organisation can achieve after we leave, not how long we can stay.",
   },
 ];
 
@@ -136,7 +142,7 @@ const packages = [
 // qa/truth-gates-2026-05-21.md (C2) until verifiable.
 const outcomes = [
   {
-    label: "AI",
+    label: "Agentic AI",
     heading: "AI strategy and delivery.",
     prose:
       "We review the gap between your AI roadmap and what is actually shipping. The deliverable is the evaluation framework your risk function signs, the governance cadence your board reviews, and the named owners that hold your delivery leads accountable. We do not build models. We make the ones you build, or buy, answer for themselves.",
@@ -148,7 +154,7 @@ const outcomes = [
       "We diagnose why customers leave, size the revenue at risk, and write the intervention plan. Every engagement names the operator who owns the work and the metric your finance team will verify. Where renewal, eligibility, or service-recovery friction is leaking revenue, we size the leak and write the 90-day plan to recover the top three.",
   },
   {
-    label: "Productivity",
+    label: "Transformation",
     heading: "Productivity acceleration.",
     prose:
       "We find where your operating model is leaking time. Duplicate decisions, ambiguous ownership, meetings that produce nothing. The deliverable is a sequenced 90-day plan to reclaim the capacity your business already has, with named owners, milestones your executives will recognise, and the dependency map your steering committee can govern.",
@@ -212,7 +218,7 @@ const faqs = [
   {
     id: 1,
     q: "What do I receive in writing at the end of the engagement, and who signs it?",
-    a: "A written deliverable, signed by the engagement lead: diagnosis, operating model, roadmap, or measurement framework, depending on the package. For bespoke work, the engagement principal signs. Every deliverable is yours to redistribute internally. We do not retain confidential client work in case studies without written permission.",
+    a: "A written deliverable, signed by the engagement lead: diagnosis, operating model, roadmap, or measurement framework, depending on the service. For bespoke work, the engagement principal signs. Every deliverable is yours to redistribute internally. We do not retain confidential client work in case studies without written permission.",
   },
   {
     id: 2,
@@ -237,7 +243,7 @@ const faqs = [
   {
     id: 6,
     q: "Why do you publish prices when most advisory firms do not?",
-    a: "Because executives spending their company's money should be able to estimate the cost of a conversation with us before they have it. The four packages on this page cover the work we are most often asked to scope: Operating Model and Architecture, 90-Day Diagnosis, Roadmap, and Measurement and Governance. Bespoke engagements are quoted on request and start at $120,000.",
+    a: "Because executives spending their company's money should be able to estimate the cost of a conversation with us before they have it. The four services on this page cover the work we are most often asked to scope: Operating Model and Architecture, 90-Day Diagnosis, Roadmap, and Measurement and Governance. Bespoke engagements are quoted on request and start at $120,000.",
   },
 ];
 
@@ -263,14 +269,15 @@ const clientLogos = [
 <Layout>
   <main id="main">
     <section class="hero" aria-label="Hero">
+      <pre class="hero-ascii" aria-hidden="true">{heroAscii}</pre>
       <div class="container">
-        <h1 class="display">We <mark class="why-mark">unlock</mark> your AI, customer growth, and productivity.</h1>
+        <h1 class="display">We <mark class="why-mark">unlock</mark> the ROI in your marketing, transformation, and AI projects.</h1>
         <p class="lede">
-          We've done the job. Every engagement ends with a written plan signed by the principal. Packages from $35,000. Bespoke on request.
+          We've done the job. Every engagement ends with a written plan signed by the principal. Services from $35,000. Bespoke on request.
         </p>
 
         <div class="actions">
-          <a class="btn btn-primary" href="#packages">See the four packages and prices.</a>
+          <a class="btn btn-primary" href="#packages">See services and prices.</a>
           <a class="btn btn-secondary" href="#contact">Talk to us.</a>
         </div>
         <p class="hero-credential">Independent. Run by ex-operators. Advisory only.</p>
@@ -332,23 +339,24 @@ const clientLogos = [
       </div>
     </section>
 
-    <section class="section section-plate" id="method" aria-label="How we work">
+    <section class="section section-plate" id="method" aria-label="How we engage">
       <div class="container">
         <div class="section-head">
-          <h2 class="display">Four principles built into every engagement.</h2>
+          <h2 class="display">How we engage.</h2>
+          <p class="lede gm-bridge">Four principles hold on every engagement. How the work itself gets done is <a href="#operating-method">the Capita Growth Method</a> below.</p>
         </div>
 
-        {
-          methodBlocks.map((b) => (
-            <article class="method-block">
-              <div class="method-content">
+        <div class="method-quad">
+          {
+            methodBlocks.map((b) => (
+              <article class="method-cell">
                 <p class="eyebrow">{b.eyebrow}</p>
                 <h3>{b.heading}</h3>
                 <p>{b.prose}</p>
-              </div>
-            </article>
-          ))
-        }
+              </article>
+            ))
+          }
+        </div>
       </div>
     </section>
 
@@ -361,7 +369,7 @@ const clientLogos = [
       <div class="container">
         <div class="section-head">
           <h2 class="display">The Capita Growth Method.</h2>
-          <p class="lede gm-lede">A continuous cycle that transforms operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage.</p>
+          <p class="lede gm-lede">How the work actually gets done: five steps we run as a loop on every engagement, each pass compounding on the last.</p>
         </div>
 
         <ol class="gm-steps">
@@ -410,10 +418,16 @@ const clientLogos = [
 
           <div class="founder-grid">
             <figure class="founder-photo">
-              <div class="tonal-placeholder" aria-hidden="true">
-                <span class="tonal-monogram" aria-hidden="true">MR</span>
-              </div>
-              <figcaption>Mitchell Ribar, Principal</figcaption>
+              <img
+                class="founder-img"
+                src="/founder.jpg"
+                alt="Mitch Ribar, Principal of Capita Technology"
+                width="760"
+                height="950"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>Mitch Ribar, Principal</figcaption>
             </figure>
 
             <div class="founder-bio">
@@ -425,8 +439,8 @@ const clientLogos = [
               </p>
 
               <p class="founder-signed">
-                I am Mitchell Ribar. I started Capita Technology because I was tired of hiring consultancies that produced beautiful decks and nothing that shipped. Every engagement on this site is led by an operator who has run the role they now advise. I rebuilt customer growth at Optus after major public crises, and scaled the multi-year AI Personalization programme to nearly 100 million customers at JPMorgan Chase. Before that, I owned the P&amp;L at Brand Networks and led financial-services product at Quantium. If you are about to spend $50,000 to $500,000 on advisory, you should know who is on the other end of the email.
-                <span class="founder-signed-name">Mitchell Ribar, Principal.</span>
+                I am Mitch Ribar. I started Capita Technology because I was tired of hiring consultancies that produced beautiful decks and nothing that shipped. Every engagement on this site is led by an operator who has run the role they now advise. I rebuilt customer growth at Optus after major public crises, and scaled the multi-year AI Personalization programme to nearly 100 million customers at JPMorgan Chase. Before that, I owned the P&amp;L at Brand Networks and led financial-services product at Quantium. If you are about to spend $50,000 to $500,000 on advisory, you should know who is on the other end of the email.
+                <span class="founder-signed-name">Mitch Ribar, Principal.</span>
               </p>
 
               {/* Cross-brand forward link (U32) - quiet, single line. */}
@@ -447,18 +461,18 @@ const clientLogos = [
       <div class="container">
         <p class="eyebrow">Our 90-day commitment</p>
         <p class="commitment-body">
-          If, at the 90-day mark after your engagement closes, the leading indicators we defined together have not moved, we return for a no-fee follow-up week to find out why. This is written into every statement of work. It applies to every package on this page and to bespoke engagements.
+          If, at the 90-day mark after your engagement closes, the leading indicators we defined together have not moved, we return for a no-fee follow-up week to find out why. This is written into every statement of work. It applies to every service on this page and to bespoke engagements.
         </p>
       </div>
     </section>
 
-    <section class="section section-plate" id="packages" aria-label="Packages and prices">
+    <section class="section section-plate" id="packages" aria-label="Services and prices">
       <div class="container">
         <div class="section-head">
-          <p class="section-label">Packages</p>
-          <h2 class="display">Four packages, <mark class="why-mark">with prices</mark>. Highest first.</h2>
+          <p class="section-label">Services</p>
+          <h2 class="display">Four services, <mark class="why-mark">with prices</mark>. Highest first.</h2>
           <p class="lede">
-            Each package below is dated, scoped, and priced. "From $X" is an honest range. Engagements run longer or wider when the scope warrants it. The four cover the engagements we are most often asked to scope. Bespoke continues beneath them.
+            Each service below is dated, scoped, and priced. "From $X" is an honest range. Engagements run longer or wider when the scope warrants it. The four cover the engagements we are most often asked to scope. Bespoke continues beneath them.
           </p>
         </div>
 
@@ -487,7 +501,7 @@ const clientLogos = [
         <div class="bespoke-band" id="bespoke">
           <p class="eyebrow">Bespoke advisory</p>
           <p class="bespoke-body">
-            For boards running programmes the four packages above do not cover: multi-business-unit operating-model redesigns, board-led transformations, regulated-entity governance builds. The engagement principal sits on your steering committee for the duration. <strong>From $120,000, scoped within five business days.</strong>
+            For boards running programmes the four services above do not cover: multi-business-unit operating-model redesigns, board-led transformations, regulated-entity governance builds. The engagement principal sits on your steering committee for the duration. <strong>From $120,000, scoped within five business days.</strong>
           </p>
           <div class="package-cta">
             <a class="btn btn-secondary" href="#contact" data-package="bespoke">Talk to us about a bespoke engagement.</a>
@@ -585,12 +599,28 @@ const clientLogos = [
 
             <div class="field-row">
               <label class="field-label">
-                <span class="micro">Company (required)</span>
+                <span class="micro">Phone (optional)</span>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  class="field-input"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  maxlength="28"
+                  placeholder="+61 412 345 678"
+                  pattern={"^[+0-9()\\-\\s]{0,28}$"}
+                  aria-describedby="error-phone"
+                />
+                <p id="error-phone" class="field-error" role="alert" hidden></p>
+              </label>
+
+              <label class="field-label">
+                <span class="micro">Company (optional)</span>
                 <input
                   id="company"
                   name="company"
                   class="field-input"
-                  required
                   autocomplete="organization"
                   inputmode="text"
                   maxlength="120"
@@ -599,70 +629,11 @@ const clientLogos = [
                 />
                 <p id="error-company" class="field-error" role="alert" hidden></p>
               </label>
-
-              <label class="field-label">
-                <span class="micro">Role (required)</span>
-                <input
-                  id="role"
-                  name="role"
-                  class="field-input"
-                  required
-                  autocomplete="organization-title"
-                  inputmode="text"
-                  maxlength="120"
-                  placeholder="Chief Customer Officer"
-                  aria-describedby="error-role"
-                />
-                <p id="error-role" class="field-error" role="alert" hidden></p>
-              </label>
-            </div>
-
-            <div class="field-row">
-              <div>
-                <span class="micro">Country code</span>
-                <div class="cc-wrap" style="margin-top: 8px;">
-                  <input
-                    id="ccSearch"
-                    name="ccSearch"
-                    class="field-input"
-                    role="combobox"
-                    aria-label="Country code"
-                    aria-expanded="false"
-                    aria-controls="ccList"
-                    aria-autocomplete="list"
-                    autocomplete="off"
-                    inputmode="search"
-                    placeholder="Australia (+61)"
-                  />
-                  <div id="ccList" class="cc-list" role="listbox" aria-label="Country codes">
-                    <div id="ccOptions" class="cc-options"></div>
-                  </div>
-                  <input type="hidden" id="ccDial" name="ccDial" value="+61" />
-                  <input type="hidden" id="ccISO3" name="ccISO3" value="AUS" />
-                  <input type="hidden" id="ccISO2" name="ccISO2" value="AU" />
-                </div>
-              </div>
-
-              <label class="field-label">
-                <span class="micro">Phone (optional)</span>
-                <input
-                  id="phone"
-                  name="phone"
-                  class="field-input"
-                  autocomplete="tel-national"
-                  inputmode="tel"
-                  maxlength="24"
-                  placeholder="412 345 678"
-                  pattern={"^[0-9()\\-\\s]{0,24}$"}
-                  aria-describedby="error-phone"
-                />
-                <p id="error-phone" class="field-error" role="alert" hidden></p>
-              </label>
             </div>
 
             <div class="field-row single">
               <label class="field-label">
-                <span class="micro">Which package, or describe the bespoke problem you need solved</span>
+                <span class="micro">Which service, or describe the bespoke problem you need solved</span>
                 <select id="package" name="package" class="field-input" aria-describedby="error-package">
                   <option value="not-sure">Not sure yet. Let's discuss.</option>
                   <option value="om-and-a">Operating Model and Architecture (from $85k)</option>
@@ -692,8 +663,9 @@ const clientLogos = [
 
             <div class="actions" style="margin-top: 24px;">
               <button class="btn btn-primary" type="submit">Send this to Capita</button>
+              <a class="btn btn-magenta" href="https://www.linkedin.com/in/mitchribar" target="_blank" rel="noopener">Chat on LinkedIn</a>
             </div>
-            <p class="form-reassurance micro">We reply within two business days. Every engagement under mutual NDA.</p>
+            <p class="form-reassurance micro">We reply within two business days. Every engagement is under mutual NDA. Your details are used only to reply, never added to a list, never shared with anyone.</p>
           </form>
 
           <aside class="contact-pains" aria-label="What we understand">
@@ -707,7 +679,7 @@ const clientLogos = [
               <li>The roadmap your team signed off in January no longer matches what is shipping in March.</li>
             </ul>
 
-            <p class="micro">Your message goes straight to Mitchell Ribar, Principal — not an inbox.</p>
+            <p class="micro">Your message goes straight to Mitch Ribar, Principal — not an inbox.</p>
 
             {CAL_BOOKING_NAMESPACE && (
               <div class="contact-cal" aria-label="Or book a discovery call">

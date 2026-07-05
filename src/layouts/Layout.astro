@@ -3,6 +3,7 @@ import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/geist/wght.css";
 import "@fontsource-variable/geist-mono/wght.css";
 import "../styles/global.css";
+import { generateAscii } from "../lib/asciiGrid";
 
 // Critical font subsets — preloaded so the WOFF2s are in flight with the
 // HTML response instead of waiting for the CSS parser to discover the
@@ -23,25 +24,13 @@ const {
   description = "Capita Technology helps boards and executives with AI strategy and delivery, customer retention and growth, and productivity. Principal-led, independent advisory. Engagements scoped and priced from $35,000. Bespoke advisory on request.",
 } = Astro.props;
 
-// Server-rendered ASCII grid. Generous size to cover ultrawide displays at the
-// smallest font-size in the clamp; CSS clips bleed via overflow:hidden on the
-// fixed layer. Character mix is deterministic (seeded from row/col) so the
-// texture is identical across builds — sparse +, ∙, * break the dot monotony
-// without visually competing with foreground content.
+// Server-rendered ASCII grid (shared generator in lib/asciiGrid). Generous
+// size to cover ultrawide displays at the smallest font-size in the clamp;
+// CSS clips the bleed via overflow:hidden. The hero-scoped spotlight layer
+// (index.astro) renders the same texture from the same generator.
 const ASCII_COLS = 320;
 const ASCII_ROWS = 80;
-const gridChar = (r: number, c: number): string => {
-  const h = ((r * 73856093) ^ (c * 19349663) ^ (r * c * 83492791)) >>> 0;
-  const v = h % 100;
-  if (v < 4) return " ";
-  if (v < 12) return "*";
-  if (v < 17) return "+";
-  if (v < 22) return "∙";
-  return "·";
-};
-const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
-  Array.from({ length: ASCII_COLS }, (_, c) => gridChar(r, c)).join(""),
-).join("\n");
+const ascii = generateAscii(ASCII_COLS, ASCII_ROWS);
 ---
 
 <!doctype html>
@@ -51,7 +40,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#0078f0" />
+    <meta name="theme-color" content="#0a6fe0" />
 
     {/* Font preloads — placed BEFORE the stylesheet link so the WOFF2
         requests start in parallel with CSS parsing instead of after.
@@ -125,9 +114,10 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             collapses to display:none at <=840px the CTA stays in the bar. */}
         <div class="header-right">
           <nav class="nav" id="primaryNav" aria-label="Primary">
-            <a href="#packages">Packages</a>
+            <a href="#packages">Services</a>
             <a href="#bespoke">Bespoke</a>
             <a href="#outcomes">Outcomes</a>
+            <a href="#operating-method">Method</a>
             <a href="#faq">FAQ</a>
           </nav>
 
@@ -158,7 +148,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           <p>© <span id="y"></span> Capita Technology. Advisory by ex-operators.</p>
           <div class="footer-links">
             <a href="#top">Top</a>
-            <a href="#packages">Packages</a>
+            <a href="#packages">Services</a>
             <a href="#outcomes">Outcomes</a>
             <a href="#faq">FAQ</a>
             <a href="#contact">Talk to us</a>
@@ -222,15 +212,17 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         let idleStart = performance.now();
 
         function setPos(x, y) {
-          grid.style.setProperty("--mx", x + "px");
-          grid.style.setProperty("--my", y + "px");
+          // Written to :root (documentElement) so both the fixed page grid and
+          // the hero-scoped .hero-ascii layer read the same spotlight position.
+          document.documentElement.style.setProperty("--mx", x + "px");
+          document.documentElement.style.setProperty("--my", y + "px");
         }
 
         function clearGradient() {
           // Removes the spotlight position so CSS falls back to the flat
           // dot tint only — used under reduced-motion.
-          grid.style.removeProperty("--mx");
-          grid.style.removeProperty("--my");
+          document.documentElement.style.removeProperty("--mx");
+          document.documentElement.style.removeProperty("--my");
         }
 
         function idleLoop(now) {
@@ -590,9 +582,11 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
       function isValidPhoneLocal(phone) {
         const raw = String(phone || "").trim();
         if (!raw) return true;
-        if (!/^[0-9\s()\-]+$/.test(raw)) return false;
+        // Allows an optional leading "+" and the full international number
+        // (country code included), since the country-code picker is gone.
+        if (!/^\+?[0-9\s()\-]+$/.test(raw)) return false;
         const digits = raw.replace(/\D/g, "");
-        return digits.length >= 4 && digits.length <= 14;
+        return digits.length >= 6 && digits.length <= 15;
       }
       function isValidFreeText(value, min, max) {
         const v = normalizeSpaces(value);
@@ -641,286 +635,9 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         }
       })();
 
-      // 4. Country code type-ahead picker.
-      (function initCountryCodePicker() {
-        const search = document.getElementById("ccSearch");
-        const list = document.getElementById("ccList");
-        const optionsHost = document.getElementById("ccOptions");
-        const ccDial = document.getElementById("ccDial");
-        const ccISO2 = document.getElementById("ccISO2");
-        const ccISO3 = document.getElementById("ccISO3");
-        const wrap = search ? search.closest(".cc-wrap") : null;
-        if (!search || !list || !optionsHost || !ccDial || !ccISO2 || !ccISO3) return;
-
-        const COUNTRY_CODES = [
-          { iso2: "AU", iso3: "AUS", dial: "+61", name: "Australia" },
-          { iso2: "NZ", iso3: "NZL", dial: "+64", name: "New Zealand" },
-          { iso2: "US", iso3: "USA", dial: "+1", name: "United States" },
-          { iso2: "CA", iso3: "CAN", dial: "+1", name: "Canada" },
-          { iso2: "GB", iso3: "GBR", dial: "+44", name: "United Kingdom" },
-          { iso2: "IE", iso3: "IRL", dial: "+353", name: "Ireland" },
-          { iso2: "DE", iso3: "DEU", dial: "+49", name: "Germany" },
-          { iso2: "FR", iso3: "FRA", dial: "+33", name: "France" },
-          { iso2: "ES", iso3: "ESP", dial: "+34", name: "Spain" },
-          { iso2: "IT", iso3: "ITA", dial: "+39", name: "Italy" },
-          { iso2: "NL", iso3: "NLD", dial: "+31", name: "Netherlands" },
-          { iso2: "BE", iso3: "BEL", dial: "+32", name: "Belgium" },
-          { iso2: "CH", iso3: "CHE", dial: "+41", name: "Switzerland" },
-          { iso2: "AT", iso3: "AUT", dial: "+43", name: "Austria" },
-          { iso2: "SE", iso3: "SWE", dial: "+46", name: "Sweden" },
-          { iso2: "NO", iso3: "NOR", dial: "+47", name: "Norway" },
-          { iso2: "DK", iso3: "DNK", dial: "+45", name: "Denmark" },
-          { iso2: "FI", iso3: "FIN", dial: "+358", name: "Finland" },
-          { iso2: "SG", iso3: "SGP", dial: "+65", name: "Singapore" },
-          { iso2: "JP", iso3: "JPN", dial: "+81", name: "Japan" },
-          { iso2: "KR", iso3: "KOR", dial: "+82", name: "South Korea" },
-          { iso2: "IN", iso3: "IND", dial: "+91", name: "India" },
-          { iso2: "CN", iso3: "CHN", dial: "+86", name: "China" },
-          { iso2: "AE", iso3: "ARE", dial: "+971", name: "United Arab Emirates" },
-          { iso2: "ZA", iso3: "ZAF", dial: "+27", name: "South Africa" },
-          { iso2: "BR", iso3: "BRA", dial: "+55", name: "Brazil" },
-          { iso2: "ID", iso3: "IDN", dial: "+62", name: "Indonesia" },
-        ];
-
-        // No emoji flags — picker text echoes into the operator's
-        // notification email; emoji renders inconsistently across clients
-        // and undercuts a senior-advisory premise.
-        function formatItem(c) {
-          return `${c.dial}  ${c.iso3}  ${c.name}`;
-        }
-        const defaultAU = COUNTRY_CODES.find((c) => c.iso2 === "AU") || COUNTRY_CODES[0];
-        const defaultDisplay = formatItem(defaultAU);
-
-        function openList() {
-          list.style.display = "block";
-          search.setAttribute("aria-expanded", "true");
-        }
-        function closeList() {
-          list.style.display = "none";
-          search.setAttribute("aria-expanded", "false");
-          // Active descendant only has meaning while the listbox is open;
-          // clear it on close so AT doesn't announce a stale option.
-          search.removeAttribute("aria-activedescendant");
-        }
-        function setSelection(c) {
-          ccDial.value = c.dial;
-          ccISO2.value = c.iso2;
-          ccISO3.value = c.iso3;
-          search.value = formatItem(c);
-          closeList();
-        }
-        function isFormattedDisplay(value) {
-          // The formatted display value of the selected country (dial code
-          // plus ISO plus name with double-space separators) does not match
-          // the haystack as a literal substring, so an includes() check
-          // would return zero matches on first focus. Treat "field still
-          // shows the selected formatted text" as no-query so the dropdown
-          // shows the full list.
-          const trimmed = String(value || "").trim();
-          if (!trimmed) return true;
-          const selected =
-            COUNTRY_CODES.find((c) => c.iso2 === ccISO2.value) || defaultAU;
-          return (
-            trimmed === defaultDisplay || trimmed === formatItem(selected)
-          );
-        }
-        function filter(q) {
-          if (isFormattedDisplay(q)) return COUNTRY_CODES;
-          const query = normalizeSpaces(q).toUpperCase();
-          if (!query) return COUNTRY_CODES;
-          return COUNTRY_CODES.filter((c) => {
-            const hay = `${c.name} ${c.iso2} ${c.iso3} ${c.dial}`.toUpperCase();
-            return hay.includes(query);
-          });
-        }
-        function render(filtered) {
-          optionsHost.innerHTML = "";
-          const items = filtered.slice(0, 30);
-          // The currently-selected dial is keyed off the hidden ISO2 field so
-          // the matching option renders aria-selected="true" — the active
-          // descendant of the listbox per the ARIA 1.2 combobox pattern.
-          const selectedISO2 = ccISO2.value;
-          for (const c of items) {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "cc-option";
-            btn.id = "cc-opt-" + c.iso2;
-            btn.setAttribute("role", "option");
-            btn.setAttribute("aria-selected", c.iso2 === selectedISO2 ? "true" : "false");
-            btn.textContent = formatItem(c);
-            btn.addEventListener("click", () => setSelection(c));
-            optionsHost.appendChild(btn);
-          }
-          if (!items.length) {
-            const empty = document.createElement("div");
-            empty.className = "micro";
-            empty.textContent = "No matches.";
-            optionsHost.appendChild(empty);
-          }
-        }
-
-        search.value = defaultDisplay;
-        render(COUNTRY_CODES);
-
-        function visibleOptions() {
-          return Array.from(optionsHost.querySelectorAll(".cc-option"));
-        }
-        function focusOption(index) {
-          const opts = visibleOptions();
-          if (!opts.length) return;
-          const clamped = Math.max(0, Math.min(opts.length - 1, index));
-          // Pure roving DOM focus: focus moves onto the option <button> itself,
-          // so Enter/Space activate it natively via its click handler. No
-          // aria-activedescendant — combining roving focus with active-descendant
-          // is a contradictory ARIA 1.2 model and left Enter ambiguous.
-          opts[clamped].focus();
-        }
-
-        search.addEventListener("focus", () => {
-          render(filter(search.value));
-          openList();
-        });
-        search.addEventListener("input", () => {
-          render(filter(search.value));
-          openList();
-        });
-        // Empty-country desync guard: if the field is cleared to blank, the
-        // hidden dial/ISO must not keep a stale previously-selected value —
-        // a visually-empty country would otherwise submit the old dial code.
-        // Snap the hidden fields back to the AU default the moment the text
-        // goes empty (display is left blank here so the user can keep typing;
-        // the AU display is restored on blur if they leave it empty).
-        search.addEventListener("input", () => {
-          if (!String(search.value || "").trim()) {
-            ccDial.value = defaultAU.dial;
-            ccISO2.value = defaultAU.iso2;
-            ccISO3.value = defaultAU.iso3;
-          }
-        });
-        // On blur with an empty field, restore the full AU default display so
-        // the field never rests visually-empty out of sync with its hidden
-        // value. A delay lets an option click land before this fires.
-        search.addEventListener("blur", () => {
-          setTimeout(() => {
-            if (!String(search.value || "").trim()) {
-              ccDial.value = defaultAU.dial;
-              ccISO2.value = defaultAU.iso2;
-              ccISO3.value = defaultAU.iso3;
-              search.value = defaultDisplay;
-            }
-          }, 120);
-        });
-        // ARIA 1.2 combobox keyboard contract on the search input:
-        // ArrowDown opens (if closed) and moves focus into the listbox;
-        // ArrowUp focuses the last option; Home/End jump to bounds;
-        // Escape closes the list.
-        search.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            // Never let Enter in the combobox submit the whole form. If the
-            // list is open, commit the first match (type-ahead); otherwise
-            // swallow it so focus stays put.
-            e.preventDefault();
-            if (search.getAttribute("aria-expanded") === "true") {
-              const opts = visibleOptions();
-              if (opts.length) opts[0].click();
-            }
-            return;
-          }
-          if (e.key === "Escape") {
-            closeList();
-            return;
-          }
-          if (e.key === "ArrowDown") {
-            e.preventDefault();
-            openList();
-            focusOption(0);
-            return;
-          }
-          if (e.key === "ArrowUp") {
-            e.preventDefault();
-            openList();
-            const opts = visibleOptions();
-            focusOption(opts.length - 1);
-            return;
-          }
-          if (e.key === "Home") {
-            e.preventDefault();
-            focusOption(0);
-            return;
-          }
-          if (e.key === "End") {
-            e.preventDefault();
-            const opts = visibleOptions();
-            focusOption(opts.length - 1);
-            return;
-          }
-        });
-        // Roving-focus keyboard nav on the options themselves: Arrow keys
-        // move focus among options; Home/End jump; Escape returns focus
-        // to the search input and closes; Enter is handled natively by
-        // button activation, which triggers setSelection via the existing
-        // click handler.
-        optionsHost.addEventListener("keydown", (e) => {
-          const opts = visibleOptions();
-          const currentIndex = opts.indexOf(document.activeElement);
-          if (e.key === "ArrowDown") {
-            e.preventDefault();
-            focusOption(currentIndex + 1);
-          } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            if (currentIndex <= 0) {
-              search.focus();
-              // Focus is back on the input with no active option beneath the
-              // cursor; drop the active-descendant pointer.
-              search.removeAttribute("aria-activedescendant");
-            } else {
-              focusOption(currentIndex - 1);
-            }
-          } else if (e.key === "Home") {
-            e.preventDefault();
-            focusOption(0);
-          } else if (e.key === "End") {
-            e.preventDefault();
-            focusOption(opts.length - 1);
-          } else if (e.key === "Escape") {
-            e.preventDefault();
-            closeList();
-            search.focus();
-          }
-        });
-        document.addEventListener("click", (e) => {
-          // Containment check (not strict equality) so clicks on the
-          // wrapper padding / label don't immediately re-close the list.
-          const inside = wrap && wrap.contains(e.target);
-          if (!inside) closeList();
-        });
-
-        // Expose a reset hook so the form-handler can restore the AU
-        // default display after form.reset() wipes the search input.
-        window.__capitaResetCountryPicker = function () {
-          ccDial.value = defaultAU.dial;
-          ccISO2.value = defaultAU.iso2;
-          ccISO3.value = defaultAU.iso3;
-          search.value = defaultDisplay;
-          render(COUNTRY_CODES);
-        };
-
-        // Expose a restore hook so the draft-persistence layer can re-apply a
-        // saved country selection (display + hidden fields) on page load.
-        // Unknown ISO2 falls back to the AU default. Returns true when a
-        // non-default country was restored so the caller can tell a real
-        // saved value from a no-op.
-        window.__capitaSetCountryPickerByISO2 = function (iso2) {
-          const match = COUNTRY_CODES.find((c) => c.iso2 === String(iso2 || "").toUpperCase());
-          const c = match || defaultAU;
-          ccDial.value = c.dial;
-          ccISO2.value = c.iso2;
-          ccISO3.value = c.iso3;
-          search.value = formatItem(c);
-          render(COUNTRY_CODES);
-          return Boolean(match);
-        };
-      })();
+      // 4. Country-code picker removed — phone is now a single optional field
+      // that accepts the full international number (country code included), so
+      // the type-ahead combobox and its hidden dial/ISO fields are gone.
 
       // 5. Form validate + Formspree POST.
       (function initLeadForm() {
@@ -932,12 +649,9 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         const nameEl = document.getElementById("name");
         const emailEl = document.getElementById("email");
         const companyEl = document.getElementById("company");
-        const roleEl = document.getElementById("role");
         const phoneEl = document.getElementById("phone");
         const packageEl = document.getElementById("package");
         const msgEl = document.getElementById("message");
-        const ccDial = document.getElementById("ccDial");
-        const ccISO3 = document.getElementById("ccISO3");
         const submitBtn = form.querySelector('button[type="submit"]');
         let pending = false;
 
@@ -965,12 +679,12 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           }
         }
         function clearAllFieldErrors() {
-          for (const id of ["name", "email", "company", "role", "phone"]) clearFieldError(id);
+          for (const id of ["name", "email", "company", "phone"]) clearFieldError(id);
         }
         // Per-field errors clear on next input keystroke (per the per-field
         // error lifecycle decision: errors persist until the user starts
         // correcting, not on every keystroke and not only at re-submit).
-        for (const id of ["name", "email", "company", "role", "phone"]) {
+        for (const id of ["name", "email", "company", "phone"]) {
           const el = document.getElementById(id);
           if (el) el.addEventListener("input", function () { clearFieldError(id); });
         }
@@ -989,7 +703,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             if (!isValidPhoneLocal(phone)) {
               setFieldError(
                 "phone",
-                "Phone must contain digits only (spaces/dashes allowed) and be 4–14 digits.",
+                "Phone can include +, spaces and dashes, and must be 6 to 15 digits.",
               );
               return false;
             }
@@ -1022,12 +736,6 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
               setFieldError("company", "Company must be 2–120 characters.");
               return false;
             }
-          } else if (id === "role") {
-            const role = normalizeSpaces(el.value);
-            if (!el.checkValidity() || !isValidFreeText(role, 2, 120)) {
-              setFieldError("role", "Role must be 2–120 characters.");
-              return false;
-            }
           }
           clearFieldError(id);
           return true;
@@ -1036,7 +744,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         // so problems surface field-by-field instead of only at submit. The
         // submit-time all-at-once pass remains the backstop. Blur only reads
         // and reports — it never preventDefaults or blocks submit.
-        for (const id of ["name", "email", "company", "role", "phone"]) {
+        for (const id of ["name", "email", "company", "phone"]) {
           const el = document.getElementById(id);
           if (el) el.addEventListener("blur", function () { validateField(id); });
         }
@@ -1070,12 +778,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         // never creates a draft. Per-field length caps mirror the input
         // maxlengths so a tampered localStorage value can't overflow a field.
         const DRAFT_KEY = "capita-lead-draft-v1";
-        const DRAFT_CAPS = { name: 60, email: 254, company: 120, role: 120, ccSearch: 80, phone: 24, message: 2000 };
-        // `search` lives in the country-picker closure; resolve it here by id
-        // so this closure can read/restore the country field too. Declared up
-        // top so the autosave wiring below can reference it without hitting
-        // the temporal dead zone.
-        const search = document.getElementById("ccSearch");
+        const DRAFT_CAPS = { name: 60, email: 254, company: 120, phone: 28, message: 2000 };
         function lsAvailable() {
           try {
             const k = "__capita_probe__";
@@ -1101,30 +804,21 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           return cap ? s.slice(0, cap) : s;
         }
         function readForm() {
-          // ccISO2 is captured alongside the display so the picker can be
-          // restored to the exact saved country, not just its text.
-          const ccISO2El = document.getElementById("ccISO2");
           return {
             name: nameEl ? nameEl.value : "",
             email: emailEl ? emailEl.value : "",
             company: companyEl ? companyEl.value : "",
-            role: roleEl ? roleEl.value : "",
-            ccSearch: search ? search.value : "",
-            ccISO2: ccISO2El ? ccISO2El.value : "",
             phone: phoneEl ? phoneEl.value : "",
             package: packageEl ? packageEl.value : "",
             message: msgEl ? msgEl.value : "",
           };
         }
         function hasAnyContent(d) {
-          // Only persist once the user has typed a field that isn't a default.
-          // The country picker text defaults to the AU display, so it alone
-          // doesn't count as "typed".
+          // Only persist once the user has typed something meaningful.
           return Boolean(
             (d.name && d.name.trim()) ||
             (d.email && d.email.trim()) ||
             (d.company && d.company.trim()) ||
-            (d.role && d.role.trim()) ||
             (d.phone && d.phone.trim()) ||
             (d.message && d.message.trim()) ||
             (d.package && d.package !== "not-sure")
@@ -1153,7 +847,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
         // Debounced autosave on input across the visible fields (incl. the
         // country search + package select + message). The honeypot is omitted
         // by construction (it is not in this list).
-        for (const el of [nameEl, emailEl, companyEl, roleEl, phoneEl, msgEl, search]) {
+        for (const el of [nameEl, emailEl, companyEl, phoneEl, msgEl]) {
           if (el) el.addEventListener("input", scheduleSave);
         }
         if (packageEl) packageEl.addEventListener("change", scheduleSave);
@@ -1178,7 +872,6 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           if (nameEl && d.name) nameEl.value = capValue("name", d.name);
           if (emailEl && d.email) emailEl.value = capValue("email", d.email);
           if (companyEl && d.company) companyEl.value = capValue("company", d.company);
-          if (roleEl && d.role) roleEl.value = capValue("role", d.role);
           if (phoneEl && d.phone) phoneEl.value = capValue("phone", d.phone);
           if (msgEl && d.message) msgEl.value = capValue("message", d.message);
           // Restore the package <select> only to a value the option list
@@ -1189,12 +882,6 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
               function (o) { return o.value === d.package; },
             );
             if (has) packageEl.value = d.package;
-          }
-          // Restore the country picker via its exposed hook (re-applies the
-          // formatted display AND the hidden dial/ISO fields). Prefer the
-          // saved ISO2; fall back to matching the saved display text.
-          if (d.ccISO2 && typeof window.__capitaSetCountryPickerByISO2 === "function") {
-            window.__capitaSetCountryPickerByISO2(d.ccISO2);
           }
         }
         // Restore once the DOM is parsed. The country-picker IIFE runs earlier
@@ -1216,14 +903,13 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
           const hp = form.querySelector('input[name="website"]')?.value;
           if (hp && hp.trim().length) return;
 
-          if (!nameEl || !emailEl || !companyEl || !roleEl) {
+          if (!nameEl || !emailEl) {
             setError("Form is missing required fields.");
             return;
           }
           const name = normalizeSpaces(nameEl.value);
           const email = normalizeSpaces(emailEl.value);
-          const company = normalizeSpaces(companyEl.value);
-          const role = normalizeSpaces(roleEl.value);
+          const company = normalizeSpaces(companyEl ? companyEl.value : "");
           const phone = normalizeSpaces(phoneEl ? phoneEl.value : "");
           const pkg = normalizePackage(packageEl ? packageEl.value : "not-sure");
           const message = safeBodyText(msgEl ? msgEl.value : "");
@@ -1243,18 +929,14 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             setFieldError("email", "Enter a valid email address.");
             hasFieldError = true;
           }
-          if (!companyEl.checkValidity() || !isValidFreeText(company, 2, 120)) {
+          if (company && !isValidFreeText(company, 2, 120)) {
             setFieldError("company", "Company must be 2–120 characters.");
-            hasFieldError = true;
-          }
-          if (!roleEl.checkValidity() || !isValidFreeText(role, 2, 120)) {
-            setFieldError("role", "Role must be 2–120 characters.");
             hasFieldError = true;
           }
           if (!isValidPhoneLocal(phone)) {
             setFieldError(
               "phone",
-              "Phone must contain digits only (spaces/dashes allowed) and be 4–14 digits.",
+              "Phone can include +, spaces and dashes, and must be 6 to 15 digits.",
             );
             hasFieldError = true;
           }
@@ -1272,11 +954,7 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
             return;
           }
 
-          const dial = stripControls(ccDial ? ccDial.value : "+61") || "+61";
-          const iso3 = stripControls(ccISO3 ? ccISO3.value : "AUS") || "AUS";
-          const fullPhone = phone ? `${dial} (${iso3}) ${phone}` : "";
-
-          const payload = { name, email, company, role, package: pkg, phone: fullPhone, message };
+          const payload = { name, email, company, package: pkg, phone, message };
 
           setPending(true);
           // 30s ceiling so a stalled Formspree edge can't leave the user
@@ -1302,12 +980,6 @@ const ascii = Array.from({ length: ASCII_ROWS }, (_, r) =>
 
             form.reset();
             clearAllFieldErrors();
-            // form.reset() wipes the search input on the country picker;
-            // restore the AU default display + hidden field values so the
-            // next prospect sees the same starting state.
-            if (typeof window.__capitaResetCountryPicker === "function") {
-              window.__capitaResetCountryPicker();
-            }
             // The submitted draft is now stale — drop it so a returning
             // prospect doesn't get last lead's data restored on next visit.
             clearDraft();

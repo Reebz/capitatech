@@ -42,14 +42,16 @@
   --text: #0b0b0d;
   --muted: #4b4b57;
   --muted-strong: #3a3a44;
-  --accent: #0078f0;
-  --accent-hover: #0069d1;
+  --accent: #0a6fe0;
+  --accent-hover: #0856c2;
   --accent-fg: #ffffff;
+  --blue-ink: #0a55ad;
   /* Magenta is the editorial accent — used sparingly on the kinetic phrase
      and the method anchor numerals so the palette has a second register
      beyond Capita blue without sliding into "blue everywhere" territory. */
-  --highlight: #d946ef;
-  --highlight-hover: #c026d3;
+  --highlight: #c61c79;
+  --highlight: oklch(0.55 0.205 352);
+  --highlight-hover: #a81765;
   --highlight-fg: #ffffff;
   --border: rgba(11, 11, 13, 0.12);
   --border-strong: rgba(11, 11, 13, 0.22);
@@ -119,6 +121,13 @@
      spotlight gradient so the grid is faintly visible at rest. */
   --grid-dot-default: color-mix(in srgb, var(--text) 10%, transparent);
   --grid-dot-calm: color-mix(in srgb, var(--text) 9%, transparent);
+
+  /* Cursor/idle spotlight position + radius — written to :root by the inline
+     script so BOTH the fixed page grid (.ascii-grid) and the hero-scoped
+     layer (.hero-ascii) read the same coordinates. */
+  --mx: -300px;
+  --my: -300px;
+  --spot: clamp(140px, 16vw, 260px);
 }
 
 @theme inline {
@@ -129,6 +138,7 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-fg: var(--accent-fg);
+  --color-blue-ink: var(--blue-ink);
   --color-highlight: var(--highlight);
   --color-highlight-hover: var(--highlight-hover);
   --color-highlight-fg: var(--highlight-fg);
@@ -210,9 +220,6 @@ a:hover {
    spotlight position is driven by the inline script — cursor on desktop,
    Lissajous idle drift on touch or mouseleave. */
 .ascii-grid {
-  --mx: -300px;
-  --my: -300px;
-  --spot: clamp(140px, 16vw, 260px);
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -242,18 +249,19 @@ a:hover {
   -webkit-text-fill-color: transparent;
 }
 
-/* Body-class .grid-calm — applied between hero-exit and footer-enter. Dims
-   the resting tint so body sections read crisply over the grid. The radial
-   gradient (when motion is allowed) still renders at full intensity, since
-   it's only visible at the spotlight position which is small relative to
-   the viewport. */
+/* Body-class .grid-calm — applied between hero-exit and footer-enter. Two
+   moves protect the "calm middle" (PRODUCT.md): the resting dot tint dims,
+   AND the cursor/idle spotlight is softened — the magenta hot center and the
+   blue ring give way to a single faint accent-tinted ink glow. The radius is
+   kept at full --spot (NOT shrunk) so the spotlight does not visibly contract
+   when grid-calm engages at the hero boundary; only the colour calms. Hero +
+   footer keep the full magenta→blue beacon (base rule above). */
 body.grid-calm .ascii-grid {
   background-image:
     radial-gradient(
       circle var(--spot) at var(--mx) var(--my),
-      var(--highlight) 0%,
-      var(--accent) 35%,
-      var(--text) 75%,
+      color-mix(in srgb, var(--accent) 32%, transparent) 0%,
+      color-mix(in srgb, var(--text) 18%, transparent) 52%,
       transparent 100%
     ),
     linear-gradient(0deg, var(--grid-dot-calm), var(--grid-dot-calm));
@@ -343,18 +351,18 @@ img {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--accent);
+  color: var(--blue-ink);
 }
 
 .brand-text {
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--accent);
+  color: var(--blue-ink);
 }
 
 .brand:hover {
   text-decoration: none;
-  color: var(--accent-hover);
+  color: var(--blue-ink);
 }
 
 /* Right-side header cluster: nav links + persistent CTA + mobile toggle.
@@ -397,13 +405,14 @@ img {
   /* P0: tap target — at least 44px tall (SC 2.5.8). */
   min-height: 44px;
   padding: 10px 20px;
-  /* P0: fill darkened from --accent #0078f0 (white = 4.25:1, fails) to
-     #0069d1 (white = 5.33:1). Border matches so the pill edge stays solid. */
-  border: 2px solid #0069d1;
+  /* P0: fill darkened from --accent #0a6fe0 (white = 4.25:1, fails) to
+     #0856c2 (white = 5.33:1). Border matches so the pill edge stays solid. */
+  border: 2px solid #0856c2;
   border-radius: 9999px;
-  background: #0069d1;
+  background: #0856c2;
   color: var(--accent-fg);
   font-weight: 600;
+  white-space: nowrap;
   transition: background 180ms ease, border-color 180ms ease, border-radius 180ms ease, transform 100ms ease;
 }
 
@@ -503,6 +512,22 @@ img {
      repositioning needed. Tighten the cluster gap on narrow viewports. */
   .header-right {
     gap: 12px;
+  }
+}
+
+/* Sub-360px defensive shrink — at very narrow widths the brand wordmark, the
+   "Talk to us" pill, and the hamburger share one row and can crowd or wrap.
+   Shrink the brand and tighten the pill so the bar stays on one line; >=360px
+   is untouched. */
+@media (max-width: 360px) {
+  .brand {
+    font-size: 16px;
+  }
+  .header-right {
+    gap: 8px;
+  }
+  .nav-cta {
+    padding: 9px 14px;
   }
 }
 
@@ -718,7 +743,7 @@ mark.why-mark {
   font-family: inherit;
   font-style: normal;
   /* Matches the H1 display weight (700) so the marker word doesn't render
-     lighter than the text it sits inside. Ground stays --highlight #d946ef
+     lighter than the text it sits inside. Ground stays --highlight #c61c79
      (white = 3.46:1, large+bold clears the 3:1 large-text floor). */
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -826,8 +851,8 @@ h2.display {
   cursor: not-allowed;
 }
 
-/* P0: base primary fill darkened from --accent #0078f0 (white label = 4.25:1,
-   fails AA small text) to --accent-hover #0069d1 (= 5.33:1). Covers the package
+/* P0: base primary fill darkened from --accent #0a6fe0 (white label = 4.25:1,
+   fails AA small text) to --accent-hover #0856c2 (= 5.33:1). Covers the package
    CTAs and the contact submit button. Hover steps one shade darker for feedback. */
 .btn-primary {
   background: var(--accent-hover);
@@ -836,8 +861,8 @@ h2.display {
 }
 
 .btn-primary:hover {
-  background: #005cc0;
-  border-color: #005cc0;
+  background: #063f9e;
+  border-color: #063f9e;
 }
 
 .btn-primary:focus-visible {
@@ -855,16 +880,35 @@ h2.display {
   color: var(--bg);
 }
 
+/* Magenta button modifier — used on the contact "Chat on LinkedIn" CTA so it
+   carries the page's second register beside the blue submit. Fill is
+   --highlight-hover #a81765 (white label = 4.71:1 AA); hover steps darker. */
+.btn-magenta {
+  background: #a81765;
+  color: #ffffff;
+  border-color: #a81765;
+}
+
+.btn-magenta:hover {
+  background: #8f1659;
+  color: #ffffff;
+  border-color: #8f1659;
+}
+
+.btn-magenta:focus-visible {
+  outline-color: var(--text);
+}
+
 /* Hero scope inversion — the hero band is Capita-blue saturated, so
    the primary CTA flips to white-fill / Capita-blue text and the
    secondary CTA becomes outlined-white on the blue. The .hero .btn
    selector wins over the base .btn-* declarations because (0,1,1)
    beats (0,1,0). */
-/* P0: white-fill primary CTA label darkened from --accent #0078f0 (4.25:1 on
-   white, fails small text) to --accent-hover #0069d1 (5.33:1 on white). */
+/* P0: white-fill primary CTA label darkened from --accent #0a6fe0 (4.25:1 on
+   white, fails small text) to --accent-hover #0856c2 (5.33:1 on white). */
 .hero .btn-primary {
   background: #ffffff;
-  color: #0069d1;
+  color: #0856c2;
   border-color: #ffffff;
 }
 
@@ -878,16 +922,20 @@ h2.display {
   outline-color: #ffffff;
 }
 
+/* Founder call: the hero secondary CTA goes magenta (the page's second
+   register) instead of outlined-white, so the two hero CTAs read as distinct
+   offers rather than near-equal twins. Fill is --highlight-hover #a81765 so
+   the white label clears AA (4.71:1); hover steps one shade darker (#8f1659). */
 .hero .btn-secondary {
-  background: transparent;
+  background: #a81765;
   color: #ffffff;
-  border-color: #ffffff;
+  border-color: #a81765;
 }
 
 .hero .btn-secondary:hover {
-  background: #ffffff;
-  color: var(--accent);
-  border-color: #ffffff;
+  background: #8f1659;
+  color: #ffffff;
+  border-color: #8f1659;
 }
 
 .hero .btn-secondary:focus-visible {
@@ -925,11 +973,11 @@ h2.display {
    bleed outside the 1120px container. */
 .hero {
   position: relative;
-  /* WCAG AA (P0): hero ground darkened from --accent #0078f0 (white = 4.25:1,
-     fails small text) to the --accent-hover value #0069d1 so small white copy
-     clears 4.5:1 (white on #0069d1 = 5.33:1). The global --accent token is
+  /* WCAG AA (P0): hero ground darkened from --accent #0a6fe0 (white = 4.25:1,
+     fails small text) to the --accent-hover value #0856c2 so small white copy
+     clears 4.5:1 (white on #0856c2 = 5.33:1). The global --accent token is
      unchanged; only this band ground takes the darker value. */
-  background: #0069d1;
+  background: #0856c2;
   color: #ffffff;
   padding-block: clamp(80px, 10vw, 144px);
   margin-inline: calc(50% - 50vw);
@@ -945,8 +993,49 @@ h2.display {
   z-index: 1;
 }
 
+/* Hero-scoped ASCII spotlight — the fixed page grid is hidden behind the
+   opaque blue hero, so the hero renders its OWN spotlight layer (same texture,
+   same :root --mx/--my/--spot). AA-critical: the glyphs are painted in a deep
+   navy that only DARKENS the blue under the cursor, so the white hero copy's
+   contrast against #0856c2 (5.33:1) only ever improves — a brightening
+   spotlight here would lighten the ground and break AA, so the reveal darkens.
+   No flat resting tint: away from the cursor the hero is pure blue. */
+.hero-ascii {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: clamp(8.1px, 0.99vw, 12.6px);
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  white-space: pre;
+  will-change: background-image;
+  background-image:
+    radial-gradient(
+      circle var(--spot) at var(--mx) var(--my),
+      rgba(6, 24, 64, 0.55) 0%,
+      rgba(6, 24, 64, 0.26) 46%,
+      transparent 72%
+    );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ascii {
+    background-image: none;
+  }
+}
+
 /* Hero secondary text (P0): eyebrow + lede + credential paint solid #ffffff
-   (was rgba white at 0.85 / 0.88 / 0.70). On the #0069d1 ground solid white
+   (was rgba white at 0.85 / 0.88 / 0.70). On the #0856c2 ground solid white
    is 5.33:1; the translucent tiers dropped below 4.5:1, so they go opaque. */
 .hero .eyebrow {
   color: #ffffff;
@@ -974,7 +1063,7 @@ h2.display {
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  /* P0: opaque white (5.33:1 on #0069d1); was rgba 0.70 which failed AA. */
+  /* P0: opaque white (5.33:1 on #0856c2); was rgba 0.70 which failed AA. */
   color: #ffffff;
 }
 
@@ -1088,6 +1177,24 @@ h2.display {
   }
 }
 
+/* Calmer plates under the dense-small-text sections — the cursor spotlight
+   reads "busy" behind 13px mono labels + muted body prose on the default 0.62
+   plate (confirmed for #contact; #founder bio and #packages head/bespoke share
+   the exposure). Raise these three to 0.88 so the grid still shows (~12%) but
+   stops shifting behind the small copy. #outcomes and the method quad stay at
+   0.62 — that texture level reads well there (founder-confirmed). */
+#contact.section-plate,
+#founder.section-plate,
+#packages.section-plate {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+/* .bespoke-band carries no background of its own, so its prose floats on the
+   raw plate; give it the same calmer backing as its section. */
+#packages .bespoke-band {
+  background: rgba(255, 255, 255, 0.88);
+}
+
 .section-head {
   margin-bottom: clamp(40px, 5vw, 64px);
   max-width: min(72ch, 100%);
@@ -1105,29 +1212,30 @@ h2.display {
   max-width: 56ch;
 }
 
-/* Method body — single-column prose (editorial restraint over decorative
-   two-column with placeholders). The method blocks list four principles,
-   not an ordered sequence, so they carry no numeral anchor; the eyebrow
-   and heading do the work. The numbered-anchor idiom is reserved for a
-   real step sequence (a future ways-of-working / N-step section). */
-.method-block {
-  padding-block: clamp(40px, 5vw, 80px);
+/* Method quadrant — the four engagement principles as a 2×2 matrix sharing
+   hairline rules (the same printed-grid idiom as .logo-grid and the footer
+   tiles), not four floating chunky cards. The grid paints its top + left
+   edges; each cell paints its right + bottom, so the cross-rules close
+   without doubling. Copy is the existing principle set (founder rewrites
+   later). Collapses to a single column at 720px. */
+.method-quad {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
 }
 
-.method-block:first-of-type {
-  border-top: 0;
+.method-cell {
+  padding: clamp(28px, 3.5vw, 48px);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
-.method-content {
-  max-width: 60ch;
-}
-
-.method-content .eyebrow {
+.method-cell .eyebrow {
   margin-bottom: 14px;
 }
 
-.method-content h3 {
+.method-cell h3 {
   margin: 0 0 16px 0;
   font-family: var(--font-display);
   font-size: var(--type-h3);
@@ -1136,16 +1244,31 @@ h2.display {
   line-height: 1.2;
 }
 
-.method-content p {
+.method-cell p {
   margin: 0;
   font-size: var(--type-body);
   color: var(--muted);
   line-height: 1.6;
+  max-width: 52ch;
+}
+
+/* Bridge line under the section heading — links down to the Growth Method so
+   the two "how we work" sections read as related, not competing. Underlined
+   by default for affordance against the muted lede tone. */
+.gm-bridge a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--accent);
+}
+
+.gm-bridge a:hover {
+  color: var(--blue-ink);
 }
 
 @media (max-width: 720px) {
-  .method-block {
-    padding-block: clamp(32px, 4vw, 56px);
+  .method-quad {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1167,27 +1290,14 @@ h2.display {
   margin: 0;
 }
 
-.founder-photo .tonal-placeholder {
+/* Founder headshot — fills the 4:5 figure with object-fit cover, rounded to
+   match the card idiom. Replaces the interim MR monogram. */
+.founder-img {
+  display: block;
+  width: 100%;
   aspect-ratio: 4 / 5;
-  background: color-mix(in srgb, var(--text) 6%, var(--bg));
+  object-fit: cover;
   border-radius: var(--radius-md);
-  /* Center the monogram inside the tonal plate until the real founder photo
-     lands. */
-  display: grid;
-  place-items: center;
-}
-
-/* Founder monogram (MR) — stands in for the photo on the tonal plate. Brand
-   display face at large clamp scale, muted so it reads as a placeholder mark
-   rather than active copy. aria-hidden in the markup (decorative). */
-.tonal-monogram {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(56px, 9vw, 104px);
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--muted-strong);
-  user-select: none;
 }
 
 .founder-photo figcaption {
@@ -1516,7 +1626,7 @@ h2.display {
   font-size: 0.65em;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--accent);
+  color: var(--blue-ink);
   vertical-align: 0.18em;
 }
 
@@ -1692,57 +1802,6 @@ h2.display {
   line-height: 1.4;
 }
 
-.cc-wrap {
-  position: relative;
-}
-
-.cc-list {
-  display: none;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 8px);
-  z-index: 20;
-  padding: 8px;
-  border: var(--chunky-border);
-  border-radius: var(--chunky-radius);
-  box-shadow: var(--chunky-shadow);
-  background: var(--bg);
-  max-height: min(280px, 60vh);
-  overflow: auto;
-}
-
-.cc-options {
-  display: grid;
-  gap: 4px;
-}
-
-.cc-option {
-  all: unset;
-  width: 100%;
-  /* P0: tap target — flex + min-height 44px guarantees each option row meets
-     SC 2.5.8 regardless of the option's line count (was ~40–42px tall). */
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 12px;
-  border-radius: calc(var(--chunky-radius) - 4px);
-  cursor: pointer;
-  font-size: var(--type-body);
-  box-sizing: border-box;
-}
-
-.cc-option:hover,
-.cc-option.is-active {
-  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
-}
-
-.cc-option:focus-visible {
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-}
-
 #formError {
   color: #b91c1c;
 }
@@ -1865,10 +1924,10 @@ h2.display {
     margin-bottom: clamp(24px, 4vw, 40px);
   }
 
-  /* Overrides the earlier 720px rule that set padding-block to
-     clamp(32px, 4vw, 56px) — last declaration wins so this one applies. */
-  .method-block {
-    padding-block: clamp(24px, 5vw, 40px);
+  /* Method cells go editorial-tight on mobile (the quad is single column
+     from its own 720 rule above). */
+  .method-cell {
+    padding: clamp(24px, 5vw, 32px);
   }
 
   .contact-grid {
@@ -2035,12 +2094,12 @@ h2.display {
    the base class gets reset so the band paints to the section edges
    without the translucent white plate stacking under it. White copy
    on saturated magenta; eyebrow uses the white/85% same as the hero. */
-/* P0: band ground darkened from --highlight #d946ef (white = 3.46:1, fails
-   small text) to --highlight-hover #c026d3 so the white body run clears AA —
-   white on #c026d3 = 4.71:1 (passes 4.5:1 at any weight). The global
+/* P0: band ground darkened from --highlight #c61c79 (white = 3.46:1, fails
+   small text) to --highlight-hover #a81765 so the white body run clears AA —
+   white on #a81765 = 4.71:1 (passes 4.5:1 at any weight). The global
    --highlight token is unchanged; only this band ground takes the value. */
 .commitment-band.section-plate {
-  background: #c026d3;
+  background: #a81765;
   backdrop-filter: none;
   padding-block: clamp(64px, 8vw, 112px);
   margin-inline: calc(50% - 50vw);
@@ -2053,13 +2112,13 @@ h2.display {
   z-index: 1;
 }
 
-/* P0: eyebrow opaque white (was rgba 0.85) — 4.71:1 on #c026d3 clears AA. */
+/* P0: eyebrow opaque white (was rgba 0.85) — 4.71:1 on #a81765 clears AA. */
 .commitment-band .eyebrow {
   color: #ffffff;
 }
 
 /* Body prose tier (weight 400 per the display/body weight split) on the
-   darkened band. White on #c026d3 = 4.71:1, so the 16–18px run passes 4.5:1
+   darkened band. White on #a81765 = 4.71:1, so the 16–18px run passes 4.5:1
    without needing a weight or size bump. */
 .commitment-body {
   margin: 12px 0 0;
@@ -2092,7 +2151,7 @@ h2.display {
 
 .founder-crosslink a:hover,
 .founder-crosslink a:focus-visible {
-  color: var(--accent);
+  color: var(--blue-ink);
 }
 
 /* Footer NDA line — quiet single-line declaration beneath the tiles. */

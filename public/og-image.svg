@@ -46,9 +46,9 @@
        washing out the blue wordmark contrast. -->
   <defs>
     <radialGradient id="magentaGlow" cx="50%" cy="50%" r="35%">
-      <stop offset="0%" stop-color="#d946ef" stop-opacity="0.18"/>
-      <stop offset="60%" stop-color="#d946ef" stop-opacity="0.06"/>
-      <stop offset="100%" stop-color="#d946ef" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#c61c79" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#c61c79" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#c61c79" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <ellipse cx="600" cy="315" rx="380" ry="200" fill="url(#magentaGlow)"/>
@@ -56,7 +56,7 @@
   <!-- "Capita" wordmark — geometric path traced from a clean sans (Geist-ish)
        so PNG rasterization doesn't depend on font availability. Capita blue
        on white with subtle magenta glow already laid down behind. -->
-  <g fill="#0078f0">
+  <g fill="#0a6fe0">
     <!-- C -->
     <path d="M 270 240 q -50 0 -78 30 q -28 30 -28 80 t 28 80 q 28 30 78 30 q 40 0 70 -20 l 22 38 q -38 28 -94 28 q -68 0 -110 -42 q -42 -42 -42 -114 t 42 -114 q 42 -42 110 -42 q 56 0 94 28 l -22 38 q -30 -20 -70 -20 z"/>
     <!-- a -->
