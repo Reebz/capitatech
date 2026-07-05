@@ -1046,6 +1046,17 @@ h2.display {
   color: #ffffff;
 }
 
+/* Below 600px the --type-h1 floor (56px) makes the H1's longest word
+   ("transformation,") wider than the viewport — measured 405px at 56px
+   against a 354px box at 390px wide — which drags the whole page into
+   horizontal scroll. 12vw meets the 56px cap exactly at ~467px and the
+   38px floor keeps the word inside a 320px viewport. */
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: clamp(38px, 12vw, 56px);
+  }
+}
+
 .hero .lede {
   margin-top: 28px;
   max-width: 50ch;
