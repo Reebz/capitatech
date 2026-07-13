@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology — D2 Poster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --paper:#f6f6f3; --ink:#0b0b0d; --muted:#4b4b57; --muted-strong:#3a3a44;
+        --accent:#0078f0; --magenta:#d946ef; --rule:rgba(11,11,13,0.16);
+        --display:"Geist",system-ui,Arial,sans-serif; --sans:"Inter",system-ui,Arial,sans-serif; --mono:"Geist Mono",ui-monospace,monospace;
+      }
+      *{box-sizing:border-box;}
+      html,body{margin:0;padding:0;}
+      body{background:#2b2b31;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;padding:28px;}
+      .sheet{width:210mm;height:297mm;background:var(--paper);box-shadow:0 24px 70px rgba(0,0,0,.45);overflow:hidden;display:flex;flex-direction:column;}
+
+      /* ONE blue masthead block */
+      .masthead{background:var(--accent);color:#fff;padding:14mm 18mm 13mm;}
+      .masthead .top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10mm;}
+      .masthead .wordmark{font-family:var(--display);font-weight:700;font-size:13pt;letter-spacing:-0.02em;color:#fff;}
+      .masthead .wordmark .dot{color:rgba(255,255,255,0.65);}
+      .masthead .meta{font-family:var(--mono);font-weight:500;font-size:7.5pt;letter-spacing:0.05em;text-transform:uppercase;color:rgba(255,255,255,0.8);}
+      .masthead h1{margin:0;font-family:var(--display);font-weight:600;font-size:31pt;line-height:1.05;letter-spacing:-0.028em;max-width:16ch;color:#fff;text-wrap:balance;}
+      mark.mk{background:var(--magenta);color:#fff;font-weight:600;letter-spacing:-0.028em;padding:0.02em 0.16em;border-radius:5px;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+      .masthead .sub{margin:6mm 0 0;max-width:58ch;font-size:11.5pt;line-height:1.5;color:rgba(255,255,255,0.95);text-wrap:pretty;}
+
+      /* lower body on paper */
+      .lower{flex:1 1 auto;display:flex;flex-direction:column;padding:13mm 18mm 15mm;}
+      .body{flex:1 1 auto;display:grid;grid-template-columns:0.82fr 1fr;gap:16mm;align-items:center;padding-bottom:9mm;}
+      .venn{display:flex;flex-direction:column;gap:5mm;align-items:center;}
+      .venn svg{width:100%;max-width:72mm;height:auto;display:block;}
+      .venn .cap{margin:0;text-align:center;font-family:var(--mono);font-size:7.5pt;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted-strong);}
+      .proof h2{margin:0 0 6mm;font-family:var(--display);font-weight:600;font-size:15.5pt;line-height:1.18;letter-spacing:-0.02em;color:var(--ink);text-wrap:balance;}
+      .proof .firms{margin:0 0 6mm;font-family:var(--mono);font-weight:600;font-size:9pt;letter-spacing:0.03em;color:var(--ink);line-height:1.5;}
+      .proof ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3.5mm;}
+      .proof li{font-size:10pt;line-height:1.4;color:var(--muted);padding-left:9mm;position:relative;}
+      .proof li b{color:var(--ink);font-weight:600;}
+      .proof li::before{content:"";position:absolute;left:0;top:0.62em;width:6mm;height:1.5px;background:var(--accent);}
+      .proof .mit{margin:6mm 0 0;font-size:8.5pt;line-height:1.45;color:var(--muted);}
+
+      .method{border-top:1.5px solid var(--ink);padding-top:5mm;display:flex;align-items:baseline;gap:6mm;flex-wrap:wrap;}
+      .method .lbl{font-family:var(--mono);font-weight:600;font-size:8pt;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);white-space:nowrap;}
+      .method .seq{margin:0;font-family:var(--display);font-weight:500;font-size:10pt;line-height:1.4;letter-spacing:-0.01em;color:var(--muted-strong);}
+      .method .seq .ar{color:var(--accent);font-weight:600;padding:0 1px;}
+
+      .foot{margin-top:8mm;padding-top:5mm;border-top:1px solid var(--rule);display:flex;align-items:flex-end;justify-content:space-between;gap:10mm;}
+      .foot .rev{margin:0 0 4mm;font-size:9.5pt;line-height:1.5;color:var(--ink);max-width:62ch;}
+      .foot .who .name{font-family:var(--display);font-weight:600;font-size:12pt;color:var(--ink);margin:0 0 2px;}
+      .foot .who .line{font-family:var(--mono);font-size:9.5pt;color:var(--muted-strong);margin:0;}
+      .foot .who .line a{color:var(--muted-strong);text-decoration:none;}
+      .foot .emark{font-family:var(--display);font-weight:700;font-size:11pt;letter-spacing:-0.02em;color:var(--accent);white-space:nowrap;}
+      .foot .emark .dot{color:var(--ink);}
+
+      @page{size:A4 portrait;margin:0;}
+      @media print{html,body{background:#fff;}body{padding:0;display:block;}.sheet{box-shadow:none;}.masthead,mark.mk,.proof li::before{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="masthead">
+        <div class="top">
+          <span class="wordmark">Capita<span class="dot">.</span>Technology</span>
+          <span class="meta">Independent advisory · Sydney</span>
+        </div>
+        <h1>Turn AI, strategy, and customer growth into <mark class="mk">lifetime value</mark> that compounds.</h1>
+        <p class="sub">One advisor has run customer growth at Optus, AI personalization at JPMorgan Chase, and a product P&amp;L from launch to scale.</p>
+      </header>
+
+      <div class="lower">
+        <section class="body">
+          <figure class="venn">
+            <svg viewBox="0 0 820 430" role="img" aria-label="AI, Customer Value and Strategy meet to produce Customer Growth.">
+              <g fill="none" stroke="#0b0b0d" stroke-width="2.2">
+                <circle cx="410" cy="160" r="138"/><circle cx="300" cy="292" r="138"/><circle cx="520" cy="292" r="138"/>
+              </g>
+              <rect x="330" y="228" width="160" height="36" rx="18" fill="#0078f0" stroke="#d946ef" stroke-width="3"/>
+              <text x="410" y="251" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="14" font-weight="600" letter-spacing="0.5" fill="#fff">CUSTOMER GROWTH</text>
+              <g font-family="'Geist Mono',monospace" fill="#0b0b0d">
+                <text x="410" y="42" text-anchor="middle" font-size="19" font-weight="600">AI</text>
+                <text x="150" y="392" text-anchor="middle" font-size="16" font-weight="600">CUSTOMER VALUE</text>
+                <text x="672" y="392" text-anchor="middle" font-size="16" font-weight="600">STRATEGY</text>
+              </g>
+            </svg>
+            <figcaption class="cap">Where all three meet, customers grow</figcaption>
+          </figure>
+          <div class="proof">
+            <h2>One operator has run all three at enterprise scale.</h2>
+            <p class="firms">Optus &nbsp;·&nbsp; JPMorgan Chase &nbsp;·&nbsp; Quantium &nbsp;·&nbsp; Brand Networks</p>
+            <ul>
+              <li><b>Customer value.</b> Growth and retention across customer bases up to 100M+.</li>
+              <li><b>AI.</b> Built and scaled from first launch to 300M+ events a day.</li>
+              <li><b>Strategy.</b> 20+ years, budgets past $75M, teams up to ~300, decisions on 12B+ transactions a year.</li>
+            </ul>
+            <p class="mit">MIT Sloan MBA. Applied AI and machine learning, competitive strategy, marketing. 20+ years across Australia and the United States.</p>
+          </div>
+        </section>
+
+        <section class="method">
+          <span class="lbl">The Capita Growth Method</span>
+          <p class="seq">Go, See, Understand <span class="ar">→</span> Radically Simplify <span class="ar">→</span> Accelerate &amp; Measure <span class="ar">→</span> Build &amp; Automate <span class="ar">→</span> Compound</p>
+        </section>
+
+        <footer class="foot">
+          <div class="who">
+            <p class="rev">The principal who scopes your engagement is the one who delivers it. If you call, that is who picks up.</p>
+            <p class="name">Mitchell Ribar, Principal</p>
+            <p class="line"><a href="mailto:mitch.ribar@capitatech.com.au">mitch.ribar@capitatech.com.au</a> &nbsp;·&nbsp; +61 422 077 424</p>
+          </div>
+          <span class="emark">Capita<span class="dot">.</span>Technology</span>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

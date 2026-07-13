@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology — C4 Brand Poster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --paper:#f6f6f3; --white:#ffffff;
+        --ink:#0b0b0d; --muted:#4b4b57; --muted-strong:#3a3a44;
+        --blue:#0078f0; --blue-hover:#0069d1; --magenta:#d946ef;
+        --rule:rgba(11,11,13,0.12); --rule-strong:rgba(11,11,13,0.22);
+        --display:"Geist",-apple-system,system-ui,Arial,sans-serif;
+        --sans:"Inter",-apple-system,system-ui,Arial,sans-serif;
+        --mono:"Geist Mono",ui-monospace,monospace;
+      }
+      *{box-sizing:border-box;}
+      html,body{margin:0;padding:0;}
+      body{
+        background:#1f2024;
+        font-family:var(--sans);
+        color:var(--ink);
+        -webkit-font-smoothing:antialiased;
+        text-rendering:optimizeLegibility;
+        display:flex;justify-content:center;align-items:flex-start;
+        padding:32px;
+      }
+
+      /* A4 @96dpi exact, fixed pixels so the on-screen preview equals print */
+      .sheet{
+        position:relative;
+        width:794px;height:1123px;
+        background:var(--paper);
+        box-shadow:0 28px 80px rgba(0,0,0,.5);
+        overflow:hidden;
+        display:flex;flex-direction:column;
+      }
+
+      /* ============ HERO PLATE (blue zone 1) ============ */
+      .hero{
+        background:var(--blue);
+        color:var(--white);
+        padding:48px 52px 44px;
+        -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      }
+      .hero .top{
+        display:flex;align-items:center;justify-content:space-between;
+        margin-bottom:40px;
+      }
+      .hero .brand{display:flex;align-items:center;gap:11px;}
+      .hero .brand svg{display:block;}
+      .hero .wordmark{
+        font-family:var(--display);font-weight:700;
+        font-size:15pt;letter-spacing:-0.02em;color:var(--white);
+      }
+      .hero .wordmark .dot{color:rgba(255,255,255,0.62);}
+      .hero .meta{
+        font-family:var(--mono);font-weight:500;
+        font-size:8.5pt;letter-spacing:0.05em;text-transform:uppercase;
+        color:rgba(255,255,255,0.82);text-align:right;
+      }
+      .hero h1{
+        margin:0;
+        font-family:var(--display);font-weight:600;
+        font-size:36pt;line-height:1.06;letter-spacing:-0.028em;
+        color:var(--white);max-width:17ch;
+        text-wrap:balance;
+      }
+      /* restrained emphasis: kept on white, lifted to 700, with a thin magenta underline — NOT a fill block */
+      .hero h1 .emph{
+        font-weight:700;
+        position:relative;
+        white-space:normal;
+        background-image:linear-gradient(var(--magenta),var(--magenta));
+        background-repeat:no-repeat;
+        background-position:0 99%;
+        background-size:100% 2.5px;
+        padding-bottom:2px;
+        -webkit-box-decoration-break:clone;box-decoration-break:clone;
+      }
+      .hero .sub{
+        margin:24px 0 0;
+        max-width:64ch;
+        font-family:var(--sans);
+        font-size:10.5pt;line-height:1.55;
+        color:rgba(255,255,255,0.92);
+        text-wrap:pretty;
+      }
+      /* mono proof framing line at white/88% */
+      .hero .proofline{
+        margin:16px 0 0;
+        font-family:var(--mono);font-weight:400;
+        font-size:9pt;line-height:1.5;letter-spacing:0.01em;
+        color:rgba(255,255,255,0.88);
+        max-width:74ch;
+      }
+
+      /* ============ MIDDLE on warm-gray ============ */
+      .mid{
+        flex:1 1 auto;
+        display:flex;flex-direction:column;
+        padding:34px 52px 28px;
+      }
+
+      /* --- Intersection figure: the centerpiece, large + legible --- */
+      .figwrap{
+        display:flex;flex-direction:column;align-items:center;
+        padding-bottom:26px;
+        border-bottom:1px solid var(--rule);
+      }
+      .figwrap svg{
+        width:430px;height:auto;display:block;
+        -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      }
+      .figwrap .cap{
+        margin:16px auto 0;text-align:center;max-width:58ch;
+        font-family:var(--sans);font-size:10pt;line-height:1.45;
+        color:var(--muted-strong);
+        text-wrap:pretty;
+      }
+      .figwrap .cap b{color:var(--ink);font-weight:600;}
+
+      /* --- Operator proof --- */
+      .proof{padding:24px 0 0;}
+      .proof .lead{
+        margin:0 0 14px;
+        font-family:var(--display);font-weight:600;
+        font-size:15pt;line-height:1.2;letter-spacing:-0.02em;
+        color:var(--ink);text-wrap:balance;
+      }
+      .proof .firms{
+        margin:0 0 18px;
+        font-family:var(--mono);font-weight:600;
+        font-size:9.5pt;letter-spacing:0.04em;
+        color:var(--ink);line-height:1.5;
+      }
+      .proof .firms .sep{color:var(--blue);padding:0 4px;}
+      .proof ul{
+        margin:0;padding:0;list-style:none;
+        display:grid;grid-template-columns:1fr 1fr;gap:11px 34px;
+      }
+      .proof li{
+        font-family:var(--sans);font-size:10pt;line-height:1.42;
+        color:var(--muted);position:relative;padding-left:30px;
+      }
+      .proof li::before{
+        content:"";position:absolute;left:0;top:0.55em;
+        width:20px;height:1.5px;background:var(--blue);
+        -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      }
+      .proof li .k{
+        display:block;
+        font-family:var(--mono);font-weight:600;
+        font-size:8.5pt;letter-spacing:0.05em;text-transform:uppercase;
+        color:var(--muted-strong);margin-bottom:2px;
+      }
+      .proof li b{color:var(--ink);font-weight:600;}
+      .proof .mit{
+        margin:18px 0 0;
+        font-family:var(--sans);font-size:9pt;line-height:1.5;
+        color:var(--muted-strong);
+        padding-top:14px;border-top:1px dashed var(--rule);
+        max-width:88ch;
+      }
+
+      /* --- Method row (single horizontal sequence) --- */
+      .method{
+        margin-top:auto;
+        padding-top:22px;
+        border-top:1.5px solid var(--ink);
+        display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
+      }
+      .method .lbl{
+        font-family:var(--mono);font-weight:600;
+        font-size:8.5pt;letter-spacing:0.05em;text-transform:uppercase;
+        color:var(--ink);white-space:nowrap;flex:0 0 auto;
+      }
+      .method .seq{
+        margin:0;flex:1 1 auto;
+        font-family:var(--display);font-weight:500;
+        font-size:12pt;line-height:1.45;letter-spacing:-0.012em;
+        color:var(--muted-strong);
+      }
+      .method .seq .ar{color:var(--blue);font-weight:600;padding:0 5px;}
+
+      /* ============ CONTACT BAND (blue zone 2) ============ */
+      .contact{
+        background:var(--blue);
+        color:var(--white);
+        padding:26px 52px 30px;
+        -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      }
+      .contact .rev{
+        margin:0 0 18px;
+        font-family:var(--sans);
+        font-size:10pt;line-height:1.5;
+        color:rgba(255,255,255,0.92);
+        max-width:78ch;
+        padding-bottom:16px;
+        border-bottom:1px solid rgba(255,255,255,0.22);
+      }
+      .contact .grid{
+        display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+      }
+      .contact .who .name{
+        margin:0 0 8px;
+        font-family:var(--display);font-weight:600;
+        font-size:13pt;letter-spacing:-0.015em;color:var(--white);
+      }
+      .contact .who .lines{
+        font-family:var(--mono);font-weight:400;
+        font-size:11pt;line-height:1.55;color:var(--white);
+      }
+      .contact .who .lines a{color:var(--white);text-decoration:none;}
+      .contact .who .site{
+        font-size:9pt;color:rgba(255,255,255,0.82);margin-top:6px;
+        letter-spacing:0.02em;
+      }
+      .contact .emark{
+        display:flex;align-items:center;gap:10px;
+        white-space:nowrap;flex:0 0 auto;align-self:flex-end;
+      }
+      .contact .emark svg{display:block;}
+      .contact .emark .wm{
+        font-family:var(--display);font-weight:700;
+        font-size:13pt;letter-spacing:-0.02em;color:var(--white);
+      }
+      .contact .emark .wm .dot{color:rgba(255,255,255,0.62);}
+
+      @page{size:A4 portrait;margin:0;}
+      @media print{
+        html,body{background:#fff;}
+        body{padding:0;display:block;}
+        .sheet{box-shadow:none;width:210mm;height:297mm;}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+
+      <!-- ===== HERO PLATE (blue zone 1) ===== -->
+      <header class="hero">
+        <div class="top">
+          <span class="brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="34" height="34" aria-label="Capita"><rect width="32" height="32" rx="6" fill="#0078f0"/><path d="M 22.5 11 A 6.5 6.5 0 1 0 22.5 21" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>
+            <span class="wordmark">Capita<span class="dot">.</span>Technology</span>
+          </span>
+          <span class="meta">Independent Executive Advisory · Sydney</span>
+        </div>
+        <h1>Turn AI, strategy, and customer growth into <span class="emph">lifetime value that compounds</span>.</h1>
+        <p class="proofline">One advisor has run customer growth at Optus, AI personalization at JPMorgan Chase, and a product P&amp;L from launch to scale.</p>
+      </header>
+
+      <!-- ===== MIDDLE (warm-gray) ===== -->
+      <div class="mid">
+
+        <!-- Intersection figure: large + legible, labels OUTSIDE circles -->
+        <figure class="figwrap">
+          <svg viewBox="0 0 760 470" role="img" aria-label="AI, Customer Value and Strategy meet to produce Customer Growth.">
+            <!-- three thin-stroke circles, optional faint warm wash -->
+            <g>
+              <circle cx="380" cy="180" r="158" fill="#0b0b0d" fill-opacity="0.04" stroke="#0b0b0d" stroke-width="2"/>
+              <circle cx="262" cy="320" r="158" fill="#0b0b0d" fill-opacity="0.04" stroke="#0b0b0d" stroke-width="2"/>
+              <circle cx="498" cy="320" r="158" fill="#0b0b0d" fill-opacity="0.04" stroke="#0b0b0d" stroke-width="2"/>
+            </g>
+            <!-- center token: ONLY filled element — blue disc ringed once in magenta -->
+            <circle cx="380" cy="278" r="62" fill="#d946ef"/>
+            <circle cx="380" cy="278" r="56" fill="#0078f0"/>
+            <text x="380" y="272" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="13" font-weight="600" letter-spacing="0.4" fill="#ffffff">CUSTOMER</text>
+            <text x="380" y="290" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="13" font-weight="600" letter-spacing="0.4" fill="#ffffff">GROWTH</text>
+            <!-- lens labels OUTSIDE the circles -->
+            <g font-family="'Geist Mono',ui-monospace,monospace" fill="#0b0b0d" font-weight="600" letter-spacing="0.6">
+              <text x="380" y="36" text-anchor="middle" font-size="22">AI</text>
+              <text x="108" y="452" text-anchor="middle" font-size="17">CUSTOMER VALUE</text>
+              <text x="652" y="452" text-anchor="middle" font-size="17">STRATEGY</text>
+            </g>
+          </svg>
+          <figcaption class="cap">Most advisors hold one. <b>The value is where all three meet</b> — and someone has run that ground.</figcaption>
+        </figure>
+
+        <!-- Operator proof -->
+        <section class="proof">
+          <p class="lead">One operator has run all three at enterprise scale.</p>
+          <p class="firms">OPTUS<span class="sep">·</span>JPMORGAN CHASE<span class="sep">·</span>QUANTIUM<span class="sep">·</span>BRAND NETWORKS</p>
+          <ul>
+            <li><span class="k">Customer value</span>Run customer growth and retention across customer bases up to <b>100M+</b>.</li>
+            <li><span class="k">AI</span>Built and scaled AI from first MVP to <b>300M+ events a day</b>.</li>
+            <li><span class="k">Strategy</span>20+ years owning strategy, budgets past <b>$75M</b>, teams up to <b>~300</b>; decisions over <b>12B+ transactions</b> a year.</li>
+          </ul>
+          <p class="mit">MIT Sloan MBA — applied AI and machine learning, competitive strategy, marketing. 20+ years across Australia and the United States.</p>
+        </section>
+
+        <!-- Method row -->
+        <section class="method">
+          <span class="lbl">The Capita Growth Method</span>
+          <p class="seq">Go, See, Understand <span class="ar">→</span> Radically Simplify <span class="ar">→</span> Accelerate &amp; Measure <span class="ar">→</span> Build &amp; Automate <span class="ar">→</span> Compound</p>
+        </section>
+
+      </div>
+
+      <!-- ===== CONTACT BAND (blue zone 2) ===== -->
+      <footer class="contact">
+        <p class="rev">The principal who scopes your engagement is the one who delivers it. If you call, that is who picks up.</p>
+        <div class="grid">
+          <div class="who">
+            <p class="name">Mitchell Ribar — Principal</p>
+            <div class="lines">
+              <a href="mailto:consulting@capitatech.com.au">consulting@capitatech.com.au</a><br />
+              +61 422 077 424
+              <div class="site">capitatech.com.au · Sydney, Australia</div>
+            </div>
+          </div>
+          <span class="emark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="30" height="30" aria-label="Capita"><rect width="32" height="32" rx="6" fill="#ffffff"/><path d="M 22.5 11 A 6.5 6.5 0 1 0 22.5 21" fill="none" stroke="#0078f0" stroke-width="4" stroke-linecap="round"/></svg>
+            <span class="wm">Capita<span class="dot">.</span>Technology</span>
+          </span>
+        </div>
+      </footer>
+
+    </main>
+  </body>
+</html>

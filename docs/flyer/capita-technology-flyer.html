@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology · Executive One-Pager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --paper:#ffffff;
+        --ink:#0b0b0d; --muted:#4b4b57; --muted-strong:#3a3a44;
+        --blue:#0078f0; --blue-h:#0069d1; --magenta:#d946ef;
+        --rule:rgba(11,11,13,0.12); --rule-strong:rgba(11,11,13,0.22);
+        --on-blue:#ffffff; --on-blue-dim:rgba(255,255,255,0.82);
+        --display:"Geist",-apple-system,system-ui,Arial,sans-serif;
+        --sans:"Inter",-apple-system,system-ui,Arial,sans-serif;
+        --mono:"Geist Mono",ui-monospace,SFMono-Regular,monospace;
+      }
+      *{box-sizing:border-box;}
+      html,body{margin:0;padding:0;}
+      body{
+        background:#1f2024;font-family:var(--sans);color:var(--ink);
+        -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+        display:flex;justify-content:center;align-items:flex-start;padding:26px;
+      }
+      .sheet{
+        width:794px;height:1123px;background:var(--paper);
+        box-shadow:0 24px 70px rgba(0,0,0,.5);
+        overflow:hidden;position:relative;display:flex;flex-direction:column;
+        -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      }
+
+      /* ============ BLUE TOP BANNER ============ */
+      .topbar{
+        flex:0 0 auto;background:var(--blue);
+        display:flex;align-items:center;justify-content:space-between;padding:17px 46px;
+      }
+      .tb-brand{display:flex;align-items:center;gap:12px;}
+      .tb-brand svg{display:block;}
+      .tb-wordmark{
+        font-family:var(--display);font-weight:700;font-size:18.5pt;
+        letter-spacing:-0.025em;color:var(--on-blue);line-height:1;
+      }
+      .tb-wordmark .dot{color:var(--magenta);}
+      .tb-meta{
+        font-family:var(--mono);font-weight:500;font-size:8.5pt;
+        letter-spacing:0.07em;text-transform:uppercase;color:var(--on-blue);
+        text-align:right;line-height:1.55;
+      }
+      .tb-meta .ed{display:block;color:var(--on-blue-dim);font-size:8pt;letter-spacing:0.06em;}
+
+      /* ============ BODY ============ */
+      .body{flex:1 1 auto;display:flex;flex-direction:column;padding:26px 46px 0;min-height:0;}
+
+      /* ---- HEADER ---- */
+      .lede{flex:0 0 auto;padding:0 0 18px;border-bottom:1.5px solid var(--ink);}
+      .lede h1{
+        margin:0;font-family:var(--display);font-weight:600;
+        font-size:34pt;line-height:1.04;letter-spacing:-0.03em;
+        color:var(--ink);max-width:22ch;text-wrap:balance;
+      }
+      .lede h1 .em{
+        color:var(--blue-h);font-weight:600;
+        border-bottom:2.5px solid var(--magenta);padding-bottom:1px;
+      }
+      .standfirst{
+        margin:14px 0 0;font-family:var(--display);font-weight:400;
+        font-size:13.5pt;line-height:1.36;letter-spacing:-0.012em;
+        color:var(--muted-strong);max-width:66ch;text-wrap:pretty;
+      }
+      .standfirst b{color:var(--ink);font-weight:500;}
+
+      /* ---- TWO COLUMNS: OUTCOMES | EXPERTISE ---- */
+      .cols{
+        flex:1 1 auto;display:grid;grid-template-columns:0.84fr 1px 1.22fr;
+        column-gap:30px;padding:18px 0 0;min-height:0;
+      }
+      .colrule{background:var(--rule-strong);width:1px;height:100%;}
+      .seclabel{
+        font-family:var(--mono);font-weight:600;font-size:9pt;
+        letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-h);margin:0 0 14px;
+      }
+
+      /* outcomes */
+      .outcomes{display:flex;flex-direction:column;min-width:0;}
+      .olist{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:15px;flex:1 1 auto;justify-content:space-between;}
+      .olist li{position:relative;padding-left:20px;}
+      .olist li::before{
+        content:"";position:absolute;left:0;top:6px;width:9px;height:9px;border-radius:50%;
+        background:var(--blue);
+      }
+      .olist .h{
+        display:block;font-family:var(--display);font-weight:600;font-size:11.5pt;
+        letter-spacing:-0.015em;color:var(--ink);line-height:1.2;margin:0 0 2px;
+      }
+      .olist .d{
+        font-family:var(--sans);font-size:9.5pt;line-height:1.4;color:var(--muted);
+      }
+
+      /* expertise */
+      .expertise{display:flex;flex-direction:column;min-width:0;}
+      .ex-frame{flex:1 1 auto;display:flex;align-items:center;justify-content:center;padding:0 0 4px;min-height:0;}
+      .ex-frame svg{width:100%;height:auto;max-height:100%;display:block;}
+      .ex-flavor{
+        margin:0;font-family:var(--sans);font-size:10pt;line-height:1.45;color:var(--muted-strong);
+        text-wrap:pretty;
+      }
+      .ex-flavor b{color:var(--ink);font-weight:600;}
+      .ex-cred{
+        margin:9px 0 0;padding:9px 0 0;border-top:0.75px solid var(--rule);
+        font-family:var(--mono);font-weight:500;font-size:8.5pt;letter-spacing:0.04em;
+        text-transform:uppercase;color:var(--muted);
+      }
+
+      /* ============ METHOD (prominent icon-node flow) ============ */
+      .method{
+        flex:0 0 auto;margin-top:16px;border-top:1.5px solid var(--ink);padding:14px 0 4px;
+      }
+      .method .seclabel{text-align:center;color:var(--ink);margin-bottom:16px;}
+      .flow{display:flex;align-items:flex-start;justify-content:space-between;}
+      .mnode{display:flex;flex-direction:column;align-items:center;gap:9px;width:104px;flex:0 0 auto;}
+      .mnode .circ{
+        width:56px;height:56px;border-radius:50%;border:1.8px solid var(--ink);
+        display:flex;align-items:center;justify-content:center;background:#fff;
+      }
+      .mnode.out .circ{background:var(--blue);border-color:var(--blue);}
+      .mnode .nm{
+        font-family:var(--display);font-weight:500;font-size:9.5pt;line-height:1.18;
+        letter-spacing:-0.01em;color:var(--ink);text-align:center;
+      }
+      .marrow{flex:1 1 auto;display:flex;align-items:center;margin-top:27px;min-width:18px;}
+      .marrow .ln{flex:1;height:0;border-top:1.6px solid var(--rule-strong);}
+      .marrow .hd{color:var(--magenta);font-size:13px;line-height:1;margin-left:1px;}
+
+      /* ---- principal line (slim, above footer) ---- */
+      .rev{
+        flex:0 0 auto;margin:auto 0 14px;padding-top:14px;text-align:center;
+        font-family:var(--display);font-weight:500;font-size:10pt;line-height:1.4;
+        letter-spacing:-0.01em;color:var(--ink);
+      }
+
+      /* ============ BLUE FOOTER BAND ============ */
+      .footerband{
+        flex:0 0 auto;background:var(--blue);
+        display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px;padding:13px 46px;
+      }
+      .fb-who .name{
+        margin:0 0 2px;font-family:var(--display);font-weight:600;font-size:11.5pt;
+        letter-spacing:-0.015em;color:var(--on-blue);line-height:1.1;
+      }
+      .fb-who .name .role{color:var(--on-blue-dim);font-weight:500;}
+      .fb-who .geo{margin:0;font-family:var(--mono);font-weight:400;font-size:8pt;letter-spacing:0.04em;color:var(--on-blue-dim);}
+      .fb-contact{justify-self:start;}
+      .fb-contact .em{margin:0 0 2px;font-family:var(--mono);font-weight:600;font-size:11.5pt;letter-spacing:-0.005em;color:var(--on-blue);line-height:1.15;}
+      .fb-contact .mob{margin:0;font-family:var(--mono);font-weight:500;font-size:11.5pt;color:var(--on-blue);line-height:1.15;}
+      .fb-emark{display:flex;align-items:center;gap:9px;justify-self:end;}
+      .fb-emark svg{display:block;}
+      .fb-emark .wm{font-family:var(--display);font-weight:700;font-size:11.5pt;letter-spacing:-0.025em;color:var(--on-blue);line-height:1;}
+      .fb-emark .wm .dot{color:var(--magenta);}
+
+      @page{size:A4 portrait;margin:0;}
+      @media print{
+        html,body{background:#fff;}
+        body{padding:0;display:block;}
+        .sheet{box-shadow:none;width:210mm;height:297mm;}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+
+      <!-- ===== BLUE TOP BANNER ===== -->
+      <header class="topbar">
+        <div class="tb-brand">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" aria-label="Capita"><rect width="32" height="32" rx="6" fill="#ffffff"/><path d="M 22.5 11 A 6.5 6.5 0 1 0 22.5 21" fill="none" stroke="#0078f0" stroke-width="4" stroke-linecap="round"/></svg>
+          <span class="tb-wordmark">Capita<span class="dot">.</span>Technology</span>
+        </div>
+        <div class="tb-meta">
+          Independent Executive Advisory
+          <span class="ed">Sydney · Australia</span>
+        </div>
+      </header>
+
+      <!-- ===== BODY ===== -->
+      <div class="body">
+
+        <!-- HEADER -->
+        <section class="lede">
+          <h1>Turn AI, strategy, and customer growth into <span class="em">lifetime value that compounds</span>.</h1>
+          <p class="standfirst">Independent executive advisory on the operating models, platforms, and decisions that compound lifetime value.</p>
+        </section>
+
+        <!-- TWO COLUMNS -->
+        <section class="cols">
+
+          <!-- OUTCOMES -->
+          <div class="outcomes">
+            <p class="seclabel">Outcomes</p>
+            <ul class="olist">
+              <li><span class="h">AI that performs</span><span class="d">Investment tied to measurable revenue and margin, not demos.</span></li>
+              <li><span class="h">Churn down, lifetime value up</span><span class="d">Isolate the drivers; own and measure the interventions.</span></li>
+              <li><span class="h">Customer revenue growth</span><span class="d">Pricing, friction removal, and service-failure recovery.</span></li>
+              <li><span class="h">Decisions your board can act on</span><span class="d">Operating models and clear one to three year roadmaps.</span></li>
+            </ul>
+          </div>
+
+          <div class="colrule"></div>
+
+          <!-- EXPERTISE -->
+          <figure class="expertise" style="margin:0;">
+            <p class="seclabel">Expertise</p>
+            <div class="ex-frame">
+              <svg viewBox="0 0 460 452" role="img" aria-label="AI, Customer Value and Strategy overlap to produce Customer Growth at the center.">
+                <g fill="rgba(11,11,13,0.045)" stroke="none">
+                  <circle cx="230" cy="158" r="132"/>
+                  <circle cx="156" cy="284" r="132"/>
+                  <circle cx="304" cy="284" r="132"/>
+                </g>
+                <g fill="none" stroke="#0b0b0d" stroke-width="2">
+                  <circle cx="230" cy="158" r="132"/>
+                  <circle cx="156" cy="284" r="132"/>
+                  <circle cx="304" cy="284" r="132"/>
+                </g>
+                <circle cx="230" cy="236" r="64" fill="#0078f0" stroke="#d946ef" stroke-width="3.5"/>
+                <text x="230" y="231" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="15" font-weight="600" letter-spacing="0.4" fill="#ffffff">CUSTOMER</text>
+                <text x="230" y="250" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="15" font-weight="600" letter-spacing="0.4" fill="#ffffff">GROWTH</text>
+                <g font-family="'Geist Mono',ui-monospace,monospace" fill="#0b0b0d" font-weight="600" letter-spacing="0.7">
+                  <text x="230" y="20" text-anchor="middle" font-size="17">AI</text>
+                  <text x="70" y="446" text-anchor="middle" font-size="13.5">CUSTOMER VALUE</text>
+                  <text x="392" y="446" text-anchor="middle" font-size="13.5">STRATEGY</text>
+                </g>
+                <g stroke="rgba(11,11,13,0.30)" stroke-width="1">
+                  <line x1="230" y1="27" x2="230" y2="38"/>
+                  <line x1="70" y1="424" x2="104" y2="398"/>
+                  <line x1="392" y1="424" x2="358" y2="398"/>
+                </g>
+              </svg>
+            </div>
+            <figcaption>
+              <p class="ex-flavor">Most firms split these across three people. <b>One operator has run all three at enterprise scale</b>: customer growth, AI, and strategy.</p>
+              <p class="ex-cred">MIT Sloan MBA · 20+ years · AU &amp; US</p>
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- METHOD -->
+        <section class="method">
+          <p class="seclabel">The Capita Growth Method</p>
+          <div class="flow">
+            <div class="mnode">
+              <span class="circ"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0078f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+              <span class="nm">Go, See,<br>Understand</span>
+            </div>
+            <span class="marrow"><span class="ln"></span><span class="hd">&#9656;</span></span>
+            <div class="mnode">
+              <span class="circ"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0078f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+              <span class="nm">Radically<br>Simplify</span>
+            </div>
+            <span class="marrow"><span class="ln"></span><span class="hd">&#9656;</span></span>
+            <div class="mnode">
+              <span class="circ"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0078f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+              <span class="nm">Accelerate<br>&amp; Measure</span>
+            </div>
+            <span class="marrow"><span class="ln"></span><span class="hd">&#9656;</span></span>
+            <div class="mnode">
+              <span class="circ"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0078f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+              <span class="nm">Build &amp;<br>Automate</span>
+            </div>
+            <span class="marrow"><span class="ln"></span><span class="hd">&#9656;</span></span>
+            <div class="mnode out">
+              <span class="circ"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+              <span class="nm">Compound</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRINCIPAL LINE -->
+        <p class="rev">The principal who scopes your engagement is the one who delivers it.</p>
+      </div>
+
+      <!-- ===== BLUE FOOTER BAND ===== -->
+      <footer class="footerband">
+        <div class="fb-who">
+          <p class="name">Mitchell Ribar<span class="role">, Principal</span></p>
+          <p class="geo">capitatech.com.au · Sydney, Australia</p>
+        </div>
+        <div class="fb-contact">
+          <p class="em">mitch.ribar@capitatech.com.au</p>
+          <p class="mob">+61 422 077 424</p>
+        </div>
+        <div class="fb-emark">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="24" height="24" aria-label="Capita"><rect width="32" height="32" rx="6" fill="#ffffff"/><path d="M 22.5 11 A 6.5 6.5 0 1 0 22.5 21" fill="none" stroke="#0078f0" stroke-width="4" stroke-linecap="round"/></svg>
+          <span class="wm">Capita<span class="dot">.</span>Technology</span>
+        </div>
+      </footer>
+
+    </main>
+  </body>
+</html>

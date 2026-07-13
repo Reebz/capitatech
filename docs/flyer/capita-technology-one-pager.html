@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology One-Pager</title>
+
+    <!-- Brand fonts (match the website system: Geist display, Inter body, Geist Mono labels) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ---- Tokens, mirrored from src/styles/global.css (v1 BLUE POSTER) ---- */
+      :root {
+        --bg: #f6f6f3;
+        --text: #0b0b0d;
+        --muted: #4b4b57;
+        --muted-strong: #3a3a44;
+        --accent: #0078f0;
+        --accent-hover: #0069d1;
+        --highlight: #d946ef;
+        --border: rgba(11, 11, 13, 0.12);
+        --border-strong: rgba(11, 11, 13, 0.22);
+
+        --font-display: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+        --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+        --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+
+        --chunky-border: 2px solid var(--text);
+        --chunky-radius: 12px;
+
+        --inset: 15mm;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body { margin: 0; padding: 0; }
+
+      /* Screen presentation — the A4 sheet centred on a neutral backdrop. */
+      body {
+        background: #2b2b31;
+        font-family: var(--font-sans);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        display: flex;
+        justify-content: center;
+        padding: 28px;
+      }
+
+      /* ---- The single A4 face ---- */
+      .sheet {
+        position: relative;
+        width: 210mm;
+        height: 297mm;
+        background: var(--bg);
+        overflow: hidden;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        display: flex;
+        flex-direction: column;
+        color: var(--text);
+      }
+
+      /* Faint static ASCII grid texture — the site's resting-state tint
+         (flat ink dots), frozen for print. Behind everything; the saturated
+         blue bands paint opaque over it. */
+      .grid {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        z-index: 0;
+        pointer-events: none;
+        font-family: var(--font-mono);
+        font-size: 7px;
+        line-height: 1.42;
+        letter-spacing: 0.04em;
+        white-space: pre;
+        color: rgba(11, 11, 13, 0.085);
+        overflow: hidden;
+        user-select: none;
+      }
+
+      .layer { position: relative; z-index: 1; }
+      .pad { padding-left: var(--inset); padding-right: var(--inset); }
+
+      /* ---- Type primitives ---- */
+      .mono-label {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--muted-strong);
+        font-size: 8.5pt;
+        margin: 0;
+      }
+      .section-label {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--muted-strong);
+        font-size: 8.5pt;
+        margin: 0 0 7px 0;
+        display: block;
+      }
+      .section-label::after {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 2px;
+        margin-top: 7px;
+        background: var(--highlight);
+      }
+
+      mark.why-mark {
+        background: var(--highlight);
+        color: #fff;
+        font-family: inherit;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        padding: 0.02em 0.18em;
+        border-radius: 5px;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+
+      /* ---- 1. Header ---- */
+      .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10mm;
+        padding-top: 8mm;
+        padding-bottom: 6mm;
+        border-bottom: 1px solid var(--border);
+      }
+      .brand {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 15pt;
+        letter-spacing: -0.02em;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+      .brand .dot { color: var(--text); }
+      .head-contact {
+        text-align: right;
+        font-size: 8pt;
+        line-height: 1.5;
+        color: var(--muted-strong);
+        text-transform: none;
+        letter-spacing: 0.01em;
+      }
+      .head-contact a { color: var(--muted-strong); text-decoration: none; }
+
+      /* ---- 2. Hero (full-bleed Capita blue) ---- */
+      .hero {
+        background: var(--accent);
+        color: #fff;
+        padding-top: 6mm;
+        padding-bottom: 6mm;
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        line-height: 1.03;
+        font-size: 25pt;
+        margin: 0;
+        max-width: 19ch;
+        color: #fff;
+        text-wrap: balance;
+      }
+      .hero .sub {
+        margin: 5mm 0 0 0;
+        max-width: 64ch;
+        font-size: 10.5pt;
+        line-height: 1.45;
+        color: rgba(255, 255, 255, 0.94);
+        text-wrap: pretty;
+      }
+      .hero .cred {
+        margin: 4.5mm 0 0 0;
+        font-family: var(--font-mono);
+        font-size: 7.6pt;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      /* ---- 3. Triad ---- */
+      .triad {
+        padding-top: 4mm;
+        padding-bottom: 3mm;
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 7mm;
+        align-items: center;
+      }
+      .triad-figure { width: 100%; height: auto; max-height: 42mm; display: block; margin-inline: auto; }
+      .triad-copy h2 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 15pt;
+        letter-spacing: -0.02em;
+        line-height: 1.12;
+        margin: 0 0 9px 0;
+        text-wrap: balance;
+      }
+      .triad-copy p {
+        margin: 0;
+        font-size: 9.5pt;
+        line-height: 1.5;
+        color: var(--muted);
+        max-width: 38ch;
+        text-wrap: pretty;
+      }
+      .triad-copy .em { color: var(--text); font-weight: 600; }
+
+      /* ---- 4. Proof ---- */
+      .proof { padding-top: 4mm; padding-bottom: 4mm; }
+      .proof .lead {
+        margin: 0 0 4.5mm 0;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 13pt;
+        letter-spacing: -0.015em;
+        line-height: 1.2;
+      }
+      .employers {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 10pt;
+        letter-spacing: 0.04em;
+        color: var(--text);
+        margin: 0 0 4.5mm 0;
+      }
+      .facts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3.5mm 9mm;
+        margin: 0 0 4.5mm 0;
+      }
+      .fact { display: block; }
+      .fact .tag {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 7.4pt;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--accent);
+        display: block;
+        margin-bottom: 3px;
+      }
+      .fact .body {
+        font-size: 9.5pt;
+        line-height: 1.4;
+        color: var(--text);
+        margin: 0;
+      }
+      .cred-line {
+        border-top: 1px solid var(--border);
+        padding-top: 3.5mm;
+        font-size: 9pt;
+        line-height: 1.45;
+        color: var(--muted);
+        margin: 0;
+      }
+      .cred-line strong { color: var(--text); font-weight: 600; }
+
+      /* ---- 5. Method — The Capita Growth Method ---- */
+      .method { padding-top: 4mm; padding-bottom: 4mm; background: rgba(255, 255, 255, 0.5); }
+      .method-head { margin-bottom: 3mm; }
+      .method-intro {
+        margin: 1mm 0 0 0;
+        font-size: 9pt;
+        line-height: 1.4;
+        color: var(--muted);
+        max-width: 96ch;
+        text-wrap: pretty;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3.5mm;
+      }
+      .step .num {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 14pt;
+        color: var(--accent);
+        line-height: 1;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .step .name {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 9.5pt;
+        letter-spacing: -0.01em;
+        line-height: 1.12;
+        margin: 0 0 3px 0;
+        text-wrap: balance;
+      }
+      .step .sub {
+        margin: 0 0 4px 0;
+        font-size: 7.6pt;
+        line-height: 1.28;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .step .out {
+        margin: 0;
+        font-size: 7.2pt;
+        line-height: 1.3;
+        color: var(--muted);
+      }
+      .step .out-tag {
+        display: block;
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 6.4pt;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--muted-strong);
+        margin-bottom: 1px;
+      }
+      .loop {
+        margin: 4.5mm 0 0 0;
+        padding-top: 3.5mm;
+        border-top: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-size: 7.6pt;
+        letter-spacing: 0.02em;
+        color: var(--muted-strong);
+        line-height: 1.5;
+      }
+      .loop .arrow { color: var(--accent); }
+      .loop .cycle { color: var(--highlight); font-weight: 600; }
+
+      /* ---- 6. Bespoke / engagements (quiet) ---- */
+      .bespoke {
+        padding-top: 3mm;
+        padding-bottom: 3mm;
+        border-top: 1px solid var(--border);
+      }
+      .bespoke p { margin: 0; }
+      .bespoke .lead { font-size: 9.5pt; line-height: 1.45; color: var(--text); }
+      .bespoke .lead strong { font-weight: 600; }
+      .bespoke .names {
+        margin-top: 5px;
+        font-family: var(--font-mono);
+        font-size: 8.2pt;
+        letter-spacing: 0.02em;
+        color: var(--muted-strong);
+      }
+
+      /* ---- 7. Contact (full-bleed Capita blue — bookends the hero) ---- */
+      .contact {
+        margin-top: auto;
+        background: var(--accent);
+        color: #fff;
+        padding-top: 5mm;
+        padding-bottom: 5mm;
+      }
+      .contact .reversal {
+        margin: 0 0 4.5mm 0;
+        font-size: 9.5pt;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.95);
+        max-width: 70ch;
+      }
+      .contact-row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 10mm;
+        flex-wrap: wrap;
+      }
+      .contact .who .name {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 12pt;
+        margin: 0 0 5px 0;
+        color: #fff;
+      }
+      .contact .who .lines {
+        font-family: var(--font-mono);
+        font-size: 9.5pt;
+        line-height: 1.5;
+        color: #fff;
+        margin: 0;
+      }
+      .contact .who .lines a { color: #fff; text-decoration: none; }
+      .contact .markecho {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 13pt;
+        letter-spacing: -0.02em;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .contact .markecho .dot { color: rgba(255, 255, 255, 0.6); }
+
+      /* ---- Print ---- */
+      @page { size: A4 portrait; margin: 0; }
+      @media print {
+        html, body { background: #fff; }
+        body { padding: 0; display: block; }
+        .sheet { box-shadow: none; width: 210mm; height: 297mm; }
+        .hero, .contact, .fact .tag, .step .num, mark.why-mark,
+        .section-label::after, .method .loop .cycle, .brand, .method {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="sheet" role="document" aria-label="Capita Technology one-pager">
+      <pre class="grid" id="grid" aria-hidden="true"></pre>
+
+      <!-- 1. Header — brand + contact details eyebrow (top right) -->
+      <header class="head pad layer">
+        <span class="brand">Capita<span class="dot">.</span>Technology</span>
+        <div class="head-contact mono-label">
+          capitatech.com.au &nbsp;·&nbsp; <a href="mailto:mitch.ribar@capitatech.com.au">mitch.ribar@capitatech.com.au</a> &nbsp;·&nbsp; +61 422 077 424
+        </div>
+      </header>
+
+      <!-- 2. Hero -->
+      <section class="hero pad layer" aria-label="Headline">
+        <h1>Turn AI, strategy, and customer growth into <mark class="why-mark">lifetime value</mark> that compounds.</h1>
+        <p class="sub">
+          One advisor has run customer growth at Optus, AI personalization at JPMorgan Chase,
+          and a product P&amp;L from launch to scale.
+        </p>
+        <p class="cred">Independent · Ex-operators · Advisory</p>
+      </section>
+
+      <!-- 3. Three-circle intersection -->
+      <section class="triad pad layer" aria-label="The intersection of AI, customer value, and strategy">
+        <svg class="triad-figure" viewBox="0 0 820 430" role="img"
+             aria-label="A three-circle diagram: AI, Customer Value, and Strategy meeting to produce Customer Growth.">
+          <g fill="none" stroke="#0b0b0d" stroke-width="2">
+            <circle cx="410" cy="160" r="135" />
+            <circle cx="300" cy="290" r="135" />
+            <circle cx="520" cy="290" r="135" />
+          </g>
+
+          <!-- Centre token: the only filled element — blue ringed magenta -->
+          <g>
+            <rect x="330" y="227" width="160" height="36" rx="18"
+                  fill="#0078f0" stroke="#d946ef" stroke-width="3" />
+            <text x="410" y="250" text-anchor="middle"
+                  font-family="'Geist Mono', monospace" font-size="14" font-weight="600"
+                  letter-spacing="0.5" fill="#ffffff">CUSTOMER GROWTH</text>
+          </g>
+
+          <!-- Labels, outside the circles -->
+          <g font-family="'Geist Mono', monospace" fill="#0b0b0d">
+            <text x="410" y="44" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="0.5">AI</text>
+            <text x="410" y="64" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">DELIVERY &amp; GOVERNANCE</text>
+
+            <text x="150" y="386" text-anchor="middle" font-size="17" font-weight="600" letter-spacing="0.5">CUSTOMER VALUE</text>
+            <text x="150" y="406" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">RETENTION · LIFECYCLE · LTV</text>
+
+            <text x="670" y="386" text-anchor="middle" font-size="17" font-weight="600" letter-spacing="0.5">STRATEGY</text>
+            <text x="670" y="406" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">THE CALL BOARDS OWN</text>
+          </g>
+        </svg>
+
+        <div class="triad-copy">
+          <h2>Where all three meet, customers grow.</h2>
+          <p>
+            <span class="em">Most advisors hold one.</span> The value is where AI, customer value,
+            and strategy connect, and one operator has run that ground at enterprise scale.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. Operator proof -->
+      <section class="proof pad layer" aria-label="The proof">
+        <span class="section-label">The proof</span>
+        <p class="lead">A career, not a pitch. One operator has run each of these at enterprise scale.</p>
+        <p class="employers">Optus · JPMorgan Chase · Quantium · Brand Networks</p>
+
+        <div class="facts">
+          <span class="fact">
+            <span class="tag">Customer value</span>
+            <p class="body">Customer growth and retention across customer bases up to 100M+.</p>
+          </span>
+          <span class="fact">
+            <span class="tag">AI</span>
+            <p class="body">AI built and scaled from first launch to 300M+ events a day.</p>
+          </span>
+          <span class="fact">
+            <span class="tag">Strategy</span>
+            <p class="body">20+ years owning strategy, budgets past $75M, and teams up to ~300.</p>
+          </span>
+          <span class="fact">
+            <span class="tag">Data depth</span>
+            <p class="body">Decision systems on 12B+ transactions a year.</p>
+          </span>
+        </div>
+
+        <p class="cred-line">
+          <strong>MIT Sloan MBA</strong>: applied AI and machine learning, competitive strategy, and marketing.
+          20+ years operating across Australia and the United States.
+        </p>
+      </section>
+
+      <!-- 5. The Capita Growth Method -->
+      <section class="method pad layer" aria-label="The Capita Growth Method">
+        <div class="method-head">
+          <span class="section-label" style="margin:0;">The Capita Growth Method</span>
+          <p class="method-intro">
+            A continuous cycle that turns operational knowledge into systems, systems into intelligence,
+            and intelligence into competitive advantage.
+          </p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="num">1</span>
+            <p class="name">Go, See, Understand</p>
+            <p class="sub">We go where the work happens.</p>
+            <p class="out"><span class="out-tag">Outcome</span>Requirements seen first-hand: who, what, where, how.</p>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <p class="name">Radically Simplify</p>
+            <p class="sub">Complexity is the enemy of scale.</p>
+            <p class="out"><span class="out-tag">Outcome</span>A value-chain stripped to what truly matters.</p>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <p class="name">Accelerate &amp; Measure</p>
+            <p class="sub">Speed is a learning advantage.</p>
+            <p class="out"><span class="out-tag">Outcome</span>A repeatable, battle-tested blueprint.</p>
+          </div>
+          <div class="step">
+            <span class="num">4</span>
+            <p class="name">Build &amp; Automate</p>
+            <p class="sub">Automate proven work, not assumptions.</p>
+            <p class="out"><span class="out-tag">Outcome</span>Execution that scales without adding people.</p>
+          </div>
+          <div class="step">
+            <span class="num">5</span>
+            <p class="name">Compound</p>
+            <p class="sub">Every cycle makes the next one smarter.</p>
+            <p class="out"><span class="out-tag">Outcome</span>A self-improving system that compounds.</p>
+          </div>
+        </div>
+        <p class="loop">
+          Go, See, Understand <span class="arrow">→</span> Radically Simplify <span class="arrow">→</span>
+          Accelerate &amp; Measure <span class="arrow">→</span> Build &amp; Automate <span class="arrow">→</span>
+          Compound
+          <span class="cycle">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#d946ef" stroke-width="2.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"
+                 style="vertical-align: -1px;"><path d="M21 12a9 9 0 1 1-2.64-6.36" /><path d="M21 3v6h-6" /></svg>
+            continuous loop
+          </span>
+        </p>
+      </section>
+
+      <!-- 6. Bespoke-led engagements -->
+      <section class="bespoke pad layer" aria-label="Engagements">
+        <p class="lead"><strong>Every engagement is scoped to you.</strong> We start from the problem, not a price list.</p>
+        <p class="names">Operating Model &amp; Architecture · 90-Day Diagnosis · Roadmap · Measurement &amp; Governance</p>
+      </section>
+
+      <!-- 7. Contact -->
+      <footer class="contact pad layer" aria-label="Contact">
+        <p class="reversal">
+          The principal who scopes your engagement is the one who delivers it. If you call, that is who picks up.
+        </p>
+        <div class="contact-row">
+          <div class="who">
+            <p class="name">Mitchell Ribar, Principal</p>
+            <p class="lines">
+              <a href="mailto:mitch.ribar@capitatech.com.au">mitch.ribar@capitatech.com.au</a><br />
+              +61 422 077 424
+            </p>
+          </div>
+          <span class="markecho">Capita<span class="dot">.</span>Technology</span>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // Static ASCII grid — deterministic texture matching the site's resting
+      // tint. Generated once so the printed PDF carries the same faint grid.
+      (function () {
+        var el = document.getElementById("grid");
+        if (!el) return;
+        var COLS = 200, ROWS = 130;
+        function ch(r, c) {
+          var h = ((r * 73856093) ^ (c * 19349663) ^ (r * c * 83492791)) >>> 0;
+          var v = h % 100;
+          if (v < 4) return " ";
+          if (v < 12) return "*";
+          if (v < 17) return "+";
+          if (v < 22) return "∙";
+          return "·";
+        }
+        var out = [];
+        for (var r = 0; r < ROWS; r++) {
+          var line = "";
+          for (var c = 0; c < COLS; c++) line += ch(r, c);
+          out.push(line);
+        }
+        el.textContent = out.join("\n");
+      })();
+    </script>
+  </body>
+</html>

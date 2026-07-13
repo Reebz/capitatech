@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology — C3 Financial Broadsheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        /* warm paper tint, very subtle */
+        --paper:#f7f6f2;
+        --ink:#0b0b0d; --muted:#4b4b57; --muted-strong:#3a3a44;
+        --blue:#0078f0; --blue-h:#0069d1; --magenta:#d946ef;
+        --rule:rgba(11,11,13,0.12); --rule-strong:rgba(11,11,13,0.22);
+        --display:"Geist",-apple-system,system-ui,Arial,sans-serif;
+        --sans:"Inter",-apple-system,system-ui,Arial,sans-serif;
+        --mono:"Geist Mono",ui-monospace,SFMono-Regular,monospace;
+      }
+      *{box-sizing:border-box;}
+      html,body{margin:0;padding:0;}
+      body{
+        background:#1f2024;
+        font-family:var(--sans);color:var(--ink);
+        -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+        display:flex;justify-content:center;align-items:flex-start;
+        padding:26px;
+      }
+      .sheet{
+        width:794px;height:1123px;background:var(--paper);
+        box-shadow:0 24px 70px rgba(0,0,0,.5);
+        overflow:hidden;position:relative;
+        -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      }
+      .page{
+        position:absolute;inset:0;
+        padding:50px 52px 44px;            /* ~13-14mm safe margin */
+        display:flex;flex-direction:column;
+      }
+
+      /* ============ NAMEPLATE (paper masthead) ============ */
+      .nameplate{flex:0 0 auto;}
+      .np-toprule{height:0;border-top:1px solid var(--rule-strong);}
+      .np-row{
+        display:flex;align-items:center;justify-content:space-between;
+        padding:9px 0 10px;
+      }
+      .np-brand{display:flex;align-items:center;gap:11px;}
+      .np-brand svg{display:block;}
+      .np-wordmark{
+        font-family:var(--display);font-weight:700;font-size:18pt;
+        letter-spacing:-0.025em;color:var(--ink);line-height:1;
+      }
+      .np-wordmark .dot{color:var(--blue);}
+      .np-meta{
+        font-family:var(--mono);font-weight:500;font-size:8.5pt;
+        letter-spacing:0.06em;text-transform:uppercase;color:var(--muted-strong);
+        text-align:right;line-height:1.5;
+      }
+      .np-meta .ed{display:block;color:var(--muted);font-size:8pt;letter-spacing:0.05em;}
+      /* the heavy double-rule that signs off a nameplate */
+      .np-botrule{height:0;border-top:2px solid var(--ink);}
+      .np-botrule.thin{margin-top:2.5px;border-top:0.75px solid var(--ink);}
+
+      /* ============ HEADLINE + STANDFIRST (deck) ============ */
+      .lede{flex:0 0 auto;padding:20px 0 19px;border-bottom:0.75px solid var(--rule-strong);}
+      .lede h1{
+        margin:0;font-family:var(--display);font-weight:600;
+        font-size:34pt;line-height:1.04;letter-spacing:-0.028em;
+        color:var(--ink);max-width:21ch;text-wrap:balance;
+      }
+      /* restrained emphasis: blue weight + thin blue underline, NOT a fill */
+      .lede h1 .em{
+        color:var(--blue-h);font-weight:600;
+        border-bottom:2px solid var(--blue);
+        padding-bottom:1px;
+      }
+      .standfirst{
+        margin:15px 0 0;font-family:var(--display);font-weight:400;
+        font-size:14.5pt;line-height:1.36;letter-spacing:-0.012em;
+        color:var(--muted-strong);max-width:58ch;text-wrap:pretty;
+      }
+      .standfirst b{color:var(--ink);font-weight:500;}
+
+      /* ============ MAIN: reportage columns + exhibit ============ */
+      .feature{
+        flex:1 1 auto;display:grid;
+        grid-template-columns:1fr 1px 1.06fr;   /* text columns | rule | exhibit */
+        column-gap:26px;
+        padding:21px 0 0;min-height:0;
+      }
+      .colrule{background:var(--rule-strong);width:1px;height:100%;}
+
+      /* --- left: the reportage --- */
+      .report{display:flex;flex-direction:column;min-width:0;}
+      .report .kicker{
+        font-family:var(--mono);font-weight:600;font-size:8.5pt;
+        letter-spacing:0.07em;text-transform:uppercase;color:var(--blue-h);
+        margin:0 0 9px;
+      }
+      .report .lead{
+        margin:0 0 13px;font-family:var(--display);font-weight:600;
+        font-size:15.5pt;line-height:1.2;letter-spacing:-0.018em;color:var(--ink);
+        text-wrap:balance;
+      }
+      /* employer marks as a masthead trust line */
+      .trustline{
+        margin:0 0 14px;padding:8px 0 9px;
+        border-top:0.75px solid var(--rule);border-bottom:0.75px solid var(--rule);
+        font-family:var(--mono);font-weight:600;font-size:9pt;
+        letter-spacing:0.04em;color:var(--ink);line-height:1.5;
+      }
+      .trustline .sep{color:var(--muted);font-weight:400;padding:0 2px;}
+
+      /* fact lines as tight columns */
+      .facts{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;}
+      .facts li{
+        padding:9px 0 9px 0;border-bottom:0.75px solid var(--rule);
+        font-family:var(--sans);font-size:10pt;line-height:1.42;color:var(--muted);
+      }
+      .facts li:first-child{padding-top:1px;}
+      .facts li .tag{
+        display:block;font-family:var(--mono);font-weight:600;font-size:8.5pt;
+        letter-spacing:0.05em;text-transform:uppercase;color:var(--blue-h);
+        margin:0 0 3px;
+      }
+      .facts li b{color:var(--ink);font-weight:600;}
+
+      .cred{
+        margin:14px 0 0;padding:11px 0 0;border-top:1.5px solid var(--ink);
+        font-family:var(--sans);font-size:9pt;line-height:1.46;color:var(--muted-strong);
+      }
+      .cred b{color:var(--ink);font-weight:600;}
+
+      /* --- right: EXHIBIT --- */
+      .exhibit{display:flex;flex-direction:column;min-width:0;}
+      .ex-head{
+        display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+        padding-bottom:7px;margin-bottom:2px;
+        border-bottom:1.5px solid var(--ink);
+      }
+      .ex-label{
+        font-family:var(--mono);font-weight:600;font-size:9pt;
+        letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);
+      }
+      .ex-fig{
+        font-family:var(--mono);font-weight:500;font-size:8pt;
+        letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);
+        white-space:nowrap;
+      }
+      .ex-frame{
+        flex:1 1 auto;display:flex;align-items:center;justify-content:center;
+        padding:16px 4px 10px;min-height:0;
+      }
+      .ex-frame svg{width:100%;height:auto;max-height:100%;display:block;}
+      .ex-cap{
+        margin:0;padding:11px 0 0;border-top:0.75px solid var(--rule);
+        font-family:var(--sans);font-size:9.5pt;line-height:1.46;color:var(--muted-strong);
+        text-wrap:pretty;
+      }
+      .ex-cap b{color:var(--ink);font-weight:600;}
+
+      /* ============ METHOD (one ruled sequence row) ============ */
+      .method{
+        flex:0 0 auto;margin-top:20px;
+        border-top:2px solid var(--ink);border-bottom:0.75px solid var(--rule-strong);
+        padding:11px 0 12px;
+        display:flex;align-items:center;gap:18px;
+      }
+      .method .lbl{
+        font-family:var(--mono);font-weight:600;font-size:8.5pt;
+        letter-spacing:0.06em;text-transform:uppercase;color:var(--ink);
+        white-space:nowrap;line-height:1.3;max-width:11ch;
+      }
+      .method .seq{
+        margin:0;font-family:var(--display);font-weight:500;
+        font-size:12.5pt;line-height:1.25;letter-spacing:-0.012em;color:var(--ink);
+      }
+      .method .seq .step{white-space:nowrap;}
+      .method .seq .ar{color:var(--blue);font-weight:600;padding:0 6px;}
+
+      /* ============ COLOPHON (ruled footer) ============ */
+      .colophon{
+        flex:0 0 auto;margin-top:auto;
+      }
+      .colophon .rev{
+        margin:18px 0 13px;font-family:var(--display);font-weight:500;
+        font-size:11pt;line-height:1.4;letter-spacing:-0.01em;color:var(--ink);
+        max-width:66ch;text-wrap:pretty;
+      }
+      .col-rule{height:0;border-top:1.5px solid var(--ink);}
+      .col-grid{
+        display:grid;grid-template-columns:auto 1fr auto;
+        align-items:center;gap:22px;padding-top:12px;
+      }
+      .col-who .name{
+        margin:0 0 3px;font-family:var(--display);font-weight:600;
+        font-size:11.5pt;letter-spacing:-0.015em;color:var(--ink);line-height:1.1;
+      }
+      .col-who .name .role{color:var(--muted-strong);font-weight:500;}
+      .col-who .geo{
+        margin:0;font-family:var(--mono);font-weight:400;font-size:8.5pt;
+        letter-spacing:0.04em;color:var(--muted);
+      }
+      .col-contact{text-align:left;}
+      .col-contact .em{
+        margin:0 0 3px;font-family:var(--mono);font-weight:600;font-size:11.5pt;
+        letter-spacing:-0.005em;color:var(--blue-h);line-height:1.15;
+      }
+      .col-contact .mob{
+        margin:0;font-family:var(--mono);font-weight:500;font-size:11.5pt;
+        letter-spacing:0;color:var(--ink);line-height:1.15;
+      }
+      .col-emark{display:flex;align-items:center;gap:9px;justify-self:end;}
+      .col-emark svg{display:block;}
+      .col-emark .wm{
+        font-family:var(--display);font-weight:700;font-size:11.5pt;
+        letter-spacing:-0.025em;color:var(--ink);line-height:1;
+      }
+      .col-emark .wm .dot{color:var(--blue);}
+
+      @page{size:A4 portrait;margin:0;}
+      @media print{
+        html,body{background:#fff;}
+        body{padding:0;display:block;}
+        .sheet{box-shadow:none;width:210mm;height:297mm;}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet"><div class="page">
+
+      <!-- ===== NAMEPLATE ===== -->
+      <header class="nameplate">
+        <div class="np-toprule"></div>
+        <div class="np-row">
+          <div class="np-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="34" height="34" aria-label="Capita"><rect width="32" height="32" rx="6" fill="#0078f0"/><path d="M 22.5 11 A 6.5 6.5 0 1 0 22.5 21" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>
+            <span class="np-wordmark">Capita<span class="dot">.</span>Technology</span>
+          </div>
+          <div class="np-meta">
+            Independent Executive Advisory · Sydney
+            <span class="ed">A Capability Statement · Vol. I</span>
+          </div>
+        </div>
+        <div class="np-botrule"></div>
+        <div class="np-botrule thin"></div>
+      </header>
+
+      <!-- ===== HEADLINE + STANDFIRST ===== -->
+      <section class="lede">
+        <h1>Turn AI, strategy, and customer growth into <span class="em">lifetime value that compounds</span>.</h1>
+        <p class="standfirst">One advisor has run <b>customer growth at Optus</b>, <b>AI personalization at JPMorgan Chase</b>, and a <b>product P&amp;L from launch to scale</b>.</p>
+      </section>
+
+      <!-- ===== FEATURE: REPORTAGE + EXHIBIT ===== -->
+      <section class="feature">
+
+        <!-- left: reportage -->
+        <div class="report">
+          <p class="kicker">The Operator Proof</p>
+          <h2 class="lead">One operator has run all three at enterprise scale.</h2>
+
+          <p class="trustline">
+            OPTUS <span class="sep">·</span> JPMORGAN CHASE <span class="sep">·</span> QUANTIUM <span class="sep">·</span> BRAND NETWORKS
+          </p>
+
+          <ul class="facts">
+            <li>
+              <span class="tag">Customer Value</span>
+              Run <b>customer growth and retention</b> across customer bases up to <b>100M+</b>.
+            </li>
+            <li>
+              <span class="tag">AI</span>
+              Built and scaled <b>AI from first MVP</b> to <b>300M+ events a day</b>.
+            </li>
+            <li>
+              <span class="tag">Strategy</span>
+              <b>20+ years</b> owning strategy, budgets past <b>$75M</b>, teams up to <b>~300</b>; decisions over <b>12B+ transactions a year</b>.
+            </li>
+          </ul>
+
+          <p class="cred">
+            <b>MIT Sloan MBA</b> — applied AI and machine learning, competitive strategy, marketing. 20+ years across Australia and the United States.
+          </p>
+        </div>
+
+        <!-- center column rule -->
+        <div class="colrule"></div>
+
+        <!-- right: exhibit -->
+        <figure class="exhibit">
+          <div class="ex-head">
+            <span class="ex-label">Exhibit</span>
+            <span class="ex-fig">Fig. 1 — The Intersection</span>
+          </div>
+          <div class="ex-frame">
+            <svg viewBox="0 0 460 470" role="img" aria-label="AI, Customer Value and Strategy overlap to produce Customer Growth at the center.">
+              <!-- optional faint warm wash inside circles -->
+              <g fill="rgba(11,11,13,0.045)" stroke="none">
+                <circle cx="230" cy="165" r="128"/>
+                <circle cx="158" cy="290" r="128"/>
+                <circle cx="302" cy="290" r="128"/>
+              </g>
+              <!-- thin ink strokes only -->
+              <g fill="none" stroke="#0b0b0d" stroke-width="2">
+                <circle cx="230" cy="165" r="128"/>
+                <circle cx="158" cy="290" r="128"/>
+                <circle cx="302" cy="290" r="128"/>
+              </g>
+              <!-- center token: blue disc, single magenta ring -->
+              <circle cx="230" cy="248" r="52" fill="#0078f0" stroke="#d946ef" stroke-width="3.5"/>
+              <text x="230" y="244" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="13" font-weight="600" letter-spacing="0.3" fill="#ffffff">CUSTOMER</text>
+              <text x="230" y="261" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="13" font-weight="600" letter-spacing="0.3" fill="#ffffff">GROWTH</text>
+              <!-- lens labels OUTSIDE the circles -->
+              <g font-family="'Geist Mono',ui-monospace,monospace" fill="#0b0b0d" font-weight="600" letter-spacing="0.6">
+                <text x="230" y="26" text-anchor="middle" font-size="17">AI</text>
+                <text x="92" y="455" text-anchor="middle" font-size="14.5">CUSTOMER VALUE</text>
+                <text x="368" y="455" text-anchor="middle" font-size="14.5">STRATEGY</text>
+              </g>
+              <!-- thin leader ticks from labels toward their lens (kept subtle) -->
+              <g stroke="rgba(11,11,13,0.30)" stroke-width="1">
+                <line x1="230" y1="33" x2="230" y2="44"/>
+                <line x1="92" y1="430" x2="124" y2="402"/>
+                <line x1="368" y1="430" x2="336" y2="402"/>
+              </g>
+            </svg>
+          </div>
+          <figcaption class="ex-cap">
+            Most advisors hold one. <b>The value is where all three meet</b> — and someone has run that ground.
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- ===== METHOD ===== -->
+      <section class="method">
+        <span class="lbl">The Capita Growth Method</span>
+        <p class="seq"><span class="step">Go, See, Understand</span><span class="ar">→</span><span class="step">Radically Simplify</span><span class="ar">→</span><span class="step">Accelerate &amp; Measure</span><span class="ar">→</span><span class="step">Build &amp; Automate</span><span class="ar">→</span><span class="step">Compound</span></p>
+      </section>
+
+      <!-- ===== COLOPHON ===== -->
+      <footer class="colophon">
+        <p class="rev">The principal who scopes your engagement is the one who delivers it. If you call, that is who picks up.</p>
+        <div class="col-rule"></div>
+        <div class="col-grid">
+          <div class="col-who">
+            <p class="name">Mitchell Ribar <span class="role">— Principal</span></p>
+            <p class="geo">capitatech.com.au · Sydney, Australia</p>
+          </div>
+          <div class="col-contact">
+            <p class="em">consulting@capitatech.com.au</p>
+            <p class="mob">+61 422 077 424</p>
+          </div>
+          <div class="col-emark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="24" height="24" aria-label="Capita"><rect width="32" height="32" rx="6" fill="#0078f0"/><path d="M 22.5 11 A 6.5 6.5 0 1 0 22.5 21" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>
+            <span class="wm">Capita<span class="dot">.</span>Technology</span>
+          </div>
+        </div>
+      </footer>
+
+    </div></main>
+  </body>
+</html>

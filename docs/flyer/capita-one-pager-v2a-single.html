@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology One-Pager (A — single face)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f6f6f3; --text: #0b0b0d; --muted: #4b4b57; --muted-strong: #3a3a44;
+        --accent: #0078f0; --highlight: #d946ef; --border: rgba(11, 11, 13, 0.12);
+        --font-display: "Geist", ui-sans-serif, system-ui, Arial, sans-serif;
+        --font-sans: "Inter", ui-sans-serif, system-ui, Arial, sans-serif;
+        --font-mono: "Geist Mono", ui-monospace, Menlo, monospace;
+        --inset: 17mm;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: #2b2b31; font-family: var(--font-sans); color: var(--text);
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+        display: flex; justify-content: center; padding: 28px;
+      }
+      .sheet {
+        position: relative; width: 210mm; height: 297mm; background: var(--bg);
+        overflow: hidden; box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+        display: flex; flex-direction: column; color: var(--text);
+      }
+      .grid {
+        position: absolute; inset: 0; margin: 0; z-index: 0; pointer-events: none;
+        font-family: var(--font-mono); font-size: 7px; line-height: 1.42; letter-spacing: 0.04em;
+        white-space: pre; color: rgba(11,11,13,0.07); overflow: hidden; user-select: none;
+      }
+      .layer { position: relative; z-index: 1; }
+      .pad { padding-left: var(--inset); padding-right: var(--inset); }
+      mark.why-mark {
+        background: var(--highlight); color: #fff; font-family: inherit; font-weight: 600;
+        letter-spacing: -0.025em; padding: 0.02em 0.18em; border-radius: 5px;
+        -webkit-box-decoration-break: clone; box-decoration-break: clone;
+      }
+
+      /* Header — quiet; must not compete with the hero */
+      .head {
+        display: flex; align-items: baseline; justify-content: space-between; gap: 10mm;
+        padding-top: 9mm; padding-bottom: 7mm;
+      }
+      .brand { font-family: var(--font-display); font-weight: 700; font-size: 14pt; letter-spacing: -0.02em; color: var(--accent); white-space: nowrap; }
+      .brand .dot { color: var(--text); }
+      .head .contact { font-family: var(--font-mono); font-size: 7.5pt; letter-spacing: 0.01em; color: var(--muted); text-align: right; }
+      .head .contact a { color: var(--muted); text-decoration: none; }
+
+      /* 1 — HERO (the dominant first read) */
+      .hero { background: var(--accent); color: #fff; padding-top: 8mm; padding-bottom: 8mm; }
+      .hero h1 {
+        margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 28pt;
+        line-height: 1.04; letter-spacing: -0.028em; max-width: 17ch; color: #fff; text-wrap: balance;
+      }
+      .hero .sub {
+        margin: 6mm 0 0 0; max-width: 60ch; font-size: 11.5pt; line-height: 1.5;
+        color: rgba(255,255,255,0.95); text-wrap: pretty;
+      }
+
+      /* 2 — VENN (the idea; the visual anchor, given room) */
+      .venn { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5mm; padding-top: 6mm; padding-bottom: 5mm; }
+      .venn svg { width: 78mm; height: auto; display: block; }
+      .venn .cap {
+        margin: 0; text-align: center; max-width: 64ch; font-size: 12pt; line-height: 1.45; color: var(--text);
+        font-family: var(--font-display); font-weight: 500; letter-spacing: -0.01em; text-wrap: balance;
+      }
+      .venn .cap b { color: var(--text); font-weight: 600; }
+
+      /* 3 — PROOF (one calm strip, no grid, no tags) */
+      .proof { padding-top: 7mm; padding-bottom: 7mm; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+      .proof h2 {
+        margin: 0 0 5mm 0; font-family: var(--font-display); font-weight: 600; font-size: 15pt;
+        letter-spacing: -0.015em; line-height: 1.2; text-wrap: balance;
+      }
+      .proof .firms { margin: 0 0 4mm 0; font-family: var(--font-mono); font-weight: 600; font-size: 10pt; letter-spacing: 0.04em; color: var(--text); }
+      .proof .stats { margin: 0; font-size: 10.5pt; line-height: 1.6; color: var(--muted); max-width: 78ch; }
+      .proof .stats b { color: var(--text); font-weight: 600; }
+      .proof .mit { margin: 4mm 0 0 0; font-size: 9pt; line-height: 1.45; color: var(--muted); }
+
+      /* 4 — METHOD (one quiet line) */
+      .method { padding-top: 6mm; padding-bottom: 7mm; }
+      .method .lbl { font-family: var(--font-mono); font-weight: 600; font-size: 8pt; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted-strong); display: block; margin-bottom: 4px; }
+      .method .seq { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 10pt; line-height: 1.4; letter-spacing: -0.01em; color: var(--text); }
+      .method .seq .arrow { color: var(--accent); font-weight: 600; padding: 0 2px; }
+      .method .seq .cyc { color: var(--highlight); }
+
+      /* 5 — CONTACT (the closing bookend) */
+      .contact { background: var(--accent); color: #fff; padding-top: 8mm; padding-bottom: 8mm; }
+      .contact .rev { margin: 0 0 6mm 0; font-size: 10.5pt; line-height: 1.5; color: rgba(255,255,255,0.95); max-width: 66ch; }
+      .contact .row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10mm; flex-wrap: wrap; }
+      .contact .name { margin: 0 0 5px 0; font-family: var(--font-display); font-weight: 600; font-size: 13pt; color: #fff; }
+      .contact .lines { margin: 0; font-family: var(--font-mono); font-size: 10pt; line-height: 1.55; color: #fff; }
+      .contact .lines a { color: #fff; text-decoration: none; }
+      .contact .mark { font-family: var(--font-display); font-weight: 700; font-size: 14pt; letter-spacing: -0.02em; color: #fff; white-space: nowrap; }
+      .contact .mark .dot { color: rgba(255,255,255,0.6); }
+
+      @page { size: A4 portrait; margin: 0; }
+      @media print {
+        html, body { background: #fff; }
+        body { padding: 0; display: block; }
+        .sheet { box-shadow: none; width: 210mm; height: 297mm; }
+        .hero, .contact, mark.why-mark, .brand, .method .seq .cyc {
+          -webkit-print-color-adjust: exact; print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet" aria-label="Capita Technology one-pager">
+      <pre class="grid" id="grid" aria-hidden="true"></pre>
+
+      <header class="head pad layer">
+        <span class="brand">Capita<span class="dot">.</span>Technology</span>
+        <span class="contact">capitatech.com.au &nbsp; <a href="mailto:mitch.ribar@capitatech.com.au">mitch.ribar@capitatech.com.au</a> &nbsp; +61 422 077 424</span>
+      </header>
+
+      <!-- 1 — HERO -->
+      <section class="hero pad layer" aria-label="Headline">
+        <h1>Turn AI, strategy, and customer growth into <mark class="why-mark">lifetime value</mark> that compounds.</h1>
+        <p class="sub">One advisor has run customer growth at Optus, AI personalization at JPMorgan Chase, and a product P&amp;L from launch to scale.</p>
+      </section>
+
+      <!-- 2 — VENN -->
+      <section class="venn pad layer" aria-label="The intersection">
+        <svg viewBox="0 0 820 430" role="img" aria-label="AI, Customer Value, and Strategy meet to produce Customer Growth.">
+          <g fill="none" stroke="#0b0b0d" stroke-width="2">
+            <circle cx="410" cy="160" r="135" /><circle cx="300" cy="290" r="135" /><circle cx="520" cy="290" r="135" />
+          </g>
+          <g>
+            <rect x="330" y="227" width="160" height="36" rx="18" fill="#0078f0" stroke="#d946ef" stroke-width="3" />
+            <text x="410" y="250" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="14" font-weight="600" letter-spacing="0.5" fill="#ffffff">CUSTOMER GROWTH</text>
+          </g>
+          <g font-family="'Geist Mono', monospace" fill="#0b0b0d">
+            <text x="410" y="44" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="0.5">AI</text>
+            <text x="410" y="64" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">DELIVERY &amp; GOVERNANCE</text>
+            <text x="150" y="386" text-anchor="middle" font-size="17" font-weight="600" letter-spacing="0.5">CUSTOMER VALUE</text>
+            <text x="150" y="406" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">RETENTION · LIFECYCLE · LTV</text>
+            <text x="670" y="386" text-anchor="middle" font-size="17" font-weight="600" letter-spacing="0.5">STRATEGY</text>
+            <text x="670" y="406" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">THE CALL BOARDS OWN</text>
+          </g>
+        </svg>
+        <p class="cap">Most advisors hold one. <b>The value is where AI, customer value, and strategy meet</b> — and one operator has run that ground at enterprise scale.</p>
+      </section>
+
+      <!-- 3 — PROOF -->
+      <section class="proof pad layer" aria-label="The proof">
+        <h2>One operator has run all three at enterprise scale.</h2>
+        <p class="firms">Optus · JPMorgan Chase · Quantium · Brand Networks</p>
+        <p class="stats">
+          <b>Customer value:</b> growth and retention across customer bases up to 100M+. &nbsp;
+          <b>AI:</b> built and scaled from first launch to 300M+ events a day. &nbsp;
+          <b>Strategy:</b> 20+ years, budgets past $75M, teams up to ~300, decision systems on 12B+ transactions a year.
+        </p>
+        <p class="mit">MIT Sloan MBA. Applied AI and machine learning, competitive strategy, marketing. 20+ years across Australia and the United States.</p>
+      </section>
+
+      <!-- 4 — METHOD (one line) -->
+      <section class="method pad layer" aria-label="The Capita Growth Method">
+        <span class="lbl">The Capita Growth Method</span>
+        <p class="seq">Go, See, Understand <span class="arrow">→</span> Radically Simplify <span class="arrow">→</span> Accelerate &amp; Measure <span class="arrow">→</span> Build &amp; Automate <span class="arrow">→</span> Compound <span class="cyc">↻</span></p>
+      </section>
+
+      <!-- 5 — CONTACT -->
+      <footer class="contact pad layer" aria-label="Contact">
+        <p class="rev">The principal who scopes your engagement is the one who delivers it. If you call, that is who picks up.</p>
+        <div class="row">
+          <div>
+            <p class="name">Mitchell Ribar, Principal</p>
+            <p class="lines"><a href="mailto:mitch.ribar@capitatech.com.au">mitch.ribar@capitatech.com.au</a><br />+61 422 077 424</p>
+          </div>
+          <span class="mark">Capita<span class="dot">.</span>Technology</span>
+        </div>
+      </footer>
+    </main>
+    <script>
+      (function () {
+        var el = document.getElementById("grid"); if (!el) return;
+        var COLS = 200, ROWS = 130, out = [];
+        function ch(r, c){ var h=((r*73856093)^(c*19349663)^(r*c*83492791))>>>0, v=h%100; if(v<4)return" ";if(v<12)return"*";if(v<17)return"+";if(v<22)return"∙";return"·"; }
+        for (var r=0;r<ROWS;r++){ var s=""; for(var c=0;c<COLS;c++) s+=ch(r,c); out.push(s); }
+        el.textContent = out.join("\n");
+      })();
+    </script>
+  </body>
+</html>

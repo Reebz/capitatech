@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology Flyer (B — two-sided)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f6f6f3; --text: #0b0b0d; --muted: #4b4b57; --muted-strong: #3a3a44;
+        --accent: #0078f0; --highlight: #d946ef; --border: rgba(11, 11, 13, 0.12);
+        --font-display: "Geist", ui-sans-serif, system-ui, Arial, sans-serif;
+        --font-sans: "Inter", ui-sans-serif, system-ui, Arial, sans-serif;
+        --font-mono: "Geist Mono", ui-monospace, Menlo, monospace;
+        --inset: 17mm;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: #2b2b31; font-family: var(--font-sans); color: var(--text);
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+        display: flex; flex-direction: column; align-items: center; gap: 26px; padding: 28px;
+      }
+      .sheet {
+        position: relative; width: 210mm; height: 297mm; background: var(--bg);
+        overflow: hidden; box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+        display: flex; flex-direction: column; color: var(--text);
+      }
+      .grid {
+        position: absolute; inset: 0; margin: 0; z-index: 0; pointer-events: none;
+        font-family: var(--font-mono); font-size: 7px; line-height: 1.42; letter-spacing: 0.04em;
+        white-space: pre; color: rgba(11,11,13,0.07); overflow: hidden; user-select: none;
+      }
+      .layer { position: relative; z-index: 1; }
+      .pad { padding-left: var(--inset); padding-right: var(--inset); }
+      mark.why-mark {
+        background: var(--highlight); color: #fff; font-family: inherit; font-weight: 600;
+        letter-spacing: -0.025em; padding: 0.02em 0.18em; border-radius: 5px;
+        -webkit-box-decoration-break: clone; box-decoration-break: clone;
+      }
+      .head { display: flex; align-items: baseline; justify-content: space-between; gap: 10mm; padding-top: 9mm; padding-bottom: 7mm; }
+      .brand { font-family: var(--font-display); font-weight: 700; font-size: 14pt; letter-spacing: -0.02em; color: var(--accent); white-space: nowrap; }
+      .brand .dot { color: var(--text); }
+      .head .contact { font-family: var(--font-mono); font-size: 7.5pt; color: var(--muted); text-align: right; }
+      .head .contact a { color: var(--muted); text-decoration: none; }
+      .head .kick { font-family: var(--font-mono); font-size: 8pt; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted-strong); }
+
+      /* FRONT */
+      .hero { background: var(--accent); color: #fff; padding-top: 11mm; padding-bottom: 11mm; }
+      .hero h1 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 33pt; line-height: 1.04; letter-spacing: -0.028em; max-width: 17ch; color: #fff; text-wrap: balance; }
+      .hero .sub { margin: 6mm 0 0 0; max-width: 60ch; font-size: 11.5pt; line-height: 1.5; color: rgba(255,255,255,0.95); text-wrap: pretty; }
+
+      .venn { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6mm; padding-top: 8mm; padding-bottom: 8mm; }
+      .venn svg { width: 96mm; height: auto; display: block; }
+      .venn .cap { margin: 0; text-align: center; max-width: 60ch; font-size: 12.5pt; line-height: 1.45; color: var(--text); font-family: var(--font-display); font-weight: 500; letter-spacing: -0.01em; text-wrap: balance; }
+      .venn .cap b { font-weight: 600; }
+
+      .proof { padding-top: 7mm; padding-bottom: 8mm; border-top: 1px solid var(--border); }
+      .proof h2 { margin: 0 0 5mm 0; font-family: var(--font-display); font-weight: 600; font-size: 15pt; letter-spacing: -0.015em; line-height: 1.2; text-wrap: balance; }
+      .proof .firms { margin: 0 0 4mm 0; font-family: var(--font-mono); font-weight: 600; font-size: 10pt; letter-spacing: 0.04em; color: var(--text); }
+      .proof .stats { margin: 0; font-size: 10.5pt; line-height: 1.6; color: var(--muted); max-width: 80ch; }
+      .proof .stats b { color: var(--text); font-weight: 600; }
+      .proof .mit { margin: 4mm 0 0 0; font-size: 9pt; line-height: 1.45; color: var(--muted); }
+      .front-foot { margin-top: auto; padding-top: 6mm; padding-bottom: 8mm; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); }
+      .front-foot .mark { font-family: var(--font-display); font-weight: 700; font-size: 12pt; letter-spacing: -0.02em; color: var(--accent); }
+      .front-foot .mark .dot { color: var(--text); }
+      .front-foot .over { font-family: var(--font-mono); font-size: 8pt; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted-strong); }
+
+      /* BACK — the method gets a full face */
+      .m-intro { padding-top: 8mm; padding-bottom: 6mm; }
+      .m-intro h2 { margin: 0 0 4mm 0; font-family: var(--font-display); font-weight: 600; font-size: 19pt; letter-spacing: -0.02em; line-height: 1.08; text-wrap: balance; }
+      .m-intro p { margin: 0; font-size: 11pt; line-height: 1.5; color: var(--muted); max-width: 70ch; text-wrap: pretty; }
+      .steps-list { display: flex; flex-direction: column; }
+      .step-row { display: grid; grid-template-columns: 16mm 1fr; gap: 6mm; padding: 6mm 0; border-top: 1px solid var(--border); align-items: start; }
+      .step-row .n { font-family: var(--font-mono); font-weight: 600; font-size: 22pt; line-height: 1; color: var(--accent); }
+      .step-row .name { margin: 0 0 3px 0; font-family: var(--font-display); font-weight: 600; font-size: 14pt; letter-spacing: -0.015em; line-height: 1.15; }
+      .step-row .sub { margin: 0 0 4px 0; font-size: 10.5pt; line-height: 1.4; color: var(--text); }
+      .step-row .out { margin: 0; font-size: 9.5pt; line-height: 1.4; color: var(--muted); }
+      .step-row .out b { color: var(--muted-strong); font-weight: 600; }
+      .loopline { margin: 5mm 0 0 0; padding-top: 5mm; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 9pt; letter-spacing: 0.02em; color: var(--muted-strong); }
+      .loopline .cyc { color: var(--highlight); }
+
+      .engage { padding-top: 6mm; padding-bottom: 6mm; }
+      .engage .lead { margin: 0; font-size: 10.5pt; line-height: 1.5; color: var(--text); }
+      .engage .lead b { font-weight: 600; }
+      .engage .names { margin: 4px 0 0 0; font-family: var(--font-mono); font-size: 8.6pt; letter-spacing: 0.02em; color: var(--muted-strong); }
+
+      .contact { margin-top: auto; background: var(--accent); color: #fff; padding-top: 8mm; padding-bottom: 8mm; }
+      .contact .rev { margin: 0 0 6mm 0; font-size: 10.5pt; line-height: 1.5; color: rgba(255,255,255,0.95); max-width: 66ch; }
+      .contact .row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10mm; flex-wrap: wrap; }
+      .contact .name { margin: 0 0 5px 0; font-family: var(--font-display); font-weight: 600; font-size: 13pt; color: #fff; }
+      .contact .lines { margin: 0; font-family: var(--font-mono); font-size: 10pt; line-height: 1.55; color: #fff; }
+      .contact .lines a { color: #fff; text-decoration: none; }
+      .contact .mark { font-family: var(--font-display); font-weight: 700; font-size: 14pt; letter-spacing: -0.02em; color: #fff; white-space: nowrap; }
+      .contact .mark .dot { color: rgba(255,255,255,0.6); }
+
+      @page { size: A4 portrait; margin: 0; }
+      @media print {
+        html, body { background: #fff; }
+        body { padding: 0; display: block; gap: 0; }
+        .sheet { box-shadow: none; width: 210mm; height: 297mm; page-break-after: always; }
+        .sheet:last-child { page-break-after: auto; }
+        .hero, .contact, mark.why-mark, .brand, .step-row .n, .loopline .cyc, .front-foot .mark {
+          -webkit-print-color-adjust: exact; print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ FRONT FACE ============ -->
+    <main class="sheet" aria-label="Capita Technology flyer, front">
+      <pre class="grid gridA" aria-hidden="true"></pre>
+      <header class="head pad layer">
+        <span class="brand">Capita<span class="dot">.</span>Technology</span>
+        <span class="contact">capitatech.com.au &nbsp; <a href="mailto:mitch.ribar@capitatech.com.au">mitch.ribar@capitatech.com.au</a> &nbsp; +61 422 077 424</span>
+      </header>
+
+      <section class="hero pad layer" aria-label="Headline">
+        <h1>Turn AI, strategy, and customer growth into <mark class="why-mark">lifetime value</mark> that compounds.</h1>
+        <p class="sub">One advisor has run customer growth at Optus, AI personalization at JPMorgan Chase, and a product P&amp;L from launch to scale.</p>
+      </section>
+
+      <section class="venn pad layer" aria-label="The intersection">
+        <svg viewBox="0 0 820 430" role="img" aria-label="AI, Customer Value, and Strategy meet to produce Customer Growth.">
+          <g fill="none" stroke="#0b0b0d" stroke-width="2">
+            <circle cx="410" cy="160" r="135" /><circle cx="300" cy="290" r="135" /><circle cx="520" cy="290" r="135" />
+          </g>
+          <g>
+            <rect x="330" y="227" width="160" height="36" rx="18" fill="#0078f0" stroke="#d946ef" stroke-width="3" />
+            <text x="410" y="250" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="14" font-weight="600" letter-spacing="0.5" fill="#ffffff">CUSTOMER GROWTH</text>
+          </g>
+          <g font-family="'Geist Mono', monospace" fill="#0b0b0d">
+            <text x="410" y="44" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="0.5">AI</text>
+            <text x="410" y="64" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">DELIVERY &amp; GOVERNANCE</text>
+            <text x="150" y="386" text-anchor="middle" font-size="17" font-weight="600" letter-spacing="0.5">CUSTOMER VALUE</text>
+            <text x="150" y="406" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">RETENTION · LIFECYCLE · LTV</text>
+            <text x="670" y="386" text-anchor="middle" font-size="17" font-weight="600" letter-spacing="0.5">STRATEGY</text>
+            <text x="670" y="406" text-anchor="middle" font-size="11" font-weight="500" fill="#4b4b57">THE CALL BOARDS OWN</text>
+          </g>
+        </svg>
+        <p class="cap">Most advisors hold one. <b>The value is where AI, customer value, and strategy meet</b> — and one operator has run that ground at enterprise scale.</p>
+      </section>
+
+      <section class="proof pad layer" aria-label="The proof">
+        <h2>One operator has run all three at enterprise scale.</h2>
+        <p class="firms">Optus · JPMorgan Chase · Quantium · Brand Networks</p>
+        <p class="stats">
+          <b>Customer value:</b> growth and retention across customer bases up to 100M+. &nbsp;
+          <b>AI:</b> built and scaled from first launch to 300M+ events a day. &nbsp;
+          <b>Strategy:</b> 20+ years, budgets past $75M, teams up to ~300, decision systems on 12B+ transactions a year.
+        </p>
+        <p class="mit">MIT Sloan MBA. Applied AI and machine learning, competitive strategy, marketing. 20+ years across Australia and the United States.</p>
+      </section>
+
+      <div class="front-foot pad layer">
+        <span class="mark">Capita<span class="dot">.</span>Technology</span>
+        <span class="over">The method and engagements overleaf →</span>
+      </div>
+    </main>
+
+    <!-- ============ BACK FACE ============ -->
+    <main class="sheet" aria-label="Capita Technology flyer, back">
+      <pre class="grid gridB" aria-hidden="true"></pre>
+      <header class="head pad layer">
+        <span class="brand">Capita<span class="dot">.</span>Technology</span>
+        <span class="kick">How the work runs</span>
+      </header>
+
+      <section class="m-intro pad layer">
+        <h2>The Capita Growth Method.</h2>
+        <p>A continuous cycle that turns operational knowledge into systems, systems into intelligence, and intelligence into competitive advantage.</p>
+      </section>
+
+      <section class="steps-list pad layer" aria-label="The five steps">
+        <div class="step-row">
+          <span class="n">1</span>
+          <div><p class="name">Go, See, Understand</p><p class="sub">We go where the work happens.</p><p class="out"><b>Outcome:</b> requirements seen first-hand: who, what, where, how.</p></div>
+        </div>
+        <div class="step-row">
+          <span class="n">2</span>
+          <div><p class="name">Radically Simplify</p><p class="sub">Complexity is the enemy of scale.</p><p class="out"><b>Outcome:</b> a value-chain stripped to what truly matters.</p></div>
+        </div>
+        <div class="step-row">
+          <span class="n">3</span>
+          <div><p class="name">Accelerate &amp; Measure</p><p class="sub">Speed is a learning advantage.</p><p class="out"><b>Outcome:</b> a repeatable, battle-tested blueprint.</p></div>
+        </div>
+        <div class="step-row">
+          <span class="n">4</span>
+          <div><p class="name">Build &amp; Automate</p><p class="sub">Automate proven work, not assumptions.</p><p class="out"><b>Outcome:</b> execution that scales without adding people.</p></div>
+        </div>
+        <div class="step-row">
+          <span class="n">5</span>
+          <div><p class="name">Compound</p><p class="sub">Every cycle makes the next one smarter.</p><p class="out"><b>Outcome:</b> a self-improving system that compounds.</p></div>
+        </div>
+        <p class="loopline">Go, See, Understand → Radically Simplify → Accelerate &amp; Measure → Build &amp; Automate → Compound <span class="cyc">↻ continuous loop</span></p>
+      </section>
+
+      <section class="engage pad layer" aria-label="Engagements">
+        <p class="lead"><b>Every engagement is scoped to you.</b> We start from the problem, not a price list.</p>
+        <p class="names">Operating Model &amp; Architecture · 90-Day Diagnosis · Roadmap · Measurement &amp; Governance</p>
+      </section>
+
+      <footer class="contact pad layer" aria-label="Contact">
+        <p class="rev">The principal who scopes your engagement is the one who delivers it. If you call, that is who picks up.</p>
+        <div class="row">
+          <div>
+            <p class="name">Mitchell Ribar, Principal</p>
+            <p class="lines"><a href="mailto:mitch.ribar@capitatech.com.au">mitch.ribar@capitatech.com.au</a><br />+61 422 077 424</p>
+          </div>
+          <span class="mark">Capita<span class="dot">.</span>Technology</span>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        function fill(el){ if(!el) return; var COLS=200,ROWS=130,out=[]; function ch(r,c){var h=((r*73856093)^(c*19349663)^(r*c*83492791))>>>0,v=h%100;if(v<4)return" ";if(v<12)return"*";if(v<17)return"+";if(v<22)return"∙";return"·";} for(var r=0;r<ROWS;r++){var s="";for(var c=0;c<COLS;c++)s+=ch(r,c);out.push(s);} el.textContent=out.join("\n"); }
+        fill(document.querySelector(".gridA")); fill(document.querySelector(".gridB"));
+      })();
+    </script>
+  </body>
+</html>

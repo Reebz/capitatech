@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Capita Technology — C2 Swiss Modular Grid</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --paper:#f6f6f3; --white:#ffffff;
+        --ink:#0b0b0d; --muted:#4b4b57; --muted-strong:#3a3a44;
+        --blue:#0078f0; --blue-d:#0069d1; --magenta:#d946ef;
+        --rule:rgba(11,11,13,0.12); --rule-strong:rgba(11,11,13,0.22);
+        --display:"Geist",system-ui,-apple-system,Arial,sans-serif;
+        --sans:"Inter",system-ui,-apple-system,Arial,sans-serif;
+        --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+      }
+      *{box-sizing:border-box;margin:0;padding:0;}
+      html,body{height:100%;}
+      body{
+        background:#1f2024;
+        font-family:var(--sans);
+        color:var(--ink);
+        -webkit-font-smoothing:antialiased;
+        text-rendering:optimizeLegibility;
+        display:flex;justify-content:center;align-items:flex-start;
+        padding:32px;
+        -webkit-print-color-adjust:exact;print-color-adjust:exact;
+      }
+
+      /* A4 @96dpi = 794 x 1123 px */
+      .sheet{
+        position:relative;
+        width:794px;height:1123px;
+        background:var(--paper);
+        overflow:hidden;
+        box-shadow:0 26px 80px rgba(0,0,0,.5);
+      }
+
+      /* ---- the visible modular grid (hairline rules) ---- */
+      /* safe margin ~14mm @96dpi ≈ 53px. Content box 688 wide. */
+      .grid{
+        position:absolute;
+        top:53px;left:53px;right:53px;bottom:53px;
+        /* 6 equal columns, baseline-driven rows handled by content blocks */
+        display:grid;
+        grid-template-columns:repeat(6,1fr);
+        grid-template-rows:
+          auto      /* masthead */
+          auto      /* headline */
+          auto      /* sub / proofline */
+          1fr       /* figure + proof */
+          auto      /* method */
+          auto;     /* footer */
+        border-top:1.5px solid var(--ink);
+        border-left:1px solid var(--rule);
+      }
+      /* faint column hairlines spanning the full content height, drawn behind content */
+      .vrules{
+        position:absolute;top:53px;left:53px;right:53px;bottom:53px;
+        display:grid;grid-template-columns:repeat(6,1fr);
+        pointer-events:none;z-index:0;
+      }
+      .vrules span{border-right:1px solid var(--rule);}
+      .vrules span:last-child{border-right:1px solid var(--rule);}
+
+      /* every content row is a grid item; module separation via hairline bottoms */
+      .row{
+        grid-column:1 / -1;
+        position:relative;z-index:1;
+        border-bottom:1px solid var(--rule);
+        border-right:1px solid var(--rule);
+      }
+
+      /* ===== masthead ===== */
+      .mast{
+        display:flex;align-items:center;justify-content:space-between;
+        padding:10px 14px 11px;
+        border-bottom:1.5px solid var(--ink);
+      }
+      .brand{display:flex;align-items:center;gap:9px;}
+      .brand svg{display:block;}
+      .wordmark{font-family:var(--display);font-weight:700;font-size:14pt;letter-spacing:-0.02em;color:var(--ink);}
+      .wordmark .dot{color:var(--blue);}
+      .mast .meta{
+        font-family:var(--mono);font-weight:500;font-size:8.5pt;
+        letter-spacing:0.05em;text-transform:uppercase;color:var(--muted-strong);
+      }
+
+      /* ===== headline ===== */
+      .head{padding:18px 14px 16px;}
+      .head .idx{
+        font-family:var(--mono);font-size:8.5pt;font-weight:500;
+        letter-spacing:0.06em;text-transform:uppercase;color:var(--muted-strong);
+        display:block;margin-bottom:10px;
+      }
+      .head h1{
+        font-family:var(--display);font-weight:600;font-size:34pt;line-height:1.06;
+        letter-spacing:-0.025em;color:var(--ink);max-width:18ch;
+      }
+      .head h1 .emph{
+        color:var(--blue);font-weight:600;
+        border-bottom:2px solid var(--magenta);
+        padding-bottom:1px;
+      }
+
+      /* ===== sub / proofline ===== */
+      .sub{
+        padding:13px 14px 14px;
+        display:grid;grid-template-columns:repeat(6,1fr);gap:0;
+      }
+      .sub p{
+        grid-column:1 / 5;
+        font-family:var(--sans);font-size:10.5pt;line-height:1.5;
+        color:var(--muted-strong);max-width:60ch;
+      }
+      .sub p b{color:var(--ink);font-weight:600;}
+
+      /* ===== main body: figure (left 4 cols) + proof (right 2 cols span) ===== */
+      .body{
+        display:grid;grid-template-columns:repeat(6,1fr);
+        align-items:stretch;
+        min-height:0;
+      }
+      .fig{
+        grid-column:1 / 4;
+        border-right:1px solid var(--rule);
+        padding:16px 16px 14px 14px;
+        display:flex;flex-direction:column;justify-content:center;
+      }
+      .fig svg{width:100%;height:auto;display:block;}
+      .fig figcaption{
+        margin-top:14px;
+        font-family:var(--sans);font-size:9.5pt;line-height:1.45;
+        color:var(--muted);max-width:42ch;
+      }
+      .fig figcaption b{color:var(--ink);font-weight:600;}
+
+      .proof{
+        grid-column:4 / 7;
+        padding:16px 4px 14px 16px;
+        display:flex;flex-direction:column;
+      }
+      .proof .pl{
+        font-family:var(--display);font-weight:600;font-size:13.5pt;line-height:1.2;
+        letter-spacing:-0.015em;color:var(--ink);margin-bottom:12px;max-width:26ch;
+      }
+      .proof .firms{
+        font-family:var(--mono);font-weight:600;font-size:9pt;
+        letter-spacing:0.03em;color:var(--ink);line-height:1.55;
+        padding-bottom:11px;margin-bottom:12px;
+        border-bottom:1px solid var(--rule);
+      }
+      .facts{list-style:none;display:flex;flex-direction:column;gap:9px;}
+      .facts li{
+        position:relative;padding-left:0;
+        font-size:9.5pt;line-height:1.42;color:var(--muted-strong);
+      }
+      .facts li .k{
+        display:block;
+        font-family:var(--mono);font-size:8.5pt;font-weight:600;
+        letter-spacing:0.05em;text-transform:uppercase;color:var(--blue);
+        margin-bottom:2px;
+      }
+      .facts li .v b{color:var(--ink);font-weight:600;}
+      .proof .cred{
+        margin-top:13px;padding-top:11px;
+        border-top:1px solid var(--rule);
+        font-size:9pt;line-height:1.45;color:var(--muted);
+      }
+
+      /* ===== method row ===== */
+      .method{
+        padding:13px 14px 13px;
+        border-top:1.5px solid var(--ink);
+      }
+      .method .lbl{
+        font-family:var(--mono);font-weight:600;font-size:9pt;
+        letter-spacing:0.06em;text-transform:uppercase;color:var(--ink);
+        display:block;margin-bottom:9px;
+      }
+      .method .seq{
+        display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;
+      }
+      .method .step{
+        font-family:var(--display);font-weight:500;font-size:12.5pt;
+        letter-spacing:-0.012em;color:var(--ink);white-space:nowrap;
+      }
+      .method .ar{
+        font-family:var(--mono);font-weight:500;font-size:11pt;
+        color:var(--blue);padding:0 2px;
+      }
+      .method .step.last{color:var(--blue);font-weight:600;}
+
+      /* ===== footer band (single restrained blue zone) ===== */
+      .foot{
+        background:var(--blue);
+        color:var(--white);
+        padding:15px 14px 15px;
+        display:grid;grid-template-columns:repeat(6,1fr);
+        gap:0 16px;align-items:end;
+        border-bottom:none;border-right:none;
+      }
+      .foot .rev{
+        grid-column:1 / 5;
+        font-size:9.5pt;line-height:1.5;color:rgba(255,255,255,0.96);
+        max-width:58ch;margin-bottom:11px;
+      }
+      .foot .who{grid-column:1 / 4;}
+      .foot .who .name{
+        font-family:var(--display);font-weight:600;font-size:12.5pt;
+        letter-spacing:-0.01em;color:var(--white);margin-bottom:5px;
+      }
+      .foot .who .ln{
+        font-family:var(--mono);font-size:11pt;line-height:1.55;
+        color:rgba(255,255,255,0.97);display:block;
+      }
+      .foot .who .ln a{color:inherit;text-decoration:none;}
+      .foot .who .ln.small{font-size:9.5pt;color:rgba(255,255,255,0.85);margin-top:4px;}
+      .foot .emark{
+        grid-column:4 / 7;
+        justify-self:end;align-self:end;text-align:right;
+      }
+      .foot .emark .wm{
+        font-family:var(--display);font-weight:700;font-size:13pt;
+        letter-spacing:-0.02em;color:var(--white);display:block;
+      }
+      .foot .emark .wm .dot{color:rgba(255,255,255,0.6);}
+      .foot .emark .ring{
+        display:inline-block;margin-top:8px;
+        width:11px;height:11px;border-radius:50%;
+        border:2px solid var(--magenta);
+      }
+
+      @page{size:A4 portrait;margin:0;}
+      @media print{
+        html,body{background:#fff;}
+        body{padding:0;display:block;}
+        .sheet{box-shadow:none;width:210mm;height:297mm;}
+        .grid,.vrules{top:14mm;left:14mm;right:14mm;bottom:14mm;}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <!-- faint column hairlines (visible modular grid) -->
+      <div class="vrules" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+      <div class="grid">
+
+        <!-- masthead -->
+        <header class="row mast">
+          <span class="brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="34" height="34" aria-label="Capita"><rect width="32" height="32" rx="6" fill="#0078f0"/><path d="M 22.5 11 A 6.5 6.5 0 1 0 22.5 21" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>
+            <span class="wordmark">Capita<span class="dot">.</span>Technology</span>
+          </span>
+          <span class="meta">Independent Executive Advisory · Sydney</span>
+        </header>
+
+        <!-- headline -->
+        <section class="row head">
+          <span class="idx">Capability Statement</span>
+          <h1>Turn AI, strategy, and customer growth into <span class="emph">lifetime value that compounds</span>.</h1>
+        </section>
+
+        <!-- subline / proofline -->
+        <section class="row sub">
+          <p><b>One advisor</b> has run customer growth at Optus, AI personalization at JPMorgan Chase, and a product P&amp;L from launch to scale.</p>
+        </section>
+
+        <!-- body: figure + proof -->
+        <section class="row body">
+          <figure class="fig">
+            <svg viewBox="0 0 440 430" role="img" aria-label="AI, Customer Value and Strategy intersect to produce Customer Growth.">
+              <!-- faint warm-gray module washes inside circles -->
+              <g fill="rgba(11,11,13,0.045)" stroke="none">
+                <circle cx="220" cy="148" r="118"/>
+                <circle cx="142" cy="276" r="118"/>
+                <circle cx="298" cy="276" r="118"/>
+              </g>
+              <!-- thin ink strokes -->
+              <g fill="none" stroke="#0b0b0d" stroke-width="1.6">
+                <circle cx="220" cy="148" r="118"/>
+                <circle cx="142" cy="276" r="118"/>
+                <circle cx="298" cy="276" r="118"/>
+              </g>
+              <!-- leader rules from labels to circle edges, set on grid logic -->
+              <g stroke="rgba(11,11,13,0.22)" stroke-width="1">
+                <line x1="220" y1="14" x2="220" y2="28"/>
+                <line x1="34"  y1="276" x2="34"  y2="276"/>
+              </g>
+              <!-- lens labels OUTSIDE circles, mono small-caps -->
+              <g font-family="'Geist Mono',ui-monospace,monospace" fill="#0b0b0d" font-weight="600" letter-spacing="0.5">
+                <text x="220" y="10" text-anchor="middle" font-size="14">AI</text>
+                <text x="6"  y="372" text-anchor="start"  font-size="13">CUSTOMER</text>
+                <text x="6"  y="389" text-anchor="start"  font-size="13">VALUE</text>
+                <text x="434" y="380" text-anchor="end"   font-size="13">STRATEGY</text>
+              </g>
+              <!-- center token: only filled element. blue disc, single magenta ring -->
+              <g>
+                <circle cx="220" cy="238" r="44" fill="#0078f0"/>
+                <circle cx="220" cy="238" r="44" fill="none" stroke="#d946ef" stroke-width="2.4"/>
+                <text x="220" y="234" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="10.5" font-weight="600" letter-spacing="0.4" fill="#ffffff">CUSTOMER</text>
+                <text x="220" y="248" text-anchor="middle" font-family="'Geist Mono',ui-monospace,monospace" font-size="10.5" font-weight="600" letter-spacing="0.4" fill="#ffffff">GROWTH</text>
+              </g>
+            </svg>
+            <figcaption><b>Most advisors hold one.</b> The value is where all three meet — and someone has run that ground.</figcaption>
+          </figure>
+
+          <div class="proof">
+            <p class="pl">One operator has run all three at enterprise scale.</p>
+            <p class="firms">Optus · JPMorgan Chase ·<br/>Quantium · Brand Networks</p>
+            <ul class="facts">
+              <li>
+                <span class="k">Customer value</span>
+                <span class="v">Run customer growth and retention across customer bases <b>up to 100M+</b>.</span>
+              </li>
+              <li>
+                <span class="k">AI</span>
+                <span class="v">Built and scaled AI from first MVP to <b>300M+ events a day</b>.</span>
+              </li>
+              <li>
+                <span class="k">Strategy</span>
+                <span class="v">20+ years owning strategy, budgets past <b>$75M</b>, teams up to ~300; decisions over <b>12B+ transactions</b> a year.</span>
+              </li>
+            </ul>
+            <p class="cred">MIT Sloan MBA — applied AI and machine learning, competitive strategy, marketing. 20+ years across Australia and the United States.</p>
+          </div>
+        </section>
+
+        <!-- method -->
+        <section class="row method">
+          <span class="lbl">The Capita Growth Method</span>
+          <div class="seq">
+            <span class="step">Go, See, Understand</span><span class="ar">→</span>
+            <span class="step">Radically Simplify</span><span class="ar">→</span>
+            <span class="step">Accelerate &amp; Measure</span><span class="ar">→</span>
+            <span class="step">Build &amp; Automate</span><span class="ar">→</span>
+            <span class="step last">Compound</span>
+          </div>
+        </section>
+
+        <!-- footer band -->
+        <footer class="row foot">
+          <p class="rev">The principal who scopes your engagement is the one who delivers it. If you call, that is who picks up.</p>
+          <div class="who">
+            <div class="name">Mitchell Ribar — Principal</div>
+            <span class="ln"><a href="mailto:consulting@capitatech.com.au">consulting@capitatech.com.au</a></span>
+            <span class="ln">+61 422 077 424</span>
+            <span class="ln small">capitatech.com.au · Sydney, Australia</span>
+          </div>
+          <div class="emark">
+            <span class="wm">Capita<span class="dot">.</span>Technology</span>
+            <span class="ring" aria-hidden="true"></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </body>
+</html>
