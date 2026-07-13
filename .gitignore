@@ -18,3 +18,12 @@ dist/
 .impeccable/
 graphify-out/
 mempalace.yaml
+.serena/
+.context/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+docs/plans/
+docs/solutions/
+docs/brainstorms/
+todos/
