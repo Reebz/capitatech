@@ -10,3 +10,11 @@ dist/
 .env.*.local
 .vercel
 .playwright-cli/
+
+# Generated tool / session state (not versioned)
+.claude/
+.design-sync/
+.ds-verify/
+.impeccable/
+graphify-out/
+mempalace.yaml
